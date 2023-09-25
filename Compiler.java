@@ -12,7 +12,8 @@ public class Compiler {
 
         LexicalAnalysis lexicalAnalysis = new LexicalAnalysis();
         // 词法分析作业使用
-        lexicalAnalysis.run();
-        // SyntacticAnalysis syntacticAnalysis = new SyntacticAnalysis(lexicalAnalysis);
+        // lexicalAnalysis.run();
+        SyntacticAnalysis syntacticAnalysis = new SyntacticAnalysis(lexicalAnalysis);
+        syntacticAnalysis.run();
     }
 }
