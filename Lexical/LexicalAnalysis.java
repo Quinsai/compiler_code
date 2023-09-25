@@ -344,10 +344,18 @@ public class LexicalAnalysis {
         }
     }
 
+    /**
+     * 获取next()调用后的单词的值
+     * @return
+     */
     public String getCurrentWordValue() {
         return currentWordValue;
     }
 
+    /**
+     * 获取next()调用后的单词的类别码
+     * @return
+     */
     public String getCurrentWordCategoryCode() {
         return currentWordCategoryCode;
     }
