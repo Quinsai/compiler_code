@@ -61,9 +61,8 @@ public class LexicalAnalysis {
      * 词法分析器构造方法
      */
     private LexicalAnalysis() {
-        String sourceCode = InputSourceCode.getSourceCode();
-        this.source = sourceCode;
-        this.sourceLength = sourceCode.length();
+        this.source = InputSourceCode.getSourceCode();
+        this.sourceLength = InputSourceCode.getSourceCodeLength();
         this.currentIndex = 0;
         this.currentLine = 1;
         this.lexicalTable = new LinkedList<LexicalTableItem>();

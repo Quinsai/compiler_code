@@ -12,6 +12,10 @@ public class InputSourceCode {
      * 字符串形式的源代码
      */
     private static String sourceCode;
+    /**
+     * 字符串性形式的源代码的长度
+     */
+    private static int sourceCodeLength;
 
     /**
      * 读入源代码
@@ -35,6 +39,7 @@ public class InputSourceCode {
         }
 
         InputSourceCode.sourceCode = sourceCodeString;
+        InputSourceCode.sourceCodeLength = sourceCodeString.length();
     }
 
     /**
@@ -43,5 +48,13 @@ public class InputSourceCode {
      */
     public static String getSourceCode() {
         return sourceCode;
+    }
+
+    /**
+     * 获得字符串形式的源代码的长度
+     * @return
+     */
+    public static int getSourceCodeLength() {
+        return sourceCodeLength;
     }
 }
