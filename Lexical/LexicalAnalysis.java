@@ -28,6 +28,14 @@ public class LexicalAnalysis {
      * 当前行号
      */
     private int currentLine;
+    /**
+     * 当前单词的值
+     */
+    private String currentWordValue;
+    /**
+     * 当前单词的类别码
+     */
+    private String currentWordCategoryCode;
 
     /**
      * 词法分析器唯一单例
@@ -306,6 +314,8 @@ public class LexicalAnalysis {
     private void addIntoLexicalTable(String categoryCode, String value, boolean whetherOutput) {
         LexicalTableItem newItem = new LexicalTableItem(categoryCode, value);
         lexicalTable.add(newItem);
+        this.currentWordValue = value;
+        this.currentWordCategoryCode = categoryCode;
         if (whetherOutput) {
             output(categoryCode, value);
         }
@@ -332,6 +342,14 @@ public class LexicalAnalysis {
         catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public String getCurrentWordValue() {
+        return currentWordValue;
+    }
+
+    public String getCurrentWordCategoryCode() {
+        return currentWordCategoryCode;
     }
 }
 
