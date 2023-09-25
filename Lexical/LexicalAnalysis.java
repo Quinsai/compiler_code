@@ -29,6 +29,11 @@ public class LexicalAnalysis {
      */
     private int currentLine;
 
+    /**
+     * 词法分析器唯一单例
+     */
+    static LexicalAnalysis lexicalAnalysis;
+
     class LexicalTableItem {
         public String categoryCode;
         public String value;
@@ -47,13 +52,25 @@ public class LexicalAnalysis {
     /**
      * 词法分析器构造方法
      */
-    public LexicalAnalysis() {
+    private LexicalAnalysis() {
         String sourceCode = InputSourceCode.getSourceCode();
         this.source = sourceCode;
         this.sourceLength = sourceCode.length();
         this.currentIndex = 0;
         this.currentLine = 1;
         this.lexicalTable = new LinkedList<LexicalTableItem>();
+    }
+
+    static {
+        LexicalAnalysis.lexicalAnalysis = new LexicalAnalysis();
+    }
+
+    /**
+     * 获取词法分析器唯一单例
+     * @return
+     */
+    public static LexicalAnalysis getInstance() {
+        return LexicalAnalysis.lexicalAnalysis;
     }
 
     /**
