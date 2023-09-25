@@ -1,5 +1,6 @@
 import Input.InputSourceCode;
 import Lexical.LexicalAnalysis;
+import Syntactic.SyntacticAnalysis;
 
 /**
  * 编译器主类
@@ -11,6 +12,7 @@ public class Compiler {
 
         LexicalAnalysis lexicalAnalysis = new LexicalAnalysis();
         // 词法分析作业使用
-        // lexicalAnalysis.run();
+        lexicalAnalysis.run();
+        // SyntacticAnalysis syntacticAnalysis = new SyntacticAnalysis(lexicalAnalysis);
     }
 }

@@ -65,7 +65,6 @@ public class LexicalAnalysis {
                 break;
             }
         }
-        output();
     }
 
     /**
@@ -287,24 +286,22 @@ public class LexicalAnalysis {
     private void addIntoLexicalTable(String categoryCode, String value) {
         LexicalTableItem newItem = new LexicalTableItem(categoryCode, value);
         lexicalTable.add(newItem);
+        output(categoryCode, value);
     }
 
     /**
      * 输出分析结果
      */
-    private void output() {
+    private void output(String categoryCode, String value) {
         try {
 
             File outputFile = new File("./output.txt");
-            FileOutputStream fos = new FileOutputStream(outputFile);
+            FileOutputStream fos = new FileOutputStream(outputFile, true);
             OutputStreamWriter writer = new OutputStreamWriter(fos);
 
             int size = lexicalTable.size();
-            for (int i = 0; i < size; i++) {
-                String categoryCode = lexicalTable.get(i).categoryCode;
-                String value = lexicalTable.get(i).value;
-                writer.write(categoryCode + " " + value + "\n");
-            }
+
+            writer.append(categoryCode + " " + value + "\n");
 
             writer.close();
             fos.close();
