@@ -1,3 +1,4 @@
+import Input.InputSourceCode;
 import Lexical.LexicalAnalysis;
 
 /**
@@ -6,9 +7,9 @@ import Lexical.LexicalAnalysis;
 public class Compiler {
 
     public static void main(String[] args) {
-        String sourceCode = InputSourceCode.getSourceCode();
+        InputSourceCode.readSourceCode();
 
-        LexicalAnalysis lexicalAnalysis = new LexicalAnalysis(sourceCode);
+        LexicalAnalysis lexicalAnalysis = new LexicalAnalysis();
         // 词法分析作业使用
         // lexicalAnalysis.run();
     }

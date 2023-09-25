@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.LinkedList;
 
 import Error.HandleError;
+import Input.InputSourceCode;
 
 /**
  * 词法分析器类
@@ -45,9 +46,9 @@ public class LexicalAnalysis {
 
     /**
      * 词法分析器构造方法
-     * @param sourceCode 源代码
      */
-    public LexicalAnalysis(String sourceCode) {
+    public LexicalAnalysis() {
+        String sourceCode = InputSourceCode.getSourceCode();
         this.source = sourceCode;
         this.sourceLength = sourceCode.length();
         this.currentIndex = 0;

@@ -1,5 +1,6 @@
+package Input;
+
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 /**
@@ -8,10 +9,15 @@ import java.util.Scanner;
 public class InputSourceCode {
 
     /**
-     * 获取字符串形式的源代码
+     * 字符串形式的源代码
+     */
+    private static String sourceCode;
+
+    /**
+     * 读入源代码
      * @return 源代码
      */
-    public static String getSourceCode() {
+    public static void readSourceCode() {
 
         String sourceCodeString = "";
 
@@ -28,6 +34,14 @@ public class InputSourceCode {
             throw new RuntimeException(e);
         }
 
-        return sourceCodeString;
+        InputSourceCode.sourceCode = sourceCodeString;
+    }
+
+    /**
+     * 获得字符串形式的源代码
+     * @return
+     */
+    public static String getSourceCode() {
+        return sourceCode;
     }
 }
