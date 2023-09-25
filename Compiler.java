@@ -9,6 +9,7 @@ public class Compiler {
         String sourceCode = InputSourceCode.getSourceCode();
 
         LexicalAnalysis lexicalAnalysis = new LexicalAnalysis(sourceCode);
-        lexicalAnalysis.run();
+        // 词法分析作业使用
+        // lexicalAnalysis.run();
     }
 }
