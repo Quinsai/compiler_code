@@ -5,6 +5,8 @@ import java.util.LinkedList;
 
 import Error.HandleError;
 import Input.InputSourceCode;
+import Other.ParamResult;
+import Output.OutputIntoFile;
 
 /**
  * 词法分析器类
@@ -28,14 +30,6 @@ public class LexicalAnalysis {
      * 当前行号
      */
     private int currentLine;
-    /**
-     * 当前单词的值
-     */
-    private String currentWordValue;
-    /**
-     * 当前单词的类别码
-     */
-    private String currentWordCategoryCode;
 
     /**
      * 词法分析器唯一单例
@@ -86,32 +80,43 @@ public class LexicalAnalysis {
      */
     public void run(boolean whetherOutput) {
         while(true) {
-            if (next(whetherOutput) != 0) {
+
+            ParamResult<String> categoryCode = new ParamResult<>("");
+            ParamResult<String> value = new ParamResult<>("");
+
+            if (next(whetherOutput, categoryCode, value) != 0) {
                 break;
             }
+
+            if (categoryCode.whetherValid() && value.whetherValid()) {
+                System.out.println(categoryCode.getValue() + " " + value.getValue());
+            }
+
         }
     }
 
     /**
-     * 词法分析
+     * 读取下一个单词
      * @param whetherOutput 是否输出读取到的单词的类别码和值
-     * @return 0表示正常，-1表示结束，-2表示出错
+     * @param categoryCode 参数中的返回值，单词类别码
+     * @param value 参数中的返回值，单词值
+     * @return 0表示正常，-1表示读到源代码尾巴，-2表示出错
      */
-    public int next(boolean whetherOutput) {
+    public int next(boolean whetherOutput, ParamResult<String> categoryCode, ParamResult<String> value) {
         if (currentIndex >= sourceLength) {
-            return -1;
+            return LexicalAnalysisResult.END;
         }
 
         String token = ""; // 获取到的单词的值
         char c = source.charAt(currentIndex);
-        int res = 0;
+        int res = LexicalAnalysisResult.SUCCESS;
 
         if (c == ' ') {
-            res = 0;
+            res = LexicalAnalysisResult.SUCCESS;
         }
         else if (c == '\n') {
             currentLine ++;
-            res = 0;
+            res = LexicalAnalysisResult.SUCCESS;
         }
         else if (c == '_' || Character.isLetter(c)) {
             int tempIndex = currentIndex;
@@ -128,10 +133,16 @@ public class LexicalAnalysis {
             String type = ReserveWord.getReserveWord(token);
 
             if (!type.equals("NOT_RESERVE_WORD")) {
-                addIntoLexicalTable(type, token, whetherOutput);
+                storeWordResult(type, token, whetherOutput);
+                categoryCode.setValue(type);
+                value.setValue(token);
+                res = LexicalAnalysisResult.SUCCESS;
             }
             else {
-                addIntoLexicalTable("IDENFR", token, whetherOutput);
+                storeWordResult("IDENFR", token, whetherOutput);
+                categoryCode.setValue("IDENFR");
+                value.setValue(token);
+                res = LexicalAnalysisResult.SUCCESS;
             }
 
             currentIndex = tempIndex - 1;
@@ -150,7 +161,10 @@ public class LexicalAnalysis {
 
             currentIndex = tempIndex - 1;
 
-            addIntoLexicalTable("INTCON", token, whetherOutput);
+            storeWordResult("INTCON", token, whetherOutput);
+            res = LexicalAnalysisResult.SUCCESS;
+            categoryCode.setValue("INTCON");
+            value.setValue(token);
         }
         else if (c == '"') {
             int tempIndex = currentIndex + 1;
@@ -170,43 +184,72 @@ public class LexicalAnalysis {
 
             currentIndex = tempIndex;
 
-            addIntoLexicalTable("STRCON", token, whetherOutput);
+            storeWordResult("STRCON", token, whetherOutput);
+            res = LexicalAnalysisResult.SUCCESS;
+            categoryCode.setValue("STRCON");
+            value.setValue(token);
         }
         else if (c == '!') {
             if (currentIndex == sourceLength - 1 || source.charAt(currentIndex + 1) != '=') {
-                addIntoLexicalTable("NOT", "!", whetherOutput);
+                storeWordResult("NOT", "!", whetherOutput);
+                res = LexicalAnalysisResult.SUCCESS;
+                categoryCode.setValue("NOT");
+                value.setValue("!");
+            }
+            else if (currentIndex != sourceLength - 1 && source.charAt(currentIndex + 1) == '=') {
+                storeWordResult("NEQ", "!=", whetherOutput);
+                res = LexicalAnalysisResult.SUCCESS;
+                categoryCode.setValue("NEQ");
+                value.setValue("!=");
+                currentIndex ++;
             }
             else {
-                addIntoLexicalTable("NEQ", "!=", whetherOutput);
-                currentIndex ++;
+                res = LexicalAnalysisResult.ERROR;
             }
         }
         else if (c == '&') {
             if (currentIndex != sourceLength - 1 && source.charAt(currentIndex + 1) == '&') {
-                addIntoLexicalTable("AND", "&&", whetherOutput);
+                storeWordResult("AND", "&&", whetherOutput);
+                res = LexicalAnalysisResult.SUCCESS;
+                categoryCode.setValue("AND");
+                value.setValue("&&");
                 currentIndex ++;
             }
             else {
+                res = LexicalAnalysisResult.ERROR;
                 HandleError.lexicalError();
             }
         }
         else if (c == '|') {
             if (currentIndex != sourceLength - 1 && source.charAt(currentIndex + 1) == '|') {
-                addIntoLexicalTable("OR", "||", whetherOutput);
+                storeWordResult("OR", "||", whetherOutput);
+                res = LexicalAnalysisResult.SUCCESS;
+                categoryCode.setValue("OR");
+                value.setValue("||");
                 currentIndex ++;
             }
             else {
+                res = LexicalAnalysisResult.ERROR;
                 HandleError.lexicalError();
             }
         }
         else if (c == '+') {
-            addIntoLexicalTable("PLUS", "+", whetherOutput);
+            storeWordResult("PLUS", "+", whetherOutput);
+            res = LexicalAnalysisResult.SUCCESS;
+            categoryCode.setValue("PLUS");
+            value.setValue("+");
         }
         else if (c == '-') {
-            addIntoLexicalTable("MINU", "-", whetherOutput);
+            storeWordResult("MINU", "-", whetherOutput);
+            res = LexicalAnalysisResult.SUCCESS;
+            categoryCode.setValue("MINU");
+            value.setValue("-");
         }
         else if (c == '*') {
-            addIntoLexicalTable("MULT", "*", whetherOutput);
+            storeWordResult("MULT", "*", whetherOutput);
+            res = LexicalAnalysisResult.SUCCESS;
+            categoryCode.setValue("MULT");
+            value.setValue("*");
         }
         else if (c == '/') {
             if (currentIndex == sourceLength - 1) {
@@ -233,65 +276,114 @@ public class LexicalAnalysis {
                     currentIndex = tempIndex;
                 }
                 else {
-                    addIntoLexicalTable("DIV", "/", whetherOutput);
+                    storeWordResult("DIV", "/", whetherOutput);
+                    res = LexicalAnalysisResult.SUCCESS;
+                    categoryCode.setValue("DIV");
+                    value.setValue("/");
                 }
             }
         }
         else if (c == '%') {
-            addIntoLexicalTable("MOD", "%", whetherOutput);
+            storeWordResult("MOD", "%", whetherOutput);
+            res = LexicalAnalysisResult.SUCCESS;
+            categoryCode.setValue("MOD");
+            value.setValue("%");
         }
         else if (c == '<') {
             if (currentIndex != sourceLength - 1 && source.charAt(currentIndex + 1) == '=') {
-                addIntoLexicalTable("LEQ", "<=", whetherOutput);
+                storeWordResult("LEQ", "<=", whetherOutput);
+                res = LexicalAnalysisResult.SUCCESS;
+                categoryCode.setValue("LEQ");
+                value.setValue("<=");
                 currentIndex ++;
             }
             else {
-                addIntoLexicalTable("LSS", "<", whetherOutput);
+                storeWordResult("LSS", "<", whetherOutput);
+                res = LexicalAnalysisResult.SUCCESS;
+                categoryCode.setValue("LSS");
+                value.setValue("<");
             }
         }
         else if (c == '>') {
             if (currentIndex != sourceLength - 1 && source.charAt(currentIndex + 1) == '=') {
-                addIntoLexicalTable("GEQ", ">=", whetherOutput);
+                storeWordResult("GEQ", ">=", whetherOutput);
+                res = LexicalAnalysisResult.SUCCESS;
+                categoryCode.setValue("GEQ");
+                value.setValue(">=");
                 currentIndex ++;
             }
             else {
-                addIntoLexicalTable("GRE", ">", whetherOutput);
+                storeWordResult("GRE", ">", whetherOutput);
+                res = LexicalAnalysisResult.SUCCESS;
+                categoryCode.setValue("GRE");
+                value.setValue(">");
             }
         }
         else if (c == '=') {
             if (currentIndex != sourceLength - 1 && source.charAt(currentIndex + 1) == '=') {
-                addIntoLexicalTable("EQL", "==", whetherOutput);
+                storeWordResult("EQL", "==", whetherOutput);
+                res = LexicalAnalysisResult.SUCCESS;
+                categoryCode.setValue("EQL");
+                value.setValue("==");
                 currentIndex ++;
             }
             else {
-                addIntoLexicalTable("ASSIGN", "=", whetherOutput);
+                storeWordResult("ASSIGN", "=", whetherOutput);
+                res = LexicalAnalysisResult.SUCCESS;
+                categoryCode.setValue("ASSIGN");
+                value.setValue("=");
             }
         }
         else if (c == ';') {
-            addIntoLexicalTable("SEMICN", ";", whetherOutput);
+            storeWordResult("SEMICN", ";", whetherOutput);
+            res = LexicalAnalysisResult.SUCCESS;
+            categoryCode.setValue("SEMICN");
+            value.setValue(";");
         }
         else if (c == ',') {
-            addIntoLexicalTable("COMMA", ",", whetherOutput);
+            storeWordResult("COMMA", ",", whetherOutput);
+            res = LexicalAnalysisResult.SUCCESS;
+            categoryCode.setValue("COMMA");
+            value.setValue(",");
         }
         else if (c == '(') {
-            addIntoLexicalTable("LPARENT", "(", whetherOutput);
+            storeWordResult("LPARENT", "(", whetherOutput);
+            res = LexicalAnalysisResult.SUCCESS;
+            categoryCode.setValue("LPARENT");
+            value.setValue("(");
         }
         else if (c == ')') {
-            addIntoLexicalTable("RPARENT", ")", whetherOutput);
+            storeWordResult("RPARENT", ")", whetherOutput);
+            res = LexicalAnalysisResult.SUCCESS;
+            categoryCode.setValue("RPARENT");
+            value.setValue(")");
         }
         else if (c == '[') {
-            addIntoLexicalTable("LBRACK", "[", whetherOutput);
+            storeWordResult("LBRACK", "[", whetherOutput);
+            res = LexicalAnalysisResult.SUCCESS;
+            categoryCode.setValue("LBRACK");
+            value.setValue("[");
         }
         else if (c == ']') {
-            addIntoLexicalTable("RBRACK", "]", whetherOutput);
+            storeWordResult("RBRACK", "]", whetherOutput);
+            res = LexicalAnalysisResult.SUCCESS;
+            categoryCode.setValue("RBRACK");
+            value.setValue("]");
         }
         else if (c == '{') {
-            addIntoLexicalTable("LBRACE", "{", whetherOutput);
+            storeWordResult("LBRACE", "{", whetherOutput);
+            res = LexicalAnalysisResult.SUCCESS;
+            categoryCode.setValue("LBRACE");
+            value.setValue("{");
         }
         else if (c == '}') {
-            addIntoLexicalTable("RBRACE", "}", whetherOutput);
+            storeWordResult("RBRACE", "}", whetherOutput);
+            res = LexicalAnalysisResult.SUCCESS;
+            categoryCode.setValue("RBRACE");
+            value.setValue("}");
         }
         else {
+            res = LexicalAnalysisResult.ERROR;
             System.out.println("------------------");
             System.out.println(c);
             System.out.println("------------------");
@@ -305,16 +397,28 @@ public class LexicalAnalysis {
     }
 
     /**
-     * 添加到分析结果表中
+     * 偷看下一个单词
+     * 与next的区别是不改变currentIndex的值，也不输出
+     * @param categoryCode 参数中的返回值，单词类别码
+     * @param value 参数中的返回值，单词值
+     * @return 0表示正常，-1表示结束，-2表示出错
+     */
+    public int peek(ParamResult<String> categoryCode, ParamResult<String> value) {
+        int formerIndex = this.currentIndex;
+        int res = next(false, categoryCode, value);
+        this.currentIndex = formerIndex;
+        return res;
+    }
+
+    /**
+     * 存储分析的单词的结果
      * @param categoryCode 类别码
      * @param value 单词的值
      * @param whetherOutput 是否输出读取到的单词的类别码和值
      */
-    private void addIntoLexicalTable(String categoryCode, String value, boolean whetherOutput) {
+    private void storeWordResult(String categoryCode, String value, boolean whetherOutput) {
         LexicalTableItem newItem = new LexicalTableItem(categoryCode, value);
         lexicalTable.add(newItem);
-        this.currentWordValue = value;
-        this.currentWordCategoryCode = categoryCode;
         if (whetherOutput) {
             output(categoryCode, value);
         }
@@ -324,39 +428,8 @@ public class LexicalAnalysis {
      * 输出分析结果
      */
     private void output(String categoryCode, String value) {
-        try {
-
-            File outputFile = new File("./output.txt");
-            FileOutputStream fos = new FileOutputStream(outputFile, true);
-            OutputStreamWriter writer = new OutputStreamWriter(fos);
-
-            int size = lexicalTable.size();
-
-            writer.append(categoryCode + " " + value + "\n");
-
-            writer.close();
-            fos.close();
-
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        OutputIntoFile.appendToFile(categoryCode + " " + value + "\n", "output.txt");
     }
 
-    /**
-     * 获取next()调用后的单词的值
-     * @return
-     */
-    public String getCurrentWordValue() {
-        return currentWordValue;
-    }
-
-    /**
-     * 获取next()调用后的单词的类别码
-     * @return
-     */
-    public String getCurrentWordCategoryCode() {
-        return currentWordCategoryCode;
-    }
 }
 
