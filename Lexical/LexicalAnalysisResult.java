@@ -4,9 +4,9 @@ package Lexical;
  * 词法分析结果返回值
  */
 public class LexicalAnalysisResult {
-    public static int SUCCESS = 0;
-    public static int END = -1;
-    public static int ERROR = -2;
+    public static final int SUCCESS = 939;
+    public static final int END = 820;
+    public static final int ERROR = 191;
 
     private LexicalAnalysisResult() {
         return;

@@ -1,0 +1,11 @@
+CompUnit → {Decl} {FuncDef} MainFuncDef
+Decl → 'const' ... | 'int' ...
+FuncDef → 'void' ... | 'int' ... '('
+MainFuncDef → 'int' 'main' '('
+
+一次性偷看三个单词
+'const' ** ** -> Decl
+'void' ** ** -> FuncDef
+'int' 'main' '(' -> MainFuncDef
+'int' ** '(' -> FuncDef
+others -> Decl

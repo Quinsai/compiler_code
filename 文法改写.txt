@@ -1,0 +1,48 @@
+CompUnit → {Decl} {FuncDef} MainFuncDef
+Decl → ConstDecl | VarDecl
+ConstDecl → 'const' BType ConstDef { ',' ConstDef } ';'
+BType → 'int'
+ConstDef → Ident { '[' ConstExp ']' } '=' ConstInitVal
+ConstInitVal → ConstExp
+	| '{' ConstInitVal { ',' ConstInitVal } '}'
+	| '{' '}'
+VarDecl → BType VarDef { ',' VarDef } ';'
+VarDef → Ident { '[' ConstExp ']' }
+	| Ident { '[' ConstExp ']' } '=' InitVal
+InitVal → Exp 
+	| '{' InitVal { ',' InitVal } '}'
+	| '{' '}'
+FuncDef → FuncType Ident '(' [FuncFParams] ')' Block
+MainFuncDef → 'int' 'main' '(' ')' Block
+FuncType → 'void' | 'int'
+FuncFParams → FuncFParam { ',' FuncFParam }
+FuncFParam → BType Ident ['[' ']' { '[' ConstExp ']' }]
+Block → '{' { BlockItem } '}'
+BlockItem → Decl | Stmt
+Stmt → LVal '=' Exp ';'
+	| [Exp] ';'
+	| Block
+	| 'if' '(' Cond ')' Stmt [ 'else' Stmt ]
+	| 'for' '(' [ForStmt] ';' [Cond] ';' [ForStmt] ')' Stmt
+	| 'break' ';' 
+	| 'continue' ';'
+	| 'return' [Exp] ';'
+	| LVal '=' 'getint''('')'';'
+	| 'printf''('FormatString{','Exp}')'';'
+ForStmt → LVal '=' Exp
+Exp → AddExp
+Cond → LOrExp
+LVal → Ident {'[' Exp ']'}
+PrimaryExp → '(' Exp ')' | LVal | Number 
+Number → IntConst
+UnaryExp → PrimaryExp | Ident '(' [FuncRParams] ')'
+	| UnaryOp UnaryExp
+UnaryOp → '+' | '−' | '!'
+FuncRParams → Exp { ',' Exp }
+MulExp → UnaryExp { ('*' | '/' | '%') UnaryExp } 
+AddExp → MulExp { ('+' | '−') MulExp } 
+RelExp → AddExp { ('<' | '>' | '<=' | '>=') AddExp }
+EqExp → RelExp { ('==' | '!=') RelExp }
+LAndExp → EqExp { '&&' EqExp }
+LOrExp → LAndExp { '||' LAndExp }
+ConstExp → AddExp

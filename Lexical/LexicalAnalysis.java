@@ -84,7 +84,7 @@ public class LexicalAnalysis {
             ParamResult<String> categoryCode = new ParamResult<>("");
             ParamResult<String> value = new ParamResult<>("");
 
-            if (next(whetherOutput, categoryCode, value) != 0) {
+            if (next(whetherOutput, categoryCode, value) == LexicalAnalysisResult.END) {
                 break;
             }
 
@@ -111,14 +111,23 @@ public class LexicalAnalysis {
         char c = source.charAt(currentIndex);
         int res = LexicalAnalysisResult.SUCCESS;
 
-        if (c == ' ') {
-            res = LexicalAnalysisResult.SUCCESS;
+        while (true) {
+            if (c == ' ' || c == '\n') {
+                if (c == '\n') {
+                    currentLine ++;
+                }
+                currentIndex ++;
+                if (currentIndex >= sourceLength) {
+                    return LexicalAnalysisResult.END;
+                }
+                c = source.charAt(currentIndex);
+            }
+            else {
+                break;
+            }
         }
-        else if (c == '\n') {
-            currentLine ++;
-            res = LexicalAnalysisResult.SUCCESS;
-        }
-        else if (c == '_' || Character.isLetter(c)) {
+
+        if (c == '_' || Character.isLetter(c)) {
             int tempIndex = currentIndex;
 
             for (; tempIndex < sourceLength; tempIndex ++) {
@@ -389,7 +398,7 @@ public class LexicalAnalysis {
             System.out.println("------------------");
         }
 
-        if (res == 0) {
+        if (res == LexicalAnalysisResult.SUCCESS) {
             currentIndex ++;
         }
 
@@ -406,6 +415,26 @@ public class LexicalAnalysis {
     public int peek(ParamResult<String> categoryCode, ParamResult<String> value) {
         int formerIndex = this.currentIndex;
         int res = next(false, categoryCode, value);
+        this.currentIndex = formerIndex;
+        return res;
+    }
+
+    /**
+     * 批量偷看多个单词
+     * @param number 偷看的数目
+     * @param categoryCodeArray 参数中的返回值，单词类别码数组
+     * @param valueArray 参数中的返回值，单词值数组
+     * @return
+     */
+    public int peekMany(int number, ParamResult<String>[] categoryCodeArray, ParamResult<String>[] valueArray) {
+        int formerIndex = this.currentIndex;
+        int res = 0;
+        for (int i = 0; i < number; i ++) {
+            res = next(false, categoryCodeArray[i], valueArray[i]);
+            if (res != LexicalAnalysisResult.SUCCESS) {
+                return res;
+            }
+        }
         this.currentIndex = formerIndex;
         return res;
     }
