@@ -25,6 +25,7 @@ public class ConstInitVal extends SyntacticComponent {
 
     @Override
     public int analyze() {
+
         int res;
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
@@ -46,7 +47,7 @@ public class ConstInitVal extends SyntacticComponent {
             }
             else {
                 res = ConstInitVal.getInstance().analyze();
-                if (res != SyntacticAnalysisResult.ERROR) {
+                if (res != SyntacticAnalysisResult.SUCCESS) {
                     return SyntacticAnalysisResult.ERROR;
                 }
 

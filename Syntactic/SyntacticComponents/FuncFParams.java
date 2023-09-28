@@ -43,6 +43,7 @@ public class FuncFParams extends SyntacticComponent {
             if (!nextWordCategoryCode.getValue().equals("COMMA")) {
                 break;
             }
+            res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
 
             res = FuncFParam.getInstance().analyze();
             if (res != SyntacticAnalysisResult.SUCCESS) {

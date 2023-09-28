@@ -36,15 +36,9 @@ public class FuncType extends SyntacticComponent {
         if (res != LexicalAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }
-        if (!nextWordCategoryCode.getValue().equals("VOIDTK")) {
-            return SyntacticAnalysisResult.ERROR;
-        }
-
-        res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
-        if (res != LexicalAnalysisResult.SUCCESS) {
-            return SyntacticAnalysisResult.ERROR;
-        }
-        if (!nextWordCategoryCode.getValue().equals("INTTK")) {
+        if (!(nextWordCategoryCode.getValue().equals("VOIDTK")
+            || nextWordCategoryCode.getValue().equals("INTTK")
+        )) {
             return SyntacticAnalysisResult.ERROR;
         }
 

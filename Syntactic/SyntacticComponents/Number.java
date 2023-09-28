@@ -2,6 +2,7 @@ package Syntactic.SyntacticComponents;
 
 import Lexical.LexicalAnalysisResult;
 import Other.ParamResult;
+import Output.OutputIntoFile;
 import Syntactic.SyntacticAnalysisResult;
 
 public class Number extends SyntacticComponent {
@@ -37,6 +38,7 @@ public class Number extends SyntacticComponent {
             return SyntacticAnalysisResult.ERROR;
         }
 
+        OutputIntoFile.appendToFile("<Number>\n", "output.txt");
         return SyntacticAnalysisResult.SUCCESS;
     }
 }

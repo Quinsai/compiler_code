@@ -81,8 +81,8 @@ public class UnaryExp extends SyntacticComponent {
             }
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("PLUS")
-            || nextWordCategoryCode.getValue().equals("MINU")
-            || nextWordCategoryCode.getValue().equals("NOT")
+            || nextWordCategoryCodeArray[0].getValue().equals("MINU")
+            || nextWordCategoryCodeArray[0].getValue().equals("NOT")
         ) {
             res = UnaryOp.getInstance().analyze();
             if (res != SyntacticAnalysisResult.SUCCESS) {

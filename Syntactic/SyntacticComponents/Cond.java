@@ -1,5 +1,6 @@
 package Syntactic.SyntacticComponents;
 
+import Output.OutputIntoFile;
 import Syntactic.SyntacticAnalysisResult;
 
 public class Cond extends SyntacticComponent {
@@ -27,6 +28,7 @@ public class Cond extends SyntacticComponent {
         if (res != SyntacticAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }
+        OutputIntoFile.appendToFile("<Cond>\n", "output.txt");
         return SyntacticAnalysisResult.SUCCESS;
     }
 }

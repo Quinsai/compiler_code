@@ -48,7 +48,7 @@ public class ForStmt extends SyntacticComponent {
             return SyntacticAnalysisResult.ERROR;
         }
 
-        OutputIntoFile.appendToFile("<ForStmt>\n", "output");
+        OutputIntoFile.appendToFile("<ForStmt>\n", "output.txt");
         return SyntacticAnalysisResult.SUCCESS;
     }
 }

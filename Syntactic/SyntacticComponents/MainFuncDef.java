@@ -33,7 +33,6 @@ public class MainFuncDef extends SyntacticComponent {
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
         res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
-        System.out.println(nextWordCategoryCode.getValue());
         if (res != LexicalAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }

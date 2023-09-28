@@ -75,7 +75,7 @@ public class ConstDef extends SyntacticComponent {
             return SyntacticAnalysisResult.ERROR;
         }
 
-        OutputIntoFile.appendToFile("<ConstDef>\n", "output");
+        OutputIntoFile.appendToFile("<ConstDef>\n", "output.txt");
         return SyntacticAnalysisResult.SUCCESS;
     }
 }

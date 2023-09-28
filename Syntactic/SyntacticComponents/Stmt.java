@@ -200,6 +200,11 @@ public class Stmt extends SyntacticComponent {
             }
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("RETURNTK")) {
+
+            for (int i = 0; i < 2; i++) {
+                System.out.println(nextWordValueArray[i].getValue());
+            }
+
             res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
             if (res != LexicalAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
@@ -209,6 +214,7 @@ public class Stmt extends SyntacticComponent {
             }
 
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
+            // System.out.println(nextWordCategoryCode.getValue() + " " + res);
             if (res != LexicalAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }

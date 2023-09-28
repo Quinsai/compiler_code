@@ -1,5 +1,6 @@
 import Input.InputSourceCode;
 import Lexical.LexicalAnalysis;
+import Output.OutputIntoFile;
 import Syntactic.SyntacticAnalysis;
 
 /**
@@ -8,6 +9,7 @@ import Syntactic.SyntacticAnalysis;
 public class Compiler {
 
     public static void main(String[] args) {
+        OutputIntoFile.cleanFile("output.txt");
         InputSourceCode.readSourceCode();
 
         LexicalAnalysis lexicalAnalysis = LexicalAnalysis.getInstance();

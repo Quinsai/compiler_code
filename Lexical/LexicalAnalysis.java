@@ -112,7 +112,7 @@ public class LexicalAnalysis {
         int res = LexicalAnalysisResult.SUCCESS;
 
         while (true) {
-            if (c == ' ' || c == '\n') {
+            if (c == ' ' || c == '\n' || c == '\t') {
                 if (c == '\n') {
                     currentLine ++;
                 }
@@ -269,8 +269,9 @@ public class LexicalAnalysis {
                 if (nextC == '/') {
                     int tempIndex = currentIndex;
                     for (; tempIndex < sourceLength && source.charAt(tempIndex) != '\n'; tempIndex ++);
-                    currentIndex = tempIndex;
+                    currentIndex = tempIndex + 1;
                     currentLine ++;
+                    return next(whetherOutput, categoryCode, value);
                 }
                 else if (nextC == '*') {
                     int tempIndex = currentIndex + 1;
@@ -282,7 +283,8 @@ public class LexicalAnalysis {
                             currentLine ++;
                         }
                     }
-                    currentIndex = tempIndex;
+                    currentIndex = tempIndex + 1;
+                    return next(whetherOutput, categoryCode, value);
                 }
                 else {
                     storeWordResult("DIV", "/", whetherOutput);
@@ -395,6 +397,8 @@ public class LexicalAnalysis {
             res = LexicalAnalysisResult.ERROR;
             System.out.println("------------------");
             System.out.println(c);
+            System.out.println(currentIndex);
+            System.out.println(currentLine);
             System.out.println("------------------");
         }
 
@@ -431,10 +435,12 @@ public class LexicalAnalysis {
         int res = 0;
         for (int i = 0; i < number; i ++) {
             res = next(false, categoryCodeArray[i], valueArray[i]);
+            System.out.print(categoryCodeArray[i].getValue() + " ");
             if (res != LexicalAnalysisResult.SUCCESS) {
                 return res;
             }
         }
+        System.out.println();
         this.currentIndex = formerIndex;
         return res;
     }

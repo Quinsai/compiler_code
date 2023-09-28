@@ -28,4 +28,22 @@ public class OutputIntoFile {
             throw new RuntimeException(e);
         }
     }
+
+    public static void cleanFile(String filePath) {
+        try {
+
+            File outputFile = new File(filePath);
+            FileOutputStream fos = new FileOutputStream(outputFile);
+            OutputStreamWriter writer = new OutputStreamWriter(fos);
+
+            writer.write("");
+
+            writer.close();
+            fos.close();
+
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
