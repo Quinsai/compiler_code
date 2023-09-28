@@ -112,7 +112,7 @@ public class LexicalAnalysis {
         int res = LexicalAnalysisResult.SUCCESS;
 
         while (true) {
-            if (c == ' ' || c == '\n' || c == '\t') {
+            if (c <= ' ') {
                 if (c == '\n') {
                     currentLine ++;
                 }
@@ -263,6 +263,7 @@ public class LexicalAnalysis {
         else if (c == '/') {
             if (currentIndex == sourceLength - 1) {
                 HandleError.lexicalError();
+                res = LexicalAnalysisResult.ERROR;
             }
             else {
                 char nextC = source.charAt(currentIndex + 1);
@@ -395,11 +396,11 @@ public class LexicalAnalysis {
         }
         else {
             res = LexicalAnalysisResult.ERROR;
-            System.out.println("------------------");
-            System.out.println(c);
-            System.out.println(currentIndex);
-            System.out.println(currentLine);
-            System.out.println("------------------");
+//            System.out.println("------------------");
+//            System.out.println(c);
+//            System.out.println(currentIndex);
+//            System.out.println(currentLine);
+//            System.out.println("------------------");
         }
 
         if (res == LexicalAnalysisResult.SUCCESS) {
@@ -435,12 +436,10 @@ public class LexicalAnalysis {
         int res = 0;
         for (int i = 0; i < number; i ++) {
             res = next(false, categoryCodeArray[i], valueArray[i]);
-            System.out.print(categoryCodeArray[i].getValue() + " ");
             if (res != LexicalAnalysisResult.SUCCESS) {
                 return res;
             }
         }
-        System.out.println();
         this.currentIndex = formerIndex;
         return res;
     }

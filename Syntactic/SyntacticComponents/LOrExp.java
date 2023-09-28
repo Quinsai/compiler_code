@@ -39,8 +39,7 @@ public class LOrExp extends SyntacticComponent {
             if (res != LexicalAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
-            if (!(nextWordCategoryCode.getValue().equals("OR")
-            )) {
+            if (!nextWordCategoryCode.getValue().equals("OR")) {
                 break;
             }
             res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);

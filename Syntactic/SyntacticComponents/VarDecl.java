@@ -42,16 +42,14 @@ public class VarDecl extends SyntacticComponent {
 
         while (true) {
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
-
             if (res != LexicalAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
-
             if (!nextWordCategoryCode.getValue().equals("COMMA")) {
                 break;
             }
-
             res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+
             res = VarDef.getInstance().analyze();
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;

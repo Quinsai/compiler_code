@@ -1,3 +1,4 @@
+1，
 CompUnit → {Decl} {FuncDef} MainFuncDef
 Decl → 'const' ... | 'int' ...
 FuncDef → 'void' ... | 'int' ... '('
@@ -9,3 +10,8 @@ MainFuncDef → 'int' 'main' '('
 'int' 'main' '(' -> MainFuncDef
 'int' ** '(' -> FuncDef
 others -> Decl
+
+2，
+Stmt → LVal '=' Exp ';' 标识符开头
+	| Exp ';' 标识符， "+","-","!", Number，'('
+	| LVal '=' 'getint''('')'';' 标识符开头

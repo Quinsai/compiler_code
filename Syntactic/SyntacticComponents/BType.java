@@ -2,6 +2,7 @@ package Syntactic.SyntacticComponents;
 
 import Lexical.LexicalAnalysisResult;
 import Other.ParamResult;
+import Output.OutputIntoFile;
 import Syntactic.SyntacticAnalysisResult;
 
 public class BType extends SyntacticComponent {

@@ -200,11 +200,6 @@ public class Stmt extends SyntacticComponent {
             }
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("RETURNTK")) {
-
-            for (int i = 0; i < 2; i++) {
-                System.out.println(nextWordValueArray[i].getValue());
-            }
-
             res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
             if (res != LexicalAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
@@ -214,7 +209,6 @@ public class Stmt extends SyntacticComponent {
             }
 
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
-            // System.out.println(nextWordCategoryCode.getValue() + " " + res);
             if (res != LexicalAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
@@ -297,6 +291,7 @@ public class Stmt extends SyntacticComponent {
             }
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("IDENFR")) {
+            // TODO 疑似bug
             if (nextWordCategoryCodeArray[1].getValue().equals("ASSIGN") || nextWordCategoryCodeArray[1].getValue().equals("LBRACK")) {
                 res = LVal.getInstance().analyze();
                 if (res != SyntacticAnalysisResult.SUCCESS) {
@@ -362,6 +357,25 @@ public class Stmt extends SyntacticComponent {
                 if (res != SyntacticAnalysisResult.SUCCESS) {
                     return SyntacticAnalysisResult.ERROR;
                 }
+            }
+        }
+        else if (nextWordCategoryCodeArray[0].getValue().equals("PLUS")
+            || nextWordCategoryCodeArray[0].getValue().equals("MINU")
+            || nextWordCategoryCodeArray[0].getValue().equals("NOT")
+            || nextWordCategoryCodeArray[0].getValue().equals("LPARENT")
+            || nextWordCategoryCodeArray[0].getValue().equals("INTCON")
+        ) {
+            res = Exp.getInstance().analyze();
+            if (res != SyntacticAnalysisResult.SUCCESS) {
+                return SyntacticAnalysisResult.ERROR;
+            }
+
+            res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+            if (res != LexicalAnalysisResult.SUCCESS) {
+                return SyntacticAnalysisResult.ERROR;
+            }
+            if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
+                return SyntacticAnalysisResult.ERROR;
             }
         }
         else {

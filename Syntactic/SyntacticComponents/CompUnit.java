@@ -64,7 +64,7 @@ public class CompUnit extends SyntacticComponent {
             }
         }
         else {
-            return SyntacticAnalysisResult.ERROR;
+            return CompUnit.DECL;
         }
     }
 

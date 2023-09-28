@@ -59,8 +59,8 @@ public class ConstInitVal extends SyntacticComponent {
                     if (!nextWordCategoryCode.getValue().equals("COMMA")) {
                         break;
                     }
-
                     res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+
                     res = ConstInitVal.getInstance().analyze();
                     if (res == SyntacticAnalysisResult.ERROR) {
                         return SyntacticAnalysisResult.ERROR;
