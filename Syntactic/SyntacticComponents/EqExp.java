@@ -45,6 +45,7 @@ public class EqExp extends SyntacticComponent {
             )) {
                 break;
             }
+            OutputIntoFile.appendToFile("<EqExp>\n", "output.txt");
             res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
 
             res = RelExp.getInstance().analyze();

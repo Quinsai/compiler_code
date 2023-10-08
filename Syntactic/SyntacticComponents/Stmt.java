@@ -291,8 +291,8 @@ public class Stmt extends SyntacticComponent {
             }
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("IDENFR")) {
-            // TODO 疑似bug
-            if (nextWordCategoryCodeArray[1].getValue().equals("ASSIGN") || nextWordCategoryCodeArray[1].getValue().equals("LBRACK")) {
+            boolean hadAssignBeforeSemicn = lexicalAnalysis.haveAssignBeforeSemicn();
+            if (hadAssignBeforeSemicn) {
                 res = LVal.getInstance().analyze();
                 if (res != SyntacticAnalysisResult.SUCCESS) {
                     return SyntacticAnalysisResult.ERROR;
@@ -353,11 +353,159 @@ public class Stmt extends SyntacticComponent {
                 }
             }
             else {
+
                 res = Exp.getInstance().analyze();
                 if (res != SyntacticAnalysisResult.SUCCESS) {
                     return SyntacticAnalysisResult.ERROR;
                 }
+
+                res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+                if (res != LexicalAnalysisResult.SUCCESS) {
+                    return SyntacticAnalysisResult.ERROR;
+                }
+                if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
+                    return SyntacticAnalysisResult.ERROR;
+                }
             }
+            /*
+            如果我没猜错，问题可能就是出在这里
+            就是偷看的第二位是左方括号的情况
+             */
+//            if (nextWordCategoryCodeArray[1].getValue().equals("ASSIGN")) {
+//                res = LVal.getInstance().analyze();
+//                if (res != SyntacticAnalysisResult.SUCCESS) {
+//                    return SyntacticAnalysisResult.ERROR;
+//                }
+//
+//                res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+//                if (res != LexicalAnalysisResult.SUCCESS) {
+//                    return SyntacticAnalysisResult.ERROR;
+//                }
+//                if (!nextWordCategoryCode.getValue().equals("ASSIGN")) {
+//                    return SyntacticAnalysisResult.ERROR;
+//                }
+//
+//                res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
+//                if (res != LexicalAnalysisResult.SUCCESS) {
+//                    return SyntacticAnalysisResult.ERROR;
+//                }
+//                if (nextWordCategoryCode.getValue().equals("GETINTTK")) {
+//                    res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+//
+//                    res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+//                    if (res != LexicalAnalysisResult.SUCCESS) {
+//                        return SyntacticAnalysisResult.ERROR;
+//                    }
+//                    if (!nextWordCategoryCode.getValue().equals("LPARENT")) {
+//                        return SyntacticAnalysisResult.ERROR;
+//                    }
+//
+//                    res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+//                    if (res != LexicalAnalysisResult.SUCCESS) {
+//                        return SyntacticAnalysisResult.ERROR;
+//                    }
+//                    if (!nextWordCategoryCode.getValue().equals("RPARENT")) {
+//                        return SyntacticAnalysisResult.ERROR;
+//                    }
+//
+//                    res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+//                    if (res != LexicalAnalysisResult.SUCCESS) {
+//                        return SyntacticAnalysisResult.ERROR;
+//                    }
+//                    if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
+//                        return SyntacticAnalysisResult.ERROR;
+//                    }
+//                }
+//                else {
+//                    res = Exp.getInstance().analyze();
+//                    if (res != SyntacticAnalysisResult.SUCCESS) {
+//                        return SyntacticAnalysisResult.ERROR;
+//                    }
+//
+//                    res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+//                    if (res != LexicalAnalysisResult.SUCCESS) {
+//                        return SyntacticAnalysisResult.ERROR;
+//                    }
+//                    if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
+//                        return SyntacticAnalysisResult.ERROR;
+//                    }
+//                }
+//            }
+//            else if (nextWordCategoryCodeArray[1].getValue().equals("LBRACK")) {
+//                boolean hadAssignBeforeSemicn = lexicalAnalysis.haveAssignBeforeSemicn();
+//                if (hadAssignBeforeSemicn) {
+//                    res = LVal.getInstance().analyze();
+//                    if (res != SyntacticAnalysisResult.SUCCESS) {
+//                        return SyntacticAnalysisResult.ERROR;
+//                    }
+//
+//                    res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+//                    if (res != LexicalAnalysisResult.SUCCESS) {
+//                        return SyntacticAnalysisResult.ERROR;
+//                    }
+//                    if (!nextWordCategoryCode.getValue().equals("ASSIGN")) {
+//                        return SyntacticAnalysisResult.ERROR;
+//                    }
+//
+//                    res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
+//                    if (res != LexicalAnalysisResult.SUCCESS) {
+//                        return SyntacticAnalysisResult.ERROR;
+//                    }
+//                    if (nextWordCategoryCode.getValue().equals("GETINTTK")) {
+//                        res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+//
+//                        res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+//                        if (res != LexicalAnalysisResult.SUCCESS) {
+//                            return SyntacticAnalysisResult.ERROR;
+//                        }
+//                        if (!nextWordCategoryCode.getValue().equals("LPARENT")) {
+//                            return SyntacticAnalysisResult.ERROR;
+//                        }
+//
+//                        res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+//                        if (res != LexicalAnalysisResult.SUCCESS) {
+//                            return SyntacticAnalysisResult.ERROR;
+//                        }
+//                        if (!nextWordCategoryCode.getValue().equals("RPARENT")) {
+//                            return SyntacticAnalysisResult.ERROR;
+//                        }
+//
+//                        res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+//                        if (res != LexicalAnalysisResult.SUCCESS) {
+//                            return SyntacticAnalysisResult.ERROR;
+//                        }
+//                        if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
+//                            return SyntacticAnalysisResult.ERROR;
+//                        }
+//                    }
+//                    else {
+//                        res = Exp.getInstance().analyze();
+//                        if (res != SyntacticAnalysisResult.SUCCESS) {
+//                            return SyntacticAnalysisResult.ERROR;
+//                        }
+//
+//                        res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+//                        if (res != LexicalAnalysisResult.SUCCESS) {
+//                            return SyntacticAnalysisResult.ERROR;
+//                        }
+//                        if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
+//                            return SyntacticAnalysisResult.ERROR;
+//                        }
+//                    }
+//                }
+//                else {
+//                    res = Exp.getInstance().analyze();
+//                    if (res != SyntacticAnalysisResult.SUCCESS) {
+//                        return SyntacticAnalysisResult.ERROR;
+//                    }
+//                }
+//            }
+//            else {
+//                res = Exp.getInstance().analyze();
+//                if (res != SyntacticAnalysisResult.SUCCESS) {
+//                    return SyntacticAnalysisResult.ERROR;
+//                }
+//            }
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("PLUS")
             || nextWordCategoryCodeArray[0].getValue().equals("MINU")

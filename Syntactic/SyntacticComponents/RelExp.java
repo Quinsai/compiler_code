@@ -46,6 +46,7 @@ public class RelExp extends SyntacticComponent {
             )) {
                 break;
             }
+            OutputIntoFile.appendToFile("<RelExp>\n", "output.txt");
             res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
 
             res = AddExp.getInstance().analyze();

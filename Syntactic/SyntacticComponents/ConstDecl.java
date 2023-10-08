@@ -56,8 +56,8 @@ public class ConstDecl extends SyntacticComponent {
             if (!nextWordCategoryCode.getValue().equals("COMMA")) {
                 break;
             }
-
             res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+
             res = ConstDef.getInstance().analyze();
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;

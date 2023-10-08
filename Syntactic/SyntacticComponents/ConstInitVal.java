@@ -81,7 +81,6 @@ public class ConstInitVal extends SyntacticComponent {
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
-            return SyntacticAnalysisResult.SUCCESS;
         }
 
         OutputIntoFile.appendToFile("<ConstInitVal>\n", "output.txt");

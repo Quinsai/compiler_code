@@ -12,9 +12,10 @@ public class Compiler {
         OutputIntoFile.cleanFile("output.txt");
         InputSourceCode.readSourceCode();
 
-        LexicalAnalysis lexicalAnalysis = LexicalAnalysis.getInstance();
 //        词法分析作业使用
+//        LexicalAnalysis lexicalAnalysis = LexicalAnalysis.getInstance();
 //        lexicalAnalysis.run(true);
+
         SyntacticAnalysis syntacticAnalysis = SyntacticAnalysis.getInstance();
         syntacticAnalysis.run();
     }

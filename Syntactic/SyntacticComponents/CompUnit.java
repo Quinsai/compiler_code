@@ -107,7 +107,7 @@ public class CompUnit extends SyntacticComponent {
             return res;
         }
 
-        OutputIntoFile.appendToFile("<CompUnit>\n", "output.txt");
+        OutputIntoFile.appendToFile("<CompUnit>", "output.txt");
         return SyntacticAnalysisResult.SUCCESS;
 
     }

@@ -109,10 +109,10 @@ public class LexicalAnalysis {
 
         String token = ""; // 获取到的单词的值
         char c = source.charAt(currentIndex);
-        int res = LexicalAnalysisResult.SUCCESS;
+        int res = 0;
 
         while (true) {
-            if (c <= ' ') {
+            if (c == ' ' || c == '\n' || c == '\t') {
                 if (c == '\n') {
                     currentLine ++;
                 }
@@ -415,7 +415,6 @@ public class LexicalAnalysis {
      * 与next的区别是不改变currentIndex的值，也不输出
      * @param categoryCode 参数中的返回值，单词类别码
      * @param value 参数中的返回值，单词值
-     * @return 0表示正常，-1表示结束，-2表示出错
      */
     public int peek(ParamResult<String> categoryCode, ParamResult<String> value) {
         int formerIndex = this.currentIndex;
@@ -429,7 +428,6 @@ public class LexicalAnalysis {
      * @param number 偷看的数目
      * @param categoryCodeArray 参数中的返回值，单词类别码数组
      * @param valueArray 参数中的返回值，单词值数组
-     * @return
      */
     public int peekMany(int number, ParamResult<String>[] categoryCodeArray, ParamResult<String>[] valueArray) {
         int formerIndex = this.currentIndex;
@@ -441,6 +439,27 @@ public class LexicalAnalysis {
             }
         }
         this.currentIndex = formerIndex;
+        return res;
+    }
+
+    public boolean haveAssignBeforeSemicn() {
+        boolean res = false;
+        int formalIndex = this.currentIndex;
+
+        while (true) {
+            ParamResult<String> categoryCode = new ParamResult<>("");
+            ParamResult<String> value = new ParamResult<>("");
+            next(false, categoryCode, value);
+            if (categoryCode.getValue().equals("ASSIGN")) {
+                res = true;
+                break;
+            }
+            if (categoryCode.getValue().equals("SEMICN")) {
+                break;
+            }
+        }
+
+        this.currentIndex = formalIndex;
         return res;
     }
 

@@ -46,6 +46,7 @@ public class MulExp extends SyntacticComponent {
             )) {
                 break;
             }
+            OutputIntoFile.appendToFile("<MulExp>\n", "output.txt");
             res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
 
             res = UnaryExp.getInstance().analyze();

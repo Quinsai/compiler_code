@@ -44,6 +44,7 @@ public class LAndExp extends SyntacticComponent {
             )) {
                 break;
             }
+            OutputIntoFile.appendToFile("<LAndExp>\n", "output.txt");
             res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
 
             res = EqExp.getInstance().analyze();

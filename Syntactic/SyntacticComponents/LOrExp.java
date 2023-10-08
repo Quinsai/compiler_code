@@ -42,6 +42,7 @@ public class LOrExp extends SyntacticComponent {
             if (!nextWordCategoryCode.getValue().equals("OR")) {
                 break;
             }
+            OutputIntoFile.appendToFile("<LOrExp>\n", "output.txt");
             res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
 
             res = LAndExp.getInstance().analyze();
