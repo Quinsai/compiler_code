@@ -418,8 +418,10 @@ public class LexicalAnalysis {
      */
     public int peek(ParamResult<String> categoryCode, ParamResult<String> value) {
         int formerIndex = this.currentIndex;
+        int formerLine = this.currentLine;
         int res = next(false, categoryCode, value);
         this.currentIndex = formerIndex;
+        this.currentLine = formerLine;
         return res;
     }
 
@@ -431,6 +433,7 @@ public class LexicalAnalysis {
      */
     public int peekMany(int number, ParamResult<String>[] categoryCodeArray, ParamResult<String>[] valueArray) {
         int formerIndex = this.currentIndex;
+        int formerLine = this.currentLine;
         int res = 0;
         for (int i = 0; i < number; i ++) {
             res = next(false, categoryCodeArray[i], valueArray[i]);
@@ -439,12 +442,14 @@ public class LexicalAnalysis {
             }
         }
         this.currentIndex = formerIndex;
+        this.currentLine = formerLine;
         return res;
     }
 
     public boolean haveAssignBeforeSemicn() {
         boolean res = false;
-        int formalIndex = this.currentIndex;
+        int formerIndex = this.currentIndex;
+        int formerLine = this.currentLine;
 
         while (true) {
             ParamResult<String> categoryCode = new ParamResult<>("");
@@ -459,7 +464,8 @@ public class LexicalAnalysis {
             }
         }
 
-        this.currentIndex = formalIndex;
+        this.currentIndex = formerIndex;
+        this.currentLine = formerLine;
         return res;
     }
 
