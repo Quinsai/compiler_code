@@ -24,7 +24,7 @@ public class ConstInitVal extends SyntacticComponent {
     }
 
     @Override
-    public int analyze() {
+    public int analyze(boolean whetherOutput) {
 
         int res;
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
@@ -36,17 +36,17 @@ public class ConstInitVal extends SyntacticComponent {
         }
         if (nextWordCategoryCode.getValue().equals("LBRACE")) {
 
-            res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
             if (res != LexicalAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
             if (nextWordCategoryCode.getValue().equals("RBRACE")) {
-                res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+                res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
             }
             else {
-                res = ConstInitVal.getInstance().analyze();
+                res = ConstInitVal.getInstance().analyze(whetherOutput);
                 if (res != SyntacticAnalysisResult.SUCCESS) {
                     return SyntacticAnalysisResult.ERROR;
                 }
@@ -59,15 +59,15 @@ public class ConstInitVal extends SyntacticComponent {
                     if (!nextWordCategoryCode.getValue().equals("COMMA")) {
                         break;
                     }
-                    res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+                    res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
-                    res = ConstInitVal.getInstance().analyze();
+                    res = ConstInitVal.getInstance().analyze(whetherOutput);
                     if (res == SyntacticAnalysisResult.ERROR) {
                         return SyntacticAnalysisResult.ERROR;
                     }
                 }
 
-                res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+                res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
                 if (res != LexicalAnalysisResult.SUCCESS) {
                     return SyntacticAnalysisResult.ERROR;
                 }
@@ -77,13 +77,15 @@ public class ConstInitVal extends SyntacticComponent {
             }
         }
         else {
-            res = ConstExp.getInstance().analyze();
+            res = ConstExp.getInstance().analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
         }
 
-        OutputIntoFile.appendToFile("<ConstInitVal>\n", "output.txt");
+        if (whetherOutput) {
+            OutputIntoFile.appendToFile("<ConstInitVal>\n", "output.txt");
+        }
         return SyntacticAnalysisResult.SUCCESS;
     }
 }

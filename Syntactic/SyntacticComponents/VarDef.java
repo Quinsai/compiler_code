@@ -24,12 +24,12 @@ public class VarDef extends SyntacticComponent {
     }
 
     @Override
-    public int analyze() {
+    public int analyze(boolean whetherOutput) {
         int res = 0;
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
-        res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+        res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
         if (res != LexicalAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }
@@ -45,14 +45,14 @@ public class VarDef extends SyntacticComponent {
             if (!nextWordCategoryCode.getValue().equals("LBRACK")) {
                 break;
             }
-            res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
-            res = ConstExp.getInstance().analyze();
+            res = ConstExp.getInstance().analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
 
-            res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
             if (res != LexicalAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
@@ -66,15 +66,17 @@ public class VarDef extends SyntacticComponent {
             return SyntacticAnalysisResult.ERROR;
         }
         if (nextWordCategoryCode.getValue().equals("ASSIGN")) {
-            res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
-            res = InitVal.getInstance().analyze();
+            res = InitVal.getInstance().analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
         }
 
-        OutputIntoFile.appendToFile("<VarDef>\n", "output.txt");
+        if (whetherOutput) {
+            OutputIntoFile.appendToFile("<VarDef>\n", "output.txt");
+        }
         return SyntacticAnalysisResult.SUCCESS;
     }
 }

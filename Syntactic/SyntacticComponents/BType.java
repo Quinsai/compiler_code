@@ -25,12 +25,12 @@ public class BType extends SyntacticComponent {
     }
 
     @Override
-    public int analyze() {
+    public int analyze(boolean whetherOutput) {
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
         int res;
 
-        res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+        res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
         if (res != LexicalAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;

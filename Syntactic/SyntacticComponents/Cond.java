@@ -23,12 +23,14 @@ public class Cond extends SyntacticComponent {
     }
 
     @Override
-    public int analyze() {
-        int res = LOrExp.getInstance().analyze();
+    public int analyze(boolean whetherOutput) {
+        int res = LOrExp.getInstance().analyze(whetherOutput);
         if (res != SyntacticAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }
-        OutputIntoFile.appendToFile("<Cond>\n", "output.txt");
+        if (whetherOutput) {
+            OutputIntoFile.appendToFile("<Cond>\n", "output.txt");
+        }
         return SyntacticAnalysisResult.SUCCESS;
     }
 }

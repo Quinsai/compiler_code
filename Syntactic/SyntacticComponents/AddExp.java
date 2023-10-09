@@ -24,12 +24,12 @@ public class AddExp extends SyntacticComponent {
     }
 
     @Override
-    public int analyze() {
+    public int analyze(boolean whetherOutput) {
         int res = 0;
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
-        res = MulExp.getInstance().analyze();
+        res = MulExp.getInstance().analyze(whetherOutput);
         if (res != SyntacticAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }
@@ -44,16 +44,20 @@ public class AddExp extends SyntacticComponent {
             )) {
                 break;
             }
-            OutputIntoFile.appendToFile("<AddExp>\n", "output.txt");
-            res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+            if (whetherOutput) {
+                OutputIntoFile.appendToFile("<AddExp>\n", "output.txt");
+            }
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
-            res = MulExp.getInstance().analyze();
+            res = MulExp.getInstance().analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
         }
 
-        OutputIntoFile.appendToFile("<AddExp>\n", "output.txt");
+        if (whetherOutput) {
+            OutputIntoFile.appendToFile("<AddExp>\n", "output.txt");
+        }
         return SyntacticAnalysisResult.SUCCESS;
     }
 }

@@ -27,7 +27,7 @@ public class Decl extends SyntacticComponent {
     }
 
     @Override
-    public int analyze() {
+    public int analyze(boolean whetherOutput) {
         int res = 0;
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
@@ -38,10 +38,10 @@ public class Decl extends SyntacticComponent {
         }
         String categoryCode = nextWordCategoryCode.getValue();
         if (categoryCode.equals("CONSTTK")) {
-            res = ConstDecl.getInstance().analyze();
+            res = ConstDecl.getInstance().analyze(whetherOutput);
         }
         else if (categoryCode.equals("INTTK")) {
-            res = VarDecl.getInstance().analyze();
+            res = VarDecl.getInstance().analyze(whetherOutput);
         }
         else {
             res = SyntacticAnalysisResult.ERROR;

@@ -27,7 +27,7 @@ public class UnaryExp extends SyntacticComponent {
     }
 
     @Override
-    public int analyze() {
+    public int analyze(boolean whetherOutput) {
         int res = 0;
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
@@ -44,28 +44,28 @@ public class UnaryExp extends SyntacticComponent {
             return LexicalAnalysisResult.ERROR;
         }
         if (nextWordCategoryCodeArray[0].getValue().equals("LPARENT")) {
-            res = PrimaryExp.getInstance().analyze();
+            res = PrimaryExp.getInstance().analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("IDENFR")) {
             if (nextWordCategoryCodeArray[1].getValue().equals("LPARENT")) {
-                res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
-                res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+                res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+                res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
                 res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
                 if (res != LexicalAnalysisResult.SUCCESS) {
                     return SyntacticAnalysisResult.ERROR;
                 }
                 if (!nextWordCategoryCode.getValue().equals("RPARENT")) {
-                    res = FuncRParams.getInstance().analyze();
+                    res = FuncRParams.getInstance().analyze(whetherOutput);
                     if (res != SyntacticAnalysisResult.SUCCESS) {
                         return SyntacticAnalysisResult.ERROR;
                     }
                 }
 
-                res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+                res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
                 if (res != LexicalAnalysisResult.SUCCESS) {
                     return SyntacticAnalysisResult.ERROR;
                 }
@@ -74,7 +74,7 @@ public class UnaryExp extends SyntacticComponent {
                 }
             }
             else {
-                res = PrimaryExp.getInstance().analyze();
+                res = PrimaryExp.getInstance().analyze(whetherOutput);
                 if (res != SyntacticAnalysisResult.SUCCESS) {
                     return SyntacticAnalysisResult.ERROR;
                 }
@@ -84,18 +84,18 @@ public class UnaryExp extends SyntacticComponent {
             || nextWordCategoryCodeArray[0].getValue().equals("MINU")
             || nextWordCategoryCodeArray[0].getValue().equals("NOT")
         ) {
-            res = UnaryOp.getInstance().analyze();
+            res = UnaryOp.getInstance().analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
 
-            res = UnaryExp.getInstance().analyze();
+            res = UnaryExp.getInstance().analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("INTCON")) {
-            res = PrimaryExp.getInstance().analyze();
+            res = PrimaryExp.getInstance().analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
@@ -104,7 +104,9 @@ public class UnaryExp extends SyntacticComponent {
             return SyntacticAnalysisResult.ERROR;
         }
 
-        OutputIntoFile.appendToFile("<UnaryExp>\n", "output.txt");
+        if (whetherOutput) {
+            OutputIntoFile.appendToFile("<UnaryExp>\n", "output.txt");
+        }
         return SyntacticAnalysisResult.SUCCESS;
     }
 }

@@ -27,12 +27,12 @@ public class FuncType extends SyntacticComponent {
     }
 
     @Override
-    public int analyze() {
+    public int analyze(boolean whetherOutput) {
         int res = 0;
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
-        res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+        res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
         if (res != LexicalAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }
@@ -42,7 +42,9 @@ public class FuncType extends SyntacticComponent {
             return SyntacticAnalysisResult.ERROR;
         }
 
-        OutputIntoFile.appendToFile("<FuncType>\n", "output.txt");
+        if (whetherOutput) {
+            OutputIntoFile.appendToFile("<FuncType>\n", "output.txt");
+        }
         return SyntacticAnalysisResult.SUCCESS;
     }
 }

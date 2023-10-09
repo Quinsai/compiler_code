@@ -24,7 +24,7 @@ public class InitVal extends SyntacticComponent {
     }
 
     @Override
-    public int analyze() {
+    public int analyze(boolean whetherOutput) {
         int res = 0;
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
@@ -34,23 +34,23 @@ public class InitVal extends SyntacticComponent {
             return SyntacticAnalysisResult.ERROR;
         }
         if (!nextWordCategoryCode.getValue().equals("LBRACE")) {
-            res = Exp.getInstance().analyze();
+            res = Exp.getInstance().analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
         }
         else {
-            res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
             if (res != LexicalAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
             if (nextWordCategoryCode.getValue().equals("RBRACE")) {
-                res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+                res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
             }
             else {
-                res = InitVal.getInstance().analyze();
+                res = InitVal.getInstance().analyze(whetherOutput);
                 if (res != SyntacticAnalysisResult.SUCCESS) {
                     return SyntacticAnalysisResult.ERROR;
                 }
@@ -63,15 +63,15 @@ public class InitVal extends SyntacticComponent {
                     if (!nextWordCategoryCode.getValue().equals("COMMA")) {
                         break;
                     }
-                    res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+                    res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
-                    res = InitVal.getInstance().analyze();
+                    res = InitVal.getInstance().analyze(whetherOutput);
                     if (res != SyntacticAnalysisResult.SUCCESS) {
                         return SyntacticAnalysisResult.ERROR;
                     }
                 }
 
-                res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+                res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
                 if (res != LexicalAnalysisResult.SUCCESS) {
                     return SyntacticAnalysisResult.ERROR;
                 }
@@ -81,7 +81,9 @@ public class InitVal extends SyntacticComponent {
             }
         }
 
-        OutputIntoFile.appendToFile("<InitVal>\n", "output.txt");
+        if (whetherOutput) {
+            OutputIntoFile.appendToFile("<InitVal>\n", "output.txt");
+        }
         return SyntacticAnalysisResult.SUCCESS;
     }
 }

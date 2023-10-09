@@ -25,7 +25,7 @@ public class Stmt extends SyntacticComponent {
     }
 
     @Override
-    public int analyze() {
+    public int analyze(boolean whetherOutput) {
         int res = 0;
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
@@ -41,8 +41,10 @@ public class Stmt extends SyntacticComponent {
             return SyntacticAnalysisResult.ERROR;
         }
         if (nextWordCategoryCode.getValue().equals("SEMICN")) {
-            res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
-            OutputIntoFile.appendToFile("<Stmt>\n", "output.txt");
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+            if (whetherOutput) {
+                OutputIntoFile.appendToFile("<Stmt>\n", "output.txt");
+            }
             return SyntacticAnalysisResult.SUCCESS;
         }
 
@@ -51,9 +53,9 @@ public class Stmt extends SyntacticComponent {
             return SyntacticAnalysisResult.ERROR;
         }
         if (nextWordCategoryCodeArray[0].getValue().equals("IFTK")) {
-            res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
-            res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
             if (res != LexicalAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
@@ -61,12 +63,12 @@ public class Stmt extends SyntacticComponent {
                 return SyntacticAnalysisResult.ERROR;
             }
 
-            res = Cond.getInstance().analyze();
+            res = Cond.getInstance().analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
 
-            res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
             if (res != LexicalAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
@@ -74,7 +76,7 @@ public class Stmt extends SyntacticComponent {
                 return SyntacticAnalysisResult.ERROR;
             }
 
-            res = Stmt.getInstance().analyze();
+            res = Stmt.getInstance().analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
@@ -84,18 +86,18 @@ public class Stmt extends SyntacticComponent {
                 return SyntacticAnalysisResult.ERROR;
             }
             if (nextWordCategoryCode.getValue().equals("ELSETK")) {
-                res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+                res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
-                res = Stmt.getInstance().analyze();
+                res = Stmt.getInstance().analyze(whetherOutput);
                 if (res != SyntacticAnalysisResult.SUCCESS) {
                     return SyntacticAnalysisResult.ERROR;
                 }
             }
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("FORTK")) {
-            res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
-            res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
             if (res != LexicalAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
@@ -108,13 +110,13 @@ public class Stmt extends SyntacticComponent {
                 return SyntacticAnalysisResult.ERROR;
             }
             if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
-                res = ForStmt.getInstance().analyze();
+                res = ForStmt.getInstance().analyze(whetherOutput);
                 if (res != SyntacticAnalysisResult.SUCCESS) {
                     return SyntacticAnalysisResult.ERROR;
                 }
             }
 
-            res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
             if (res != LexicalAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
@@ -127,13 +129,13 @@ public class Stmt extends SyntacticComponent {
                 return SyntacticAnalysisResult.ERROR;
             }
             if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
-                res = Cond.getInstance().analyze();
+                res = Cond.getInstance().analyze(whetherOutput);
                 if (res != SyntacticAnalysisResult.SUCCESS) {
                     return SyntacticAnalysisResult.ERROR;
                 }
             }
 
-            res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
             if (res != LexicalAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
@@ -146,13 +148,13 @@ public class Stmt extends SyntacticComponent {
                 return SyntacticAnalysisResult.ERROR;
             }
             if (!nextWordCategoryCode.getValue().equals("RPARENT")) {
-                res = ForStmt.getInstance().analyze();
+                res = ForStmt.getInstance().analyze(whetherOutput);
                 if (res != SyntacticAnalysisResult.SUCCESS) {
                     return SyntacticAnalysisResult.ERROR;
                 }
             }
 
-            res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
             if (res != LexicalAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
@@ -160,13 +162,13 @@ public class Stmt extends SyntacticComponent {
                 return SyntacticAnalysisResult.ERROR;
             }
 
-            res = Stmt.getInstance().analyze();
+            res = Stmt.getInstance().analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("BREAKTK")) {
-            res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
             if (res != LexicalAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
@@ -174,7 +176,7 @@ public class Stmt extends SyntacticComponent {
                 return SyntacticAnalysisResult.ERROR;
             }
 
-            res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
             if (res != LexicalAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
@@ -183,7 +185,7 @@ public class Stmt extends SyntacticComponent {
             }
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("CONTINUETK")) {
-            res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
             if (res != LexicalAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
@@ -191,7 +193,7 @@ public class Stmt extends SyntacticComponent {
                 return SyntacticAnalysisResult.ERROR;
             }
 
-            res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
             if (res != LexicalAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
@@ -200,7 +202,7 @@ public class Stmt extends SyntacticComponent {
             }
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("RETURNTK")) {
-            res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
             if (res != LexicalAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
@@ -213,13 +215,13 @@ public class Stmt extends SyntacticComponent {
                 return SyntacticAnalysisResult.ERROR;
             }
             if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
-                res = Exp.getInstance().analyze();
+                res = Exp.getInstance().analyze(whetherOutput);
                 if (res != SyntacticAnalysisResult.SUCCESS) {
                     return SyntacticAnalysisResult.ERROR;
                 }
             }
 
-            res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
             if (res != LexicalAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
@@ -228,7 +230,7 @@ public class Stmt extends SyntacticComponent {
             }
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("PRINTFTK")) {
-            res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
             if (res != LexicalAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
@@ -236,7 +238,7 @@ public class Stmt extends SyntacticComponent {
                 return SyntacticAnalysisResult.ERROR;
             }
 
-            res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
             if (res != LexicalAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
@@ -244,7 +246,7 @@ public class Stmt extends SyntacticComponent {
                 return SyntacticAnalysisResult.ERROR;
             }
 
-            res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
             if (res != LexicalAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
@@ -260,15 +262,15 @@ public class Stmt extends SyntacticComponent {
                 if (!nextWordCategoryCode.getValue().equals("COMMA")) {
                     break;
                 }
-                res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+                res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
-                res = Exp.getInstance().analyze();
+                res = Exp.getInstance().analyze(whetherOutput);
                 if (res != SyntacticAnalysisResult.SUCCESS) {
                     return SyntacticAnalysisResult.ERROR;
                 }
             }
 
-            res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
             if (res != LexicalAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
@@ -276,7 +278,7 @@ public class Stmt extends SyntacticComponent {
                 return SyntacticAnalysisResult.ERROR;
             }
 
-            res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
             if (res != LexicalAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
@@ -285,7 +287,7 @@ public class Stmt extends SyntacticComponent {
             }
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("LBRACE")) {
-            res = Block.getInstance().analyze();
+            res = Block.getInstance().analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
@@ -293,12 +295,12 @@ public class Stmt extends SyntacticComponent {
         else if (nextWordCategoryCodeArray[0].getValue().equals("IDENFR")) {
             boolean hadAssignBeforeSemicn = lexicalAnalysis.haveAssignBeforeSemicn();
             if (hadAssignBeforeSemicn) {
-                res = LVal.getInstance().analyze();
+                res = LVal.getInstance().analyze(whetherOutput);
                 if (res != SyntacticAnalysisResult.SUCCESS) {
                     return SyntacticAnalysisResult.ERROR;
                 }
 
-                res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+                res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
                 if (res != LexicalAnalysisResult.SUCCESS) {
                     return SyntacticAnalysisResult.ERROR;
                 }
@@ -311,9 +313,9 @@ public class Stmt extends SyntacticComponent {
                     return SyntacticAnalysisResult.ERROR;
                 }
                 if (nextWordCategoryCode.getValue().equals("GETINTTK")) {
-                    res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+                    res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
-                    res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+                    res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
                     if (res != LexicalAnalysisResult.SUCCESS) {
                         return SyntacticAnalysisResult.ERROR;
                     }
@@ -321,7 +323,7 @@ public class Stmt extends SyntacticComponent {
                         return SyntacticAnalysisResult.ERROR;
                     }
 
-                    res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+                    res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
                     if (res != LexicalAnalysisResult.SUCCESS) {
                         return SyntacticAnalysisResult.ERROR;
                     }
@@ -329,7 +331,7 @@ public class Stmt extends SyntacticComponent {
                         return SyntacticAnalysisResult.ERROR;
                     }
 
-                    res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+                    res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
                     if (res != LexicalAnalysisResult.SUCCESS) {
                         return SyntacticAnalysisResult.ERROR;
                     }
@@ -338,12 +340,12 @@ public class Stmt extends SyntacticComponent {
                     }
                 }
                 else {
-                    res = Exp.getInstance().analyze();
+                    res = Exp.getInstance().analyze(whetherOutput);
                     if (res != SyntacticAnalysisResult.SUCCESS) {
                         return SyntacticAnalysisResult.ERROR;
                     }
 
-                    res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+                    res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
                     if (res != LexicalAnalysisResult.SUCCESS) {
                         return SyntacticAnalysisResult.ERROR;
                     }
@@ -354,12 +356,12 @@ public class Stmt extends SyntacticComponent {
             }
             else {
 
-                res = Exp.getInstance().analyze();
+                res = Exp.getInstance().analyze(whetherOutput);
                 if (res != SyntacticAnalysisResult.SUCCESS) {
                     return SyntacticAnalysisResult.ERROR;
                 }
 
-                res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+                res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
                 if (res != LexicalAnalysisResult.SUCCESS) {
                     return SyntacticAnalysisResult.ERROR;
                 }
@@ -513,12 +515,12 @@ public class Stmt extends SyntacticComponent {
             || nextWordCategoryCodeArray[0].getValue().equals("LPARENT")
             || nextWordCategoryCodeArray[0].getValue().equals("INTCON")
         ) {
-            res = Exp.getInstance().analyze();
+            res = Exp.getInstance().analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
 
-            res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
             if (res != LexicalAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
@@ -530,7 +532,9 @@ public class Stmt extends SyntacticComponent {
             return SyntacticAnalysisResult.ERROR;
         }
 
-        OutputIntoFile.appendToFile("<Stmt>\n", "output.txt");
+        if (whetherOutput) {
+            OutputIntoFile.appendToFile("<Stmt>\n", "output.txt");
+        }
         return SyntacticAnalysisResult.SUCCESS;
     }
 }

@@ -24,12 +24,12 @@ public class RelExp extends SyntacticComponent {
     }
 
     @Override
-    public int analyze() {
+    public int analyze(boolean whetherOutput) {
         int res = 0;
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
-        res = AddExp.getInstance().analyze();
+        res = AddExp.getInstance().analyze(whetherOutput);
         if (res != SyntacticAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }
@@ -46,16 +46,20 @@ public class RelExp extends SyntacticComponent {
             )) {
                 break;
             }
-            OutputIntoFile.appendToFile("<RelExp>\n", "output.txt");
-            res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+            if (whetherOutput) {
+                OutputIntoFile.appendToFile("<RelExp>\n", "output.txt");
+            }
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
-            res = AddExp.getInstance().analyze();
+            res = AddExp.getInstance().analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
         }
 
-        OutputIntoFile.appendToFile("<RelExp>\n", "output.txt");
+        if (whetherOutput) {
+            OutputIntoFile.appendToFile("<RelExp>\n", "output.txt");
+        }
         return SyntacticAnalysisResult.SUCCESS;
     }
 }

@@ -22,12 +22,14 @@ public class ConstExp extends SyntacticComponent {
     }
 
     @Override
-    public int analyze() {
-        int res = AddExp.getInstance().analyze();
+    public int analyze(boolean whetherOutput) {
+        int res = AddExp.getInstance().analyze(whetherOutput);
         if (res != SyntacticAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }
-        OutputIntoFile.appendToFile("<ConstExp>\n", "output.txt");
+        if (whetherOutput) {
+            OutputIntoFile.appendToFile("<ConstExp>\n", "output.txt");
+        }
         return SyntacticAnalysisResult.SUCCESS;
     }
 }

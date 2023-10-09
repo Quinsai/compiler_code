@@ -25,12 +25,12 @@ public class FuncFParams extends SyntacticComponent {
     }
 
     @Override
-    public int analyze() {
+    public int analyze(boolean whetherOutput) {
         int res = 0;
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
-        res = FuncFParam.getInstance().analyze();
+        res = FuncFParam.getInstance().analyze(whetherOutput);
         if (res != SyntacticAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }
@@ -43,15 +43,17 @@ public class FuncFParams extends SyntacticComponent {
             if (!nextWordCategoryCode.getValue().equals("COMMA")) {
                 break;
             }
-            res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
-            res = FuncFParam.getInstance().analyze();
+            res = FuncFParam.getInstance().analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
         }
 
-        OutputIntoFile.appendToFile("<FuncFParams>\n", "output.txt");
+        if (whetherOutput) {
+            OutputIntoFile.appendToFile("<FuncFParams>\n", "output.txt");
+        }
         return SyntacticAnalysisResult.SUCCESS;
     }
 }

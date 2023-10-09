@@ -51,8 +51,8 @@ public class SyntacticAnalysis {
     /**
      * 运行语法分析器
      */
-    public void run() {
-        if (CompUnit.getInstance().analyze() != SyntacticAnalysisResult.SUCCESS) {
+    public void run(boolean whetherOutput) {
+        if (CompUnit.getInstance().analyze(whetherOutput) != SyntacticAnalysisResult.SUCCESS) {
             System.out.println("error!");
         }
     }

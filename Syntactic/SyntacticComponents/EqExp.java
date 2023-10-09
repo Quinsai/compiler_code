@@ -25,12 +25,12 @@ public class EqExp extends SyntacticComponent {
     }
 
     @Override
-    public int analyze() {
+    public int analyze(boolean whetherOutput) {
         int res = 0;
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
-        res = RelExp.getInstance().analyze();
+        res = RelExp.getInstance().analyze(whetherOutput);
         if (res != SyntacticAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }
@@ -45,16 +45,20 @@ public class EqExp extends SyntacticComponent {
             )) {
                 break;
             }
-            OutputIntoFile.appendToFile("<EqExp>\n", "output.txt");
-            res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+            if (whetherOutput) {
+                OutputIntoFile.appendToFile("<EqExp>\n", "output.txt");
+            }
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
-            res = RelExp.getInstance().analyze();
+            res = RelExp.getInstance().analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
         }
 
-        OutputIntoFile.appendToFile("<EqExp>\n", "output.txt");
+        if (whetherOutput) {
+            OutputIntoFile.appendToFile("<EqExp>\n", "output.txt");
+        }
         return SyntacticAnalysisResult.SUCCESS;
     }
 }

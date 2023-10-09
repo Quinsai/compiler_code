@@ -27,7 +27,7 @@ public class PrimaryExp extends SyntacticComponent {
     }
 
     @Override
-    public int analyze() {
+    public int analyze(boolean whetherOutput) {
         int res = 0;
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
@@ -37,14 +37,14 @@ public class PrimaryExp extends SyntacticComponent {
             return SyntacticAnalysisResult.ERROR;
         }
         if (nextWordCategoryCode.getValue().equals("LPARENT")) {
-            res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
-            res = Exp.getInstance().analyze();
+            res = Exp.getInstance().analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
 
-            res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
             if (res != LexicalAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
@@ -53,13 +53,13 @@ public class PrimaryExp extends SyntacticComponent {
             }
         }
         else if (nextWordCategoryCode.getValue().equals("IDENFR")) {
-            res = LVal.getInstance().analyze();
+            res = LVal.getInstance().analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
         }
         else if (nextWordCategoryCode.getValue().equals("INTCON")) {
-            res = Number.getInstance().analyze();
+            res = Number.getInstance().analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
@@ -68,7 +68,9 @@ public class PrimaryExp extends SyntacticComponent {
             return SyntacticAnalysisResult.ERROR;
         }
 
-        OutputIntoFile.appendToFile("<PrimaryExp>\n", "output.txt");
+        if (whetherOutput) {
+            OutputIntoFile.appendToFile("<PrimaryExp>\n", "output.txt");
+        }
         return SyntacticAnalysisResult.SUCCESS;
     }
 }

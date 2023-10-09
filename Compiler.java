@@ -13,10 +13,9 @@ public class Compiler {
         InputSourceCode.readSourceCode();
 
 //        词法分析作业使用
-//        LexicalAnalysis lexicalAnalysis = LexicalAnalysis.getInstance();
-//        lexicalAnalysis.run(true);
+//        LexicalAnalysis.getInstance().run(true);
 
-        SyntacticAnalysis syntacticAnalysis = SyntacticAnalysis.getInstance();
-        syntacticAnalysis.run();
+//        语法分析作业使用
+        SyntacticAnalysis.getInstance().run(true);
     }
 }

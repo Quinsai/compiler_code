@@ -27,17 +27,17 @@ public class FuncDef extends SyntacticComponent {
     }
 
     @Override
-    public int analyze() {
+    public int analyze(boolean whetherOutput) {
         int res = 0;
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
-        res = FuncType.getInstance().analyze();
+        res = FuncType.getInstance().analyze(whetherOutput);
         if (res != SyntacticAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }
 
-        res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+        res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
         if (res != LexicalAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }
@@ -45,7 +45,7 @@ public class FuncDef extends SyntacticComponent {
             return SyntacticAnalysisResult.ERROR;
         }
 
-        res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+        res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
         if (res != LexicalAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }
@@ -58,13 +58,13 @@ public class FuncDef extends SyntacticComponent {
             return SyntacticAnalysisResult.ERROR;
         }
         if (!nextWordCategoryCode.getValue().equals("RPARENT")) {
-            res = FuncFParams.getInstance().analyze();
+            res = FuncFParams.getInstance().analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
         }
 
-        res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+        res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
         if (res != LexicalAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }
@@ -72,12 +72,14 @@ public class FuncDef extends SyntacticComponent {
             return SyntacticAnalysisResult.ERROR;
         }
 
-        res = Block.getInstance().analyze();
+        res = Block.getInstance().analyze(whetherOutput);
         if (res != SyntacticAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }
 
-        OutputIntoFile.appendToFile("<FuncDef>\n", "output.txt");
+        if (whetherOutput) {
+            OutputIntoFile.appendToFile("<FuncDef>\n", "output.txt");
+        }
         return SyntacticAnalysisResult.SUCCESS;
     }
 }

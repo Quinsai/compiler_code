@@ -25,17 +25,17 @@ public class ForStmt extends SyntacticComponent {
     }
 
     @Override
-    public int analyze() {
+    public int analyze(boolean whetherOutput) {
         int res = 0;
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
-        res = LVal.getInstance().analyze();
+        res = LVal.getInstance().analyze(whetherOutput);
         if (res != SyntacticAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }
 
-        res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+        res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
         if (res != LexicalAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }
@@ -43,12 +43,14 @@ public class ForStmt extends SyntacticComponent {
             return SyntacticAnalysisResult.ERROR;
         }
 
-        res = Exp.getInstance().analyze();
+        res = Exp.getInstance().analyze(whetherOutput);
         if (res != SyntacticAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }
 
-        OutputIntoFile.appendToFile("<ForStmt>\n", "output.txt");
+        if (whetherOutput) {
+            OutputIntoFile.appendToFile("<ForStmt>\n", "output.txt");
+        }
         return SyntacticAnalysisResult.SUCCESS;
     }
 }

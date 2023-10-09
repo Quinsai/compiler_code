@@ -25,12 +25,12 @@ public class LAndExp extends SyntacticComponent {
     }
 
     @Override
-    public int analyze() {
+    public int analyze(boolean whetherOutput) {
         int res = 0;
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
-        res = EqExp.getInstance().analyze();
+        res = EqExp.getInstance().analyze(whetherOutput);
         if (res != SyntacticAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }
@@ -44,16 +44,20 @@ public class LAndExp extends SyntacticComponent {
             )) {
                 break;
             }
-            OutputIntoFile.appendToFile("<LAndExp>\n", "output.txt");
-            res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+            if (whetherOutput) {
+                OutputIntoFile.appendToFile("<LAndExp>\n", "output.txt");
+            }
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
-            res = EqExp.getInstance().analyze();
+            res = EqExp.getInstance().analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
         }
 
-        OutputIntoFile.appendToFile("<LAndExp>\n", "output.txt");
+        if (whetherOutput) {
+            OutputIntoFile.appendToFile("<LAndExp>\n", "output.txt");
+        }
         return SyntacticAnalysisResult.SUCCESS;
     }
 }

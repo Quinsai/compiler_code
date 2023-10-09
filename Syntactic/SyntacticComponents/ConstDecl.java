@@ -25,12 +25,12 @@ public class ConstDecl extends SyntacticComponent {
     }
 
     @Override
-    public int analyze() {
+    public int analyze(boolean whetherOutput) {
         int res = 0;
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
-        res = lexicalAnalysis.next(true, nextWordCategoryCode,nextWordValue);
+        res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode,nextWordValue);
         if (res != LexicalAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }
@@ -38,12 +38,12 @@ public class ConstDecl extends SyntacticComponent {
             return SyntacticAnalysisResult.ERROR;
         }
 
-        res = BType.getInstance().analyze();
+        res = BType.getInstance().analyze(whetherOutput);
         if (res != SyntacticAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }
 
-        res = ConstDef.getInstance().analyze();
+        res = ConstDef.getInstance().analyze(whetherOutput);
         if (res != SyntacticAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }
@@ -56,15 +56,15 @@ public class ConstDecl extends SyntacticComponent {
             if (!nextWordCategoryCode.getValue().equals("COMMA")) {
                 break;
             }
-            res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
-            res = ConstDef.getInstance().analyze();
+            res = ConstDef.getInstance().analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
         }
 
-        res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+        res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
         if (res == LexicalAnalysisResult.ERROR) {
             return SyntacticAnalysisResult.ERROR;
         }
@@ -72,7 +72,9 @@ public class ConstDecl extends SyntacticComponent {
             return SyntacticAnalysisResult.ERROR;
         }
 
-        OutputIntoFile.appendToFile("<ConstDecl>\n", "output.txt");
+        if (whetherOutput) {
+            OutputIntoFile.appendToFile("<ConstDecl>\n", "output.txt");
+        }
         return SyntacticAnalysisResult.SUCCESS;
     }
 }

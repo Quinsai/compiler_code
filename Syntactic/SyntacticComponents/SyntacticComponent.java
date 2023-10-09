@@ -15,7 +15,7 @@ public class SyntacticComponent {
         this.lexicalAnalysis = LexicalAnalysis.getInstance();
     }
 
-    public int analyze() {
+    public int analyze(boolean whetherOutput) {
         System.out.println("can u see me");
         return 0;
     }

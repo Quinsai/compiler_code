@@ -73,13 +73,13 @@ public class CompUnit extends SyntacticComponent {
      * @return 0表示正常，-1表示结束，-2表示出错
      */
     @Override
-    public int analyze() {
+    public int analyze(boolean whetherOutput) {
         int res = 0;
 
         while (true) {
             res = whichComponent();
             if (res == CompUnit.DECL) {
-                res = Decl.getInstance().analyze();
+                res = Decl.getInstance().analyze(whetherOutput);
                 if (res == SyntacticAnalysisResult.ERROR) {
                     return res;
                 }
@@ -92,7 +92,7 @@ public class CompUnit extends SyntacticComponent {
         while (true) {
             res = whichComponent();
             if (res == CompUnit.FUNC_DEF) {
-                res = FuncDef.getInstance().analyze();
+                res = FuncDef.getInstance().analyze(whetherOutput);
                 if (res == SyntacticAnalysisResult.ERROR) {
                     return res;
                 }
@@ -102,12 +102,14 @@ public class CompUnit extends SyntacticComponent {
             }
         }
 
-        res = MainFuncDef.getInstance().analyze();
+        res = MainFuncDef.getInstance().analyze(whetherOutput);
         if (res == SyntacticAnalysisResult.ERROR) {
             return res;
         }
 
-        OutputIntoFile.appendToFile("<CompUnit>", "output.txt");
+        if (whetherOutput) {
+            OutputIntoFile.appendToFile("<CompUnit>", "output.txt");
+        }
         return SyntacticAnalysisResult.SUCCESS;
 
     }

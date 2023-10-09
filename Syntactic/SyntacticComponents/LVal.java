@@ -25,12 +25,12 @@ public class LVal extends SyntacticComponent {
     }
 
     @Override
-    public int analyze() {
+    public int analyze(boolean whetherOutput) {
         int res = 0;
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
-        res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+        res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
         if (res != LexicalAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }
@@ -46,14 +46,14 @@ public class LVal extends SyntacticComponent {
             if (!nextWordCategoryCode.getValue().equals("LBRACK")) {
                 break;
             }
-            res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
-            res = Exp.getInstance().analyze();
+            res = Exp.getInstance().analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
 
-            res = lexicalAnalysis.next(true, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
             if (res != LexicalAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
@@ -62,7 +62,9 @@ public class LVal extends SyntacticComponent {
             }
         }
 
-        OutputIntoFile.appendToFile("<LVal>\n", "output.txt");
+        if (whetherOutput) {
+            OutputIntoFile.appendToFile("<LVal>\n", "output.txt");
+        }
         return SyntacticAnalysisResult.SUCCESS;
     }
 }
