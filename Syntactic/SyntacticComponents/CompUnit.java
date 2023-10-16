@@ -108,7 +108,7 @@ public class CompUnit extends SyntacticComponent {
         }
 
         if (whetherOutput) {
-            OutputIntoFile.appendToFile("<CompUnit>", "output.txt");
+            OutputIntoFile.appendToFile("<CompUnit>\n", "output.txt");
         }
         return SyntacticAnalysisResult.SUCCESS;
 
