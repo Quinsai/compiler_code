@@ -54,7 +54,6 @@ public class MulExp extends SyntacticComponent {
             if (nextWordCategoryCode.getValue().equals("MULT")) {
                 this.value *= unaryExp1.value;
             }
-            // TODO 一个bug，有些时候会错误地把unaryExp1.value的值判定为0
             else if (nextWordCategoryCode.getValue().equals("DIV")) {
                 // System.out.println(this.value);
                 this.value = this.value / unaryExp1.value;
