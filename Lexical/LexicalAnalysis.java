@@ -490,5 +490,8 @@ public class LexicalAnalysis {
         OutputIntoFile.appendToFile(categoryCode + " " + value + "\n", "output.txt");
     }
 
+    public int getCurrentLine() {
+        return currentLine;
+    }
 }
 
