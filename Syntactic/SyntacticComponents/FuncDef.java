@@ -3,6 +3,7 @@ package Syntactic.SyntacticComponents;
 import Other.ParamResult;
 import Output.OutputIntoFile;
 import Result.AnalysisResult;
+import SymbolTable.Scope.ScopeStack;
 
 public class FuncDef extends SyntacticComponent {
 
@@ -58,11 +59,15 @@ public class FuncDef extends SyntacticComponent {
             return AnalysisResult.FAIL;
         }
 
+        ScopeStack.getInstance().enterScope();
+
         Block block = new Block();
         res = block.analyze(whetherOutput);
         if (res != AnalysisResult.SUCCESS) {
             return AnalysisResult.FAIL;
         }
+
+        ScopeStack.getInstance().quitScope();
 
         if (whetherOutput) {
             OutputIntoFile.appendToFile("<FuncDef>\n", "output.txt");

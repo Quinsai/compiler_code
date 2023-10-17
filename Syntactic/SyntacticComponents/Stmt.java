@@ -3,6 +3,7 @@ package Syntactic.SyntacticComponents;
 import Other.ParamResult;
 import Output.OutputIntoFile;
 import Result.AnalysisResult;
+import SymbolTable.Scope.ScopeStack;
 
 public class Stmt extends SyntacticComponent {
 
@@ -63,11 +64,15 @@ public class Stmt extends SyntacticComponent {
                 return AnalysisResult.FAIL;
             }
 
+            ScopeStack.getInstance().enterScope();
+
             Stmt stmt = new Stmt();
             res = stmt.analyze(whetherOutput);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;
             }
+
+            ScopeStack.getInstance().quitScope();
 
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
             if (res != AnalysisResult.SUCCESS) {
@@ -76,11 +81,15 @@ public class Stmt extends SyntacticComponent {
             if (nextWordCategoryCode.getValue().equals("ELSETK")) {
                 res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
+                ScopeStack.getInstance().enterScope();
+
                 Stmt stmt1 = new Stmt();
                 res = stmt1.analyze(whetherOutput);
                 if (res != AnalysisResult.SUCCESS) {
                     return AnalysisResult.FAIL;
                 }
+
+                ScopeStack.getInstance().quitScope();
             }
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("FORTK")) {
@@ -154,11 +163,15 @@ public class Stmt extends SyntacticComponent {
                 return AnalysisResult.FAIL;
             }
 
+            ScopeStack.getInstance().enterScope();
+
             Stmt stmt = new Stmt();
             res = stmt.analyze(whetherOutput);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;
             }
+
+            ScopeStack.getInstance().quitScope();
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("BREAKTK")) {
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
@@ -282,11 +295,15 @@ public class Stmt extends SyntacticComponent {
             }
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("LBRACE")) {
+            ScopeStack.getInstance().enterScope();
+
             Block block = new Block();
             res = block.analyze(whetherOutput);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;
             }
+
+            ScopeStack.getInstance().quitScope();
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("IDENFR")) {
             boolean hadAssignBeforeSemicn = lexicalAnalysis.haveAssignBeforeSemicn();
