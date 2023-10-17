@@ -6,21 +6,9 @@ import Output.OutputIntoFile;
 import Syntactic.SyntacticAnalysisResult;
 
 public class InitVal extends SyntacticComponent {
-    /**
-     * 唯一单例
-     */
-    private static InitVal initVal;
 
-    private InitVal() {
+    public InitVal() {
         super();
-    }
-
-    static {
-        initVal = new InitVal();
-    }
-
-    public static InitVal getInstance() {
-        return initVal;
     }
 
     @Override
@@ -34,7 +22,8 @@ public class InitVal extends SyntacticComponent {
             return SyntacticAnalysisResult.ERROR;
         }
         if (!nextWordCategoryCode.getValue().equals("LBRACE")) {
-            res = Exp.getInstance().analyze(whetherOutput);
+            Exp exp = new Exp();
+            res = exp.analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
@@ -50,7 +39,8 @@ public class InitVal extends SyntacticComponent {
                 res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
             }
             else {
-                res = InitVal.getInstance().analyze(whetherOutput);
+                InitVal initVal = new InitVal();
+                res = initVal.analyze(whetherOutput);
                 if (res != SyntacticAnalysisResult.SUCCESS) {
                     return SyntacticAnalysisResult.ERROR;
                 }
@@ -65,7 +55,8 @@ public class InitVal extends SyntacticComponent {
                     }
                     res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
-                    res = InitVal.getInstance().analyze(whetherOutput);
+                    InitVal initVal1 = new InitVal();
+                    res = initVal1.analyze(whetherOutput);
                     if (res != SyntacticAnalysisResult.SUCCESS) {
                         return SyntacticAnalysisResult.ERROR;
                     }

@@ -9,21 +9,8 @@ import Syntactic.SyntacticAnalysisResult;
 
 public class CompUnit extends SyntacticComponent {
 
-    /**
-     * 唯一实例
-     */
-    private static CompUnit compUnit;
-
-    private CompUnit() {
+    public CompUnit() {
         super();
-    }
-
-    static {
-        compUnit = new CompUnit();
-    }
-
-    public static CompUnit getInstance() {
-        return compUnit;
     }
 
     private static final int DECL = 665;
@@ -79,7 +66,8 @@ public class CompUnit extends SyntacticComponent {
         while (true) {
             res = whichComponent();
             if (res == CompUnit.DECL) {
-                res = Decl.getInstance().analyze(whetherOutput);
+                Decl decl = new Decl();
+                res = decl.analyze(whetherOutput);
                 if (res == SyntacticAnalysisResult.ERROR) {
                     return res;
                 }
@@ -92,7 +80,8 @@ public class CompUnit extends SyntacticComponent {
         while (true) {
             res = whichComponent();
             if (res == CompUnit.FUNC_DEF) {
-                res = FuncDef.getInstance().analyze(whetherOutput);
+                FuncDef funcDef = new FuncDef();
+                res = funcDef.analyze(whetherOutput);
                 if (res == SyntacticAnalysisResult.ERROR) {
                     return res;
                 }
@@ -102,7 +91,8 @@ public class CompUnit extends SyntacticComponent {
             }
         }
 
-        res = MainFuncDef.getInstance().analyze(whetherOutput);
+        MainFuncDef mainFuncDef = new MainFuncDef();
+        res = mainFuncDef.analyze(whetherOutput);
         if (res == SyntacticAnalysisResult.ERROR) {
             return res;
         }

@@ -6,21 +6,9 @@ import Output.OutputIntoFile;
 import Syntactic.SyntacticAnalysisResult;
 
 public class ConstInitVal extends SyntacticComponent {
-    /**
-     * 唯一单例
-     */
-    private static ConstInitVal constInitVal;
 
-    private ConstInitVal() {
+    public ConstInitVal() {
         super();
-    }
-
-    static {
-        constInitVal = new ConstInitVal();
-    }
-
-    public static ConstInitVal getInstance() {
-        return constInitVal;
     }
 
     @Override
@@ -46,7 +34,8 @@ public class ConstInitVal extends SyntacticComponent {
                 res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
             }
             else {
-                res = ConstInitVal.getInstance().analyze(whetherOutput);
+                ConstInitVal constInitVal = new ConstInitVal();
+                res = constInitVal.analyze(whetherOutput);
                 if (res != SyntacticAnalysisResult.SUCCESS) {
                     return SyntacticAnalysisResult.ERROR;
                 }
@@ -61,7 +50,8 @@ public class ConstInitVal extends SyntacticComponent {
                     }
                     res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
-                    res = ConstInitVal.getInstance().analyze(whetherOutput);
+                    ConstInitVal constInitVal1 = new ConstInitVal();
+                    res = constInitVal1.analyze(whetherOutput);
                     if (res == SyntacticAnalysisResult.ERROR) {
                         return SyntacticAnalysisResult.ERROR;
                     }
@@ -77,7 +67,8 @@ public class ConstInitVal extends SyntacticComponent {
             }
         }
         else {
-            res = ConstExp.getInstance().analyze(whetherOutput);
+            ConstExp constExp = new ConstExp();
+            res = constExp.analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }

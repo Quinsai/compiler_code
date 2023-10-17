@@ -7,22 +7,9 @@ import Syntactic.SyntacticAnalysisResult;
 
 public class ConstDecl extends SyntacticComponent {
 
-    /**
-     * 唯一单例
-     */
-    private static ConstDecl constDecl;
-
-    private ConstDecl() {
-        super();
-    }
-
-    static {
-        constDecl = new ConstDecl();
-    }
-
-    public static ConstDecl getInstance() {
-        return constDecl;
-    }
+   public ConstDecl() {
+       super();
+   }
 
     @Override
     public int analyze(boolean whetherOutput) {
@@ -38,12 +25,14 @@ public class ConstDecl extends SyntacticComponent {
             return SyntacticAnalysisResult.ERROR;
         }
 
-        res = BType.getInstance().analyze(whetherOutput);
+        BType bType = new BType();
+        res = bType.analyze(whetherOutput);
         if (res != SyntacticAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }
 
-        res = ConstDef.getInstance().analyze(whetherOutput);
+        ConstDef constDef = new ConstDef();
+        res = constDef.analyze(whetherOutput);
         if (res != SyntacticAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }
@@ -58,7 +47,8 @@ public class ConstDecl extends SyntacticComponent {
             }
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
-            res = ConstDef.getInstance().analyze(whetherOutput);
+            ConstDef constDef1 = new ConstDef();
+            res = constDef1.analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }

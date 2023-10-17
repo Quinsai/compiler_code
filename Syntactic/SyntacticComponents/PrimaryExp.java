@@ -9,21 +9,8 @@ import javax.net.ssl.SSLContext;
 
 public class PrimaryExp extends SyntacticComponent {
 
-    /**
-     * 唯一单例
-     */
-    private static PrimaryExp primaryExp;
-
-    private PrimaryExp() {
+    public PrimaryExp() {
         super();
-    }
-
-    static {
-        primaryExp = new PrimaryExp();
-    }
-
-    public static PrimaryExp getInstance() {
-        return primaryExp;
     }
 
     @Override
@@ -39,7 +26,8 @@ public class PrimaryExp extends SyntacticComponent {
         if (nextWordCategoryCode.getValue().equals("LPARENT")) {
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
-            res = Exp.getInstance().analyze(whetherOutput);
+            Exp exp = new Exp();
+            res = exp.analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
@@ -51,18 +39,26 @@ public class PrimaryExp extends SyntacticComponent {
             if (!nextWordCategoryCode.getValue().equals("RPARENT")) {
                 return SyntacticAnalysisResult.ERROR;
             }
+
+            this.value = exp.value;
         }
         else if (nextWordCategoryCode.getValue().equals("IDENFR")) {
-            res = LVal.getInstance().analyze(whetherOutput);
+            LVal lVal = new LVal();
+            res = lVal.analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
+
+            this.value = lVal.value;
         }
         else if (nextWordCategoryCode.getValue().equals("INTCON")) {
-            res = Number.getInstance().analyze(whetherOutput);
+            Number number = new Number();
+            res = number.analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
+
+            this.value = number.value;
         }
         else {
             return SyntacticAnalysisResult.ERROR;

@@ -7,21 +7,9 @@ import Syntactic.SyntacticAnalysisResult;
 
 public class BlockItem extends SyntacticComponent {
 
-    /**
-     * 唯一单例
-     */
-    private static BlockItem blockItem;
 
-    private BlockItem() {
+    public BlockItem() {
         super();
-    }
-
-    static {
-        blockItem = new BlockItem();
-    }
-
-    public static BlockItem getInstance() {
-        return blockItem;
     }
 
     @Override
@@ -35,13 +23,15 @@ public class BlockItem extends SyntacticComponent {
             return SyntacticAnalysisResult.ERROR;
         }
         if (nextWordCategoryCode.getValue().equals("CONSTTK") || nextWordCategoryCode.getValue().equals("INTTK")) {
-            res = Decl.getInstance().analyze(whetherOutput);
+            Decl decl = new Decl();
+            res = decl.analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
         }
         else {
-            res = Stmt.getInstance().analyze(whetherOutput);
+            Stmt stmt = new Stmt();
+            res = stmt.analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }

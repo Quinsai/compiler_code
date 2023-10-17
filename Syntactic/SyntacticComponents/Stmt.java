@@ -5,23 +5,12 @@ import Other.ParamResult;
 import Output.OutputIntoFile;
 import Syntactic.SyntacticAnalysisResult;
 
+import java.util.concurrent.Callable;
+
 public class Stmt extends SyntacticComponent {
 
-    /**
-     * 唯一单例
-     */
-    private static Stmt stmt;
-
-    private Stmt() {
+    public Stmt() {
         super();
-    }
-
-    static {
-        stmt = new Stmt();
-    }
-
-    public static Stmt getInstance() {
-        return stmt;
     }
 
     @Override
@@ -63,7 +52,8 @@ public class Stmt extends SyntacticComponent {
                 return SyntacticAnalysisResult.ERROR;
             }
 
-            res = Cond.getInstance().analyze(whetherOutput);
+            Cond cond = new Cond();
+            res = cond.analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
@@ -76,7 +66,8 @@ public class Stmt extends SyntacticComponent {
                 return SyntacticAnalysisResult.ERROR;
             }
 
-            res = Stmt.getInstance().analyze(whetherOutput);
+            Stmt stmt = new Stmt();
+            res = stmt.analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
@@ -88,7 +79,8 @@ public class Stmt extends SyntacticComponent {
             if (nextWordCategoryCode.getValue().equals("ELSETK")) {
                 res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
-                res = Stmt.getInstance().analyze(whetherOutput);
+                Stmt stmt1 = new Stmt();
+                res = stmt1.analyze(whetherOutput);
                 if (res != SyntacticAnalysisResult.SUCCESS) {
                     return SyntacticAnalysisResult.ERROR;
                 }
@@ -110,7 +102,8 @@ public class Stmt extends SyntacticComponent {
                 return SyntacticAnalysisResult.ERROR;
             }
             if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
-                res = ForStmt.getInstance().analyze(whetherOutput);
+                ForStmt forStmt = new ForStmt();
+                res = forStmt.analyze(whetherOutput);
                 if (res != SyntacticAnalysisResult.SUCCESS) {
                     return SyntacticAnalysisResult.ERROR;
                 }
@@ -129,7 +122,8 @@ public class Stmt extends SyntacticComponent {
                 return SyntacticAnalysisResult.ERROR;
             }
             if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
-                res = Cond.getInstance().analyze(whetherOutput);
+                Cond cond = new Cond();
+                res = cond.analyze(whetherOutput);
                 if (res != SyntacticAnalysisResult.SUCCESS) {
                     return SyntacticAnalysisResult.ERROR;
                 }
@@ -148,7 +142,8 @@ public class Stmt extends SyntacticComponent {
                 return SyntacticAnalysisResult.ERROR;
             }
             if (!nextWordCategoryCode.getValue().equals("RPARENT")) {
-                res = ForStmt.getInstance().analyze(whetherOutput);
+                ForStmt forStmt = new ForStmt();
+                res = forStmt.analyze(whetherOutput);
                 if (res != SyntacticAnalysisResult.SUCCESS) {
                     return SyntacticAnalysisResult.ERROR;
                 }
@@ -162,7 +157,8 @@ public class Stmt extends SyntacticComponent {
                 return SyntacticAnalysisResult.ERROR;
             }
 
-            res = Stmt.getInstance().analyze(whetherOutput);
+            Stmt stmt = new Stmt();
+            res = stmt.analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
@@ -215,7 +211,8 @@ public class Stmt extends SyntacticComponent {
                 return SyntacticAnalysisResult.ERROR;
             }
             if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
-                res = Exp.getInstance().analyze(whetherOutput);
+                Exp exp = new Exp();
+                res = exp.analyze(whetherOutput);
                 if (res != SyntacticAnalysisResult.SUCCESS) {
                     return SyntacticAnalysisResult.ERROR;
                 }
@@ -264,7 +261,8 @@ public class Stmt extends SyntacticComponent {
                 }
                 res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
-                res = Exp.getInstance().analyze(whetherOutput);
+                Exp exp = new Exp();
+                res = exp.analyze(whetherOutput);
                 if (res != SyntacticAnalysisResult.SUCCESS) {
                     return SyntacticAnalysisResult.ERROR;
                 }
@@ -287,7 +285,8 @@ public class Stmt extends SyntacticComponent {
             }
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("LBRACE")) {
-            res = Block.getInstance().analyze(whetherOutput);
+            Block block = new Block();
+            res = block.analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
@@ -295,7 +294,8 @@ public class Stmt extends SyntacticComponent {
         else if (nextWordCategoryCodeArray[0].getValue().equals("IDENFR")) {
             boolean hadAssignBeforeSemicn = lexicalAnalysis.haveAssignBeforeSemicn();
             if (hadAssignBeforeSemicn) {
-                res = LVal.getInstance().analyze(whetherOutput);
+                LVal lVal = new LVal();
+                res = lVal.analyze(whetherOutput);
                 if (res != SyntacticAnalysisResult.SUCCESS) {
                     return SyntacticAnalysisResult.ERROR;
                 }
@@ -340,7 +340,8 @@ public class Stmt extends SyntacticComponent {
                     }
                 }
                 else {
-                    res = Exp.getInstance().analyze(whetherOutput);
+                    Exp exp = new Exp();
+                    res = exp.analyze(whetherOutput);
                     if (res != SyntacticAnalysisResult.SUCCESS) {
                         return SyntacticAnalysisResult.ERROR;
                     }
@@ -355,8 +356,8 @@ public class Stmt extends SyntacticComponent {
                 }
             }
             else {
-
-                res = Exp.getInstance().analyze(whetherOutput);
+                Exp exp =  new Exp();
+                res = exp.analyze(whetherOutput);
                 if (res != SyntacticAnalysisResult.SUCCESS) {
                     return SyntacticAnalysisResult.ERROR;
                 }
@@ -376,7 +377,8 @@ public class Stmt extends SyntacticComponent {
             || nextWordCategoryCodeArray[0].getValue().equals("LPARENT")
             || nextWordCategoryCodeArray[0].getValue().equals("INTCON")
         ) {
-            res = Exp.getInstance().analyze(whetherOutput);
+            Exp exp = new Exp();
+            res = exp.analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }

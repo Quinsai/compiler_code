@@ -9,21 +9,8 @@ import Syntactic.SyntacticAnalysisResult;
 
 public class MainFuncDef extends SyntacticComponent {
 
-    /**
-     * 唯一单例
-     */
-    private static MainFuncDef mainFuncDef;
-
-    private MainFuncDef() {
+    public MainFuncDef() {
         super();
-    }
-
-    static {
-        mainFuncDef = new MainFuncDef();
-    }
-
-    public static MainFuncDef getInstance() {
-        return mainFuncDef;
     }
 
     @Override
@@ -65,7 +52,8 @@ public class MainFuncDef extends SyntacticComponent {
             return SyntacticAnalysisResult.ERROR;
         }
 
-        res = Block.getInstance().analyze(whetherOutput);
+        Block block = new Block();
+        res = block.analyze(whetherOutput);
         if (res != SyntacticAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }

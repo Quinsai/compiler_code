@@ -9,21 +9,8 @@ import javax.xml.transform.sax.SAXTransformerFactory;
 
 public class FuncRParams extends SyntacticComponent {
 
-    /**
-     * 唯一单例
-     */
-    private static FuncRParams funcRParams;
-
-    private FuncRParams() {
+    public FuncRParams() {
         super();
-    }
-
-    static {
-        funcRParams = new FuncRParams();
-    }
-
-    public static FuncRParams getInstance() {
-        return funcRParams;
     }
 
     @Override
@@ -32,7 +19,8 @@ public class FuncRParams extends SyntacticComponent {
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
-        res = Exp.getInstance().analyze(whetherOutput);
+        Exp exp = new Exp();
+        res = exp.analyze(whetherOutput);
         if (res != SyntacticAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }
@@ -47,7 +35,8 @@ public class FuncRParams extends SyntacticComponent {
             }
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
-            res = Exp.getInstance().analyze(whetherOutput);
+            Exp exp1 = new Exp();
+            res = exp1.analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }

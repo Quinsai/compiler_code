@@ -6,21 +6,9 @@ import Output.OutputIntoFile;
 import Syntactic.SyntacticAnalysisResult;
 
 public class LOrExp extends SyntacticComponent {
-    /**
-     * 唯一单例
-     */
-    private static LOrExp lOrExp;
 
-    private LOrExp() {
+    public LOrExp() {
         super();
-    }
-
-    static {
-        lOrExp = new LOrExp();
-    }
-
-    public static LOrExp getInstance() {
-        return lOrExp;
     }
 
     @Override
@@ -29,10 +17,12 @@ public class LOrExp extends SyntacticComponent {
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
-        res = LAndExp.getInstance().analyze(whetherOutput);
+        LAndExp lAndExp = new LAndExp();
+        res = lAndExp.analyze(whetherOutput);
         if (res != SyntacticAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }
+        this.value = lAndExp.value;
 
         while (true) {
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
@@ -47,10 +37,13 @@ public class LOrExp extends SyntacticComponent {
             }
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
-            res = LAndExp.getInstance().analyze(whetherOutput);
+            LAndExp lAndExp1 = new LAndExp();
+            res = lAndExp1.analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
+
+            this.value = this.value | lAndExp1.value;
         }
 
         if (whetherOutput) {

@@ -9,21 +9,8 @@ import javax.management.loading.ClassLoaderRepository;
 
 public class FuncType extends SyntacticComponent {
 
-    /**
-     * 唯一单例
-     */
-    private static FuncType funcType;
-
-    private FuncType() {
+    public FuncType() {
         super();
-    }
-
-    static {
-        funcType = new FuncType();
-    }
-
-    public static FuncType getInstance() {
-        return funcType;
     }
 
     @Override

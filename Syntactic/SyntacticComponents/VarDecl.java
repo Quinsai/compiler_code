@@ -7,21 +7,8 @@ import Syntactic.SyntacticAnalysisResult;
 
 public class VarDecl extends SyntacticComponent {
 
-    /**
-     * 唯一单例
-     */
-    private static VarDecl varDecl;
-
-    private VarDecl() {
+    public VarDecl() {
         super();
-    }
-
-    static {
-        varDecl = new VarDecl();
-    }
-
-    public static VarDecl getInstance() {
-        return varDecl;
     }
 
     @Override
@@ -30,12 +17,14 @@ public class VarDecl extends SyntacticComponent {
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
-        res = BType.getInstance().analyze(whetherOutput);
+        BType bType = new BType();
+        res = bType.analyze(whetherOutput);
         if (res != SyntacticAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }
 
-        res = VarDef.getInstance().analyze(whetherOutput);
+        VarDef varDef = new VarDef();
+        res = varDef.analyze(whetherOutput);
         if (res != SyntacticAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }
@@ -50,7 +39,8 @@ public class VarDecl extends SyntacticComponent {
             }
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
-            res = VarDef.getInstance().analyze(whetherOutput);
+            VarDef varDef1 = new VarDef();
+            res = varDef1.analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }

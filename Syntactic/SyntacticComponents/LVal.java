@@ -7,21 +7,8 @@ import Syntactic.SyntacticAnalysisResult;
 
 public class LVal extends SyntacticComponent {
 
-    /**
-     * 唯一单例
-     */
-    private static LVal lVal;
-
-    private LVal() {
+    public LVal() {
         super();
-    }
-
-    static {
-        lVal = new LVal();
-    }
-
-    public static LVal getInstance() {
-        return lVal;
     }
 
     @Override
@@ -48,7 +35,8 @@ public class LVal extends SyntacticComponent {
             }
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
-            res = Exp.getInstance().analyze(whetherOutput);
+            Exp exp = new Exp();
+            res = exp.analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
@@ -61,6 +49,12 @@ public class LVal extends SyntacticComponent {
                 return SyntacticAnalysisResult.ERROR;
             }
         }
+
+        // TODO 解决LVal获取value的问题
+        /*
+        这里写的3124仅仅是为了这个能跑起来而已
+         */
+        this.value = 3124;
 
         if (whetherOutput) {
             OutputIntoFile.appendToFile("<LVal>\n", "output.txt");

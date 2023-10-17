@@ -9,21 +9,8 @@ import Syntactic.SyntacticAnalysisResult;
 
 public class Decl extends SyntacticComponent {
 
-    /**
-     * 唯一单例
-     */
-    private static Decl decl;
-
-    private Decl() {
+    public Decl() {
         super();
-    }
-
-    static {
-        decl = new Decl();
-    }
-
-    public static Decl getInstance() {
-        return decl;
     }
 
     @Override
@@ -38,10 +25,12 @@ public class Decl extends SyntacticComponent {
         }
         String categoryCode = nextWordCategoryCode.getValue();
         if (categoryCode.equals("CONSTTK")) {
-            res = ConstDecl.getInstance().analyze(whetherOutput);
+            ConstDecl constDecl = new ConstDecl();
+            res = constDecl.analyze(whetherOutput);
         }
         else if (categoryCode.equals("INTTK")) {
-            res = VarDecl.getInstance().analyze(whetherOutput);
+            VarDecl varDecl = new VarDecl();
+            res = varDecl.analyze(whetherOutput);
         }
         else {
             res = SyntacticAnalysisResult.ERROR;

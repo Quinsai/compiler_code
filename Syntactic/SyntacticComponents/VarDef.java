@@ -6,21 +6,9 @@ import Output.OutputIntoFile;
 import Syntactic.SyntacticAnalysisResult;
 
 public class VarDef extends SyntacticComponent {
-    /**
-     * 唯一单例
-     */
-    private static VarDef varDef;
 
-    private VarDef() {
+    public VarDef() {
         super();
-    }
-
-    static {
-        varDef = new VarDef();
-    }
-
-    public static VarDef getInstance() {
-        return varDef;
     }
 
     @Override
@@ -47,7 +35,8 @@ public class VarDef extends SyntacticComponent {
             }
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
-            res = ConstExp.getInstance().analyze(whetherOutput);
+            ConstExp constExp = new ConstExp();
+            res = constExp.analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
@@ -68,7 +57,8 @@ public class VarDef extends SyntacticComponent {
         if (nextWordCategoryCode.getValue().equals("ASSIGN")) {
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
-            res = InitVal.getInstance().analyze(whetherOutput);
+            InitVal initVal = new InitVal();
+            res = initVal.analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }

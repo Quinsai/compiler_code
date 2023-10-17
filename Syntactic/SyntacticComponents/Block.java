@@ -6,21 +6,9 @@ import Output.OutputIntoFile;
 import Syntactic.SyntacticAnalysisResult;
 
 public class Block extends SyntacticComponent {
-    /**
-     * 唯一单例
-     */
-    private static Block block;
 
-    private Block() {
+    public Block() {
         super();
-    }
-
-    static {
-        block = new Block();
-    }
-
-    public static Block getInstance() {
-        return block;
     }
 
     @Override
@@ -46,7 +34,8 @@ public class Block extends SyntacticComponent {
                 break;
             }
 
-            res = BlockItem.getInstance().analyze(whetherOutput);
+            BlockItem blockItem = new BlockItem();
+            res = blockItem.analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }

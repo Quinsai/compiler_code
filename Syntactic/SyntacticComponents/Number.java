@@ -7,21 +7,8 @@ import Syntactic.SyntacticAnalysisResult;
 
 public class Number extends SyntacticComponent {
 
-    /**
-     * 唯一单例
-     */
-    private static Number number;
-
-    private Number() {
+    public Number() {
         super();
-    }
-
-    static {
-        number = new Number();
-    }
-
-    public static Number getInstance() {
-        return number;
     }
 
     @Override
@@ -37,6 +24,8 @@ public class Number extends SyntacticComponent {
         if (!nextWordCategoryCode.getValue().equals("INTCON")) {
             return SyntacticAnalysisResult.ERROR;
         }
+
+        this.value = Integer.parseInt(nextWordValue.getValue());
 
         if (whetherOutput) {
             OutputIntoFile.appendToFile("<Number>\n", "output.txt");

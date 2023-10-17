@@ -7,21 +7,8 @@ import Syntactic.SyntacticAnalysisResult;
 
 public class LAndExp extends SyntacticComponent {
 
-    /**
-     * 唯一单例
-     */
-    private static LAndExp lAndExp;
-
-    private LAndExp() {
+    public LAndExp() {
         super();
-    }
-
-    static {
-        lAndExp = new LAndExp();
-    }
-
-    public static LAndExp getInstance() {
-        return lAndExp;
     }
 
     @Override
@@ -30,10 +17,12 @@ public class LAndExp extends SyntacticComponent {
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
-        res = EqExp.getInstance().analyze(whetherOutput);
+        EqExp eqExp = new EqExp();
+        res = eqExp.analyze(whetherOutput);
         if (res != SyntacticAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }
+        this.value = eqExp.value;
 
         while (true) {
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
@@ -49,10 +38,13 @@ public class LAndExp extends SyntacticComponent {
             }
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
-            res = EqExp.getInstance().analyze(whetherOutput);
+            EqExp eqExp1 = new EqExp();
+            res = eqExp1.analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
+
+            this.value = this.value & eqExp1.value;
         }
 
         if (whetherOutput) {

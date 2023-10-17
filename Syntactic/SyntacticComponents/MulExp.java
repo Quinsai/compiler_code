@@ -7,21 +7,8 @@ import Syntactic.SyntacticAnalysisResult;
 
 public class MulExp extends SyntacticComponent {
 
-    /**
-     * 唯一单例
-     */
-    private static MulExp mulExp;
-
-    private MulExp() {
+    public MulExp() {
         super();
-    }
-
-    static {
-        mulExp = new MulExp();
-    }
-
-    public static MulExp getInstance() {
-        return mulExp;
     }
 
     @Override
@@ -30,10 +17,14 @@ public class MulExp extends SyntacticComponent {
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
-        res = UnaryExp.getInstance().analyze(whetherOutput);
+        UnaryExp unaryExp = new UnaryExp();
+        res = unaryExp.analyze(whetherOutput);
         if (res != SyntacticAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }
+        this.value = unaryExp.value;
+//        System.out.println("-----------------------");
+//        System.out.println(this.value);
 
         while (true) {
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
@@ -51,9 +42,25 @@ public class MulExp extends SyntacticComponent {
             }
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
-            res = UnaryExp.getInstance().analyze(whetherOutput);
+            UnaryExp unaryExp1 = new UnaryExp();
+            res = unaryExp1.analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
+            }
+
+//            System.out.println(nextWordCategoryCode.getValue());
+//            System.out.println(unaryExp1.value);
+
+            if (nextWordCategoryCode.getValue().equals("MULT")) {
+                this.value *= unaryExp1.value;
+            }
+            // TODO 一个bug，有些时候会错误地把unaryExp1.value的值判定为0
+            else if (nextWordCategoryCode.getValue().equals("DIV")) {
+                // System.out.println(this.value);
+                this.value = this.value / unaryExp1.value;
+            }
+            else if (nextWordCategoryCode.getValue().equals("MOD")) {
+                this.value %= unaryExp1.value;
             }
         }
 

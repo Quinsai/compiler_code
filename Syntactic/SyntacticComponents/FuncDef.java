@@ -9,21 +9,8 @@ import Syntactic.SyntacticAnalysisResult;
 
 public class FuncDef extends SyntacticComponent {
 
-    /**
-     * 唯一单例
-     */
-    private static FuncDef funcDef;
-
-    private FuncDef() {
+    public FuncDef() {
         super();
-    }
-
-    static {
-        funcDef = new FuncDef();
-    }
-
-    public static FuncDef getInstance() {
-        return funcDef;
     }
 
     @Override
@@ -32,7 +19,8 @@ public class FuncDef extends SyntacticComponent {
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
-        res = FuncType.getInstance().analyze(whetherOutput);
+        FuncType funcType = new FuncType();
+        res = funcType.analyze(whetherOutput);
         if (res != SyntacticAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }
@@ -58,7 +46,8 @@ public class FuncDef extends SyntacticComponent {
             return SyntacticAnalysisResult.ERROR;
         }
         if (!nextWordCategoryCode.getValue().equals("RPARENT")) {
-            res = FuncFParams.getInstance().analyze(whetherOutput);
+            FuncFParams funcFParams = new FuncFParams();
+            res = funcFParams.analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
@@ -72,7 +61,8 @@ public class FuncDef extends SyntacticComponent {
             return SyntacticAnalysisResult.ERROR;
         }
 
-        res = Block.getInstance().analyze(whetherOutput);
+        Block block = new Block();
+        res = block.analyze(whetherOutput);
         if (res != SyntacticAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }

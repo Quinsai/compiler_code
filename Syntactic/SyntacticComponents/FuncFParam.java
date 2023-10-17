@@ -7,21 +7,8 @@ import Syntactic.SyntacticAnalysisResult;
 
 public class FuncFParam extends SyntacticComponent {
 
-    /**
-     * 唯一单例
-     */
-    private static FuncFParam funcFParam;
-
-    private FuncFParam() {
+    public FuncFParam() {
         super();
-    }
-
-    static {
-        funcFParam = new FuncFParam();
-    }
-
-    public static FuncFParam getInstance() {
-        return funcFParam;
     }
 
     @Override
@@ -30,7 +17,8 @@ public class FuncFParam extends SyntacticComponent {
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
-        res = BType.getInstance().analyze(whetherOutput);
+        BType bType = new BType();
+        res = bType.analyze(whetherOutput);
         if (res != SyntacticAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }
@@ -68,7 +56,8 @@ public class FuncFParam extends SyntacticComponent {
                 }
                 res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
-                res = ConstExp.getInstance().analyze(whetherOutput);
+                ConstExp constExp = new ConstExp();
+                res = constExp.analyze(whetherOutput);
                 if (res != SyntacticAnalysisResult.SUCCESS) {
                     return SyntacticAnalysisResult.ERROR;
                 }

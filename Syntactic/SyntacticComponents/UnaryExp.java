@@ -9,21 +9,8 @@ import javax.naming.ldap.StartTlsRequest;
 
 public class UnaryExp extends SyntacticComponent {
 
-    /**
-     * 唯一单例
-     */
-    private static UnaryExp unaryExp;
-
-    private UnaryExp() {
+    public UnaryExp() {
         super();
-    }
-
-    static {
-        unaryExp = new UnaryExp();
-    }
-
-    public static UnaryExp getInstance() {
-        return unaryExp;
     }
 
     @Override
@@ -44,10 +31,12 @@ public class UnaryExp extends SyntacticComponent {
             return LexicalAnalysisResult.ERROR;
         }
         if (nextWordCategoryCodeArray[0].getValue().equals("LPARENT")) {
-            res = PrimaryExp.getInstance().analyze(whetherOutput);
+            PrimaryExp primaryExp = new PrimaryExp();
+            res = primaryExp.analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
+            this.value = primaryExp.value;
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("IDENFR")) {
             if (nextWordCategoryCodeArray[1].getValue().equals("LPARENT")) {
@@ -59,7 +48,8 @@ public class UnaryExp extends SyntacticComponent {
                     return SyntacticAnalysisResult.ERROR;
                 }
                 if (!nextWordCategoryCode.getValue().equals("RPARENT")) {
-                    res = FuncRParams.getInstance().analyze(whetherOutput);
+                    FuncRParams funcRParams = new FuncRParams();
+                    res = funcRParams.analyze(whetherOutput);
                     if (res != SyntacticAnalysisResult.SUCCESS) {
                         return SyntacticAnalysisResult.ERROR;
                     }
@@ -72,33 +62,56 @@ public class UnaryExp extends SyntacticComponent {
                 if (!nextWordCategoryCode.getValue().equals("RPARENT")) {
                     return SyntacticAnalysisResult.ERROR;
                 }
+
+                this.value = 1;
             }
             else {
-                res = PrimaryExp.getInstance().analyze(whetherOutput);
+                PrimaryExp primaryExp = new PrimaryExp();
+                res = primaryExp.analyze(whetherOutput);
                 if (res != SyntacticAnalysisResult.SUCCESS) {
                     return SyntacticAnalysisResult.ERROR;
                 }
+
+                this.value = primaryExp.value;
             }
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("PLUS")
             || nextWordCategoryCodeArray[0].getValue().equals("MINU")
             || nextWordCategoryCodeArray[0].getValue().equals("NOT")
         ) {
-            res = UnaryOp.getInstance().analyze(whetherOutput);
+            UnaryOp unaryOp = new UnaryOp();
+            res = unaryOp.analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
 
-            res = UnaryExp.getInstance().analyze(whetherOutput);
+            UnaryExp unaryExp1 = new UnaryExp();
+            res = unaryExp1.analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
+
+            this.value = unaryExp1.value;
+
+            if (nextWordCategoryCodeArray[0].getValue().equals("PLUS")) {
+                this.value = unaryExp1.value;
+            }
+            else if (nextWordCategoryCodeArray[0].getValue().equals("MINU")) {
+                this.value = -1 * unaryExp1.value;
+            }
+            else if (nextWordCategoryCodeArray[0].getValue().equals("NOT")) {
+                this.value = 1 - unaryExp1.value;
+            }
+
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("INTCON")) {
-            res = PrimaryExp.getInstance().analyze(whetherOutput);
+            PrimaryExp primaryExp = new PrimaryExp();
+            res = primaryExp.analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
+
+            this.value = primaryExp.value;
         }
         else {
             return SyntacticAnalysisResult.ERROR;

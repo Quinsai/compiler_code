@@ -5,29 +5,20 @@ import Syntactic.SyntacticAnalysisResult;
 
 public class Cond extends SyntacticComponent {
 
-    /**
-     * 唯一单例
-     */
-    private static Cond cond;
-
-    private Cond() {
+    public Cond() {
         super();
-    }
-
-    static {
-        cond = new Cond();
-    }
-
-    public static Cond getInstance() {
-        return cond;
     }
 
     @Override
     public int analyze(boolean whetherOutput) {
-        int res = LOrExp.getInstance().analyze(whetherOutput);
+        LOrExp lOrExp = new LOrExp();
+        int res = lOrExp.analyze(whetherOutput);
         if (res != SyntacticAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }
+
+        this.value = lOrExp.value;
+
         if (whetherOutput) {
             OutputIntoFile.appendToFile("<Cond>\n", "output.txt");
         }

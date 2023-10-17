@@ -7,21 +7,8 @@ import Syntactic.SyntacticAnalysisResult;
 
 public class UnaryOp extends SyntacticComponent {
 
-    /**
-     * 唯一单例
-     */
-    private static UnaryOp unaryOp;
-
-    private UnaryOp() {
+    public UnaryOp() {
         super();
-    }
-
-    static {
-        unaryOp = new UnaryOp();
-    }
-
-    public static UnaryOp getInstance() {
-        return unaryOp;
     }
 
     @Override

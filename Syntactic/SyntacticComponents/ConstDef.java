@@ -7,21 +7,8 @@ import Syntactic.SyntacticAnalysisResult;
 
 public class ConstDef extends SyntacticComponent {
 
-    /**
-     * 唯一单例
-     */
-    private static ConstDef constDef;
-
-    private ConstDef() {
+    public ConstDef() {
         super();
-    }
-
-    static {
-        constDef = new ConstDef();
-    }
-
-    public static ConstDef getInstance() {
-        return constDef;
     }
 
     @Override
@@ -48,7 +35,8 @@ public class ConstDef extends SyntacticComponent {
             }
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
-            res = ConstExp.getInstance().analyze(whetherOutput);
+            ConstExp constExp = new ConstExp();
+            res = constExp.analyze(whetherOutput);
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
@@ -70,7 +58,8 @@ public class ConstDef extends SyntacticComponent {
             return SyntacticAnalysisResult.ERROR;
         }
 
-        res = ConstInitVal.getInstance().analyze(whetherOutput);
+        ConstInitVal constInitVal = new ConstInitVal();
+        res = constInitVal.analyze(whetherOutput);
         if (res != SyntacticAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }

@@ -7,21 +7,9 @@ import Syntactic.SyntacticAnalysisResult;
 
 public class BType extends SyntacticComponent {
 
-    /**
-     * 唯一单例
-     */
-    private static BType bType;
 
-    private BType() {
+    public BType() {
         super();
-    }
-
-    static {
-        bType = new BType();
-    }
-
-    public static BType getInstance() {
-        return bType;
     }
 
     @Override

@@ -7,21 +7,8 @@ import Syntactic.SyntacticAnalysisResult;
 
 public class ForStmt extends SyntacticComponent {
 
-    /**
-     * 唯一单例
-     */
-    private static ForStmt forStmt;
-
-    private ForStmt() {
+    public ForStmt() {
         super();
-    }
-
-    static {
-        forStmt = new ForStmt();
-    }
-
-    public static ForStmt getInstance() {
-        return forStmt;
     }
 
     @Override
@@ -30,7 +17,8 @@ public class ForStmt extends SyntacticComponent {
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
-        res = LVal.getInstance().analyze(whetherOutput);
+        LVal lVal = new LVal();
+        res = lVal.analyze(whetherOutput);
         if (res != SyntacticAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }
@@ -43,7 +31,8 @@ public class ForStmt extends SyntacticComponent {
             return SyntacticAnalysisResult.ERROR;
         }
 
-        res = Exp.getInstance().analyze(whetherOutput);
+        Exp exp = new Exp();
+        res = exp.analyze(whetherOutput);
         if (res != SyntacticAnalysisResult.SUCCESS) {
             return SyntacticAnalysisResult.ERROR;
         }
