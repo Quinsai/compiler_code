@@ -1,7 +1,7 @@
 package Syntactic.SyntacticComponents;
 
 import Output.OutputIntoFile;
-import Syntactic.SyntacticAnalysisResult;
+import Result.AnalysisResult;
 
 public class Cond extends SyntacticComponent {
 
@@ -10,11 +10,11 @@ public class Cond extends SyntacticComponent {
     }
 
     @Override
-    public int analyze(boolean whetherOutput) {
+    public AnalysisResult analyze(boolean whetherOutput) {
         LOrExp lOrExp = new LOrExp();
-        int res = lOrExp.analyze(whetherOutput);
-        if (res != SyntacticAnalysisResult.SUCCESS) {
-            return SyntacticAnalysisResult.ERROR;
+        AnalysisResult res = lOrExp.analyze(whetherOutput);
+        if (res != AnalysisResult.SUCCESS) {
+            return AnalysisResult.FAIL;
         }
 
         this.value = lOrExp.value;
@@ -22,6 +22,6 @@ public class Cond extends SyntacticComponent {
         if (whetherOutput) {
             OutputIntoFile.appendToFile("<Cond>\n", "output.txt");
         }
-        return SyntacticAnalysisResult.SUCCESS;
+        return AnalysisResult.SUCCESS;
     }
 }

@@ -1,9 +1,8 @@
 package Syntactic.SyntacticComponents;
 
-import Lexical.LexicalAnalysisResult;
 import Other.ParamResult;
 import Output.OutputIntoFile;
-import Syntactic.SyntacticAnalysisResult;
+import Result.AnalysisResult;
 
 public class VarDecl extends SyntacticComponent {
 
@@ -12,27 +11,27 @@ public class VarDecl extends SyntacticComponent {
     }
 
     @Override
-    public int analyze(boolean whetherOutput) {
-        int res = 0;
+    public AnalysisResult analyze(boolean whetherOutput) {
+        AnalysisResult res;
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
         BType bType = new BType();
         res = bType.analyze(whetherOutput);
-        if (res != SyntacticAnalysisResult.SUCCESS) {
-            return SyntacticAnalysisResult.ERROR;
+        if (res != AnalysisResult.SUCCESS) {
+            return AnalysisResult.FAIL;
         }
 
         VarDef varDef = new VarDef();
         res = varDef.analyze(whetherOutput);
-        if (res != SyntacticAnalysisResult.SUCCESS) {
-            return SyntacticAnalysisResult.ERROR;
+        if (res != AnalysisResult.SUCCESS) {
+            return AnalysisResult.FAIL;
         }
 
         while (true) {
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
-            if (res != LexicalAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("COMMA")) {
                 break;
@@ -41,22 +40,22 @@ public class VarDecl extends SyntacticComponent {
 
             VarDef varDef1 = new VarDef();
             res = varDef1.analyze(whetherOutput);
-            if (res != SyntacticAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
         }
 
         res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
-        if (res != LexicalAnalysisResult.SUCCESS) {
-            return SyntacticAnalysisResult.ERROR;
+        if (res != AnalysisResult.SUCCESS) {
+            return AnalysisResult.FAIL;
         }
         if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
-            return SyntacticAnalysisResult.ERROR;
+            return AnalysisResult.FAIL;
         }
 
         if (whetherOutput) {
             OutputIntoFile.appendToFile("<VarDecl>\n", "output.txt");
         }
-        return SyntacticAnalysisResult.SUCCESS;
+        return AnalysisResult.SUCCESS;
     }
 }

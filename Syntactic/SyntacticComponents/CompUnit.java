@@ -1,11 +1,8 @@
 package Syntactic.SyntacticComponents;
 
-import Input.InputSourceCode;
-import Lexical.LexicalAnalysis;
-import Lexical.LexicalAnalysisResult;
 import Other.ParamResult;
 import Output.OutputIntoFile;
-import Syntactic.SyntacticAnalysisResult;
+import Result.AnalysisResult;
 
 public class CompUnit extends SyntacticComponent {
 
@@ -16,9 +13,10 @@ public class CompUnit extends SyntacticComponent {
     private static final int DECL = 665;
     private static final int FUNC_DEF = 878;
     private static final int MAIN_FUNC_DEF = 847;
+    private static final int FAIL = 868;
 
     private int whichComponent() {
-        int res;
+        AnalysisResult res;
         ParamResult<String>[] nextWordsCategoryCode = new ParamResult[3];
         ParamResult<String>[] nextWordsValue = new ParamResult[3];
         for (int i = 0; i < 3; i++) {
@@ -28,8 +26,8 @@ public class CompUnit extends SyntacticComponent {
 
         res = lexicalAnalysis.peekMany(3, nextWordsCategoryCode, nextWordsValue);
 
-        if (res == LexicalAnalysisResult.ERROR) {
-            return SyntacticAnalysisResult.ERROR;
+        if (res == AnalysisResult.FAIL) {
+            return FAIL;
         }
         if (nextWordsCategoryCode[0].getValue().equals("CONSTTK")) {
             return CompUnit.DECL;
@@ -60,15 +58,16 @@ public class CompUnit extends SyntacticComponent {
      * @return 0表示正常，-1表示结束，-2表示出错
      */
     @Override
-    public int analyze(boolean whetherOutput) {
-        int res = 0;
+    public AnalysisResult analyze(boolean whetherOutput) {
+        AnalysisResult res;
+        int comp = 0;
 
         while (true) {
-            res = whichComponent();
-            if (res == CompUnit.DECL) {
+            comp = whichComponent();
+            if (comp == CompUnit.DECL) {
                 Decl decl = new Decl();
                 res = decl.analyze(whetherOutput);
-                if (res == SyntacticAnalysisResult.ERROR) {
+                if (res == AnalysisResult.FAIL) {
                     return res;
                 }
             }
@@ -78,11 +77,11 @@ public class CompUnit extends SyntacticComponent {
         }
 
         while (true) {
-            res = whichComponent();
-            if (res == CompUnit.FUNC_DEF) {
+            comp = whichComponent();
+            if (comp == CompUnit.FUNC_DEF) {
                 FuncDef funcDef = new FuncDef();
                 res = funcDef.analyze(whetherOutput);
-                if (res == SyntacticAnalysisResult.ERROR) {
+                if (res == AnalysisResult.FAIL) {
                     return res;
                 }
             }
@@ -93,14 +92,14 @@ public class CompUnit extends SyntacticComponent {
 
         MainFuncDef mainFuncDef = new MainFuncDef();
         res = mainFuncDef.analyze(whetherOutput);
-        if (res == SyntacticAnalysisResult.ERROR) {
+        if (res == AnalysisResult.FAIL) {
             return res;
         }
 
         if (whetherOutput) {
             OutputIntoFile.appendToFile("<CompUnit>\n", "output.txt");
         }
-        return SyntacticAnalysisResult.SUCCESS;
+        return AnalysisResult.SUCCESS;
 
     }
 }

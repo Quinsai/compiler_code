@@ -1,11 +1,8 @@
 package Syntactic.SyntacticComponents;
 
-import Lexical.LexicalAnalysisResult;
 import Other.ParamResult;
 import Output.OutputIntoFile;
-import Syntactic.SyntacticAnalysisResult;
-
-import javax.xml.transform.sax.SAXTransformerFactory;
+import Result.AnalysisResult;
 
 public class FuncRParams extends SyntacticComponent {
 
@@ -14,21 +11,21 @@ public class FuncRParams extends SyntacticComponent {
     }
 
     @Override
-    public int analyze(boolean whetherOutput) {
-        int res = 0;
+    public AnalysisResult analyze(boolean whetherOutput) {
+        AnalysisResult res;
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
         Exp exp = new Exp();
         res = exp.analyze(whetherOutput);
-        if (res != SyntacticAnalysisResult.SUCCESS) {
-            return SyntacticAnalysisResult.ERROR;
+        if (res != AnalysisResult.SUCCESS) {
+            return AnalysisResult.FAIL;
         }
 
         while (true) {
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
-            if (res != LexicalAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("COMMA")) {
                 break;
@@ -37,14 +34,14 @@ public class FuncRParams extends SyntacticComponent {
 
             Exp exp1 = new Exp();
             res = exp1.analyze(whetherOutput);
-            if (res != SyntacticAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
         }
 
         if (whetherOutput) {
             OutputIntoFile.appendToFile("<FuncRParams>\n", "output.txt");
         }
-        return SyntacticAnalysisResult.SUCCESS;
+        return AnalysisResult.SUCCESS;
     }
 }

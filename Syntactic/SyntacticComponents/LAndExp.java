@@ -1,9 +1,8 @@
 package Syntactic.SyntacticComponents;
 
-import Lexical.LexicalAnalysisResult;
 import Other.ParamResult;
 import Output.OutputIntoFile;
-import Syntactic.SyntacticAnalysisResult;
+import Result.AnalysisResult;
 
 public class LAndExp extends SyntacticComponent {
 
@@ -12,22 +11,22 @@ public class LAndExp extends SyntacticComponent {
     }
 
     @Override
-    public int analyze(boolean whetherOutput) {
-        int res = 0;
+    public AnalysisResult analyze(boolean whetherOutput) {
+        AnalysisResult res;
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
         EqExp eqExp = new EqExp();
         res = eqExp.analyze(whetherOutput);
-        if (res != SyntacticAnalysisResult.SUCCESS) {
-            return SyntacticAnalysisResult.ERROR;
+        if (res != AnalysisResult.SUCCESS) {
+            return AnalysisResult.FAIL;
         }
         this.value = eqExp.value;
 
         while (true) {
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
-            if (res != LexicalAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
             if (!(nextWordCategoryCode.getValue().equals("AND")
             )) {
@@ -40,8 +39,8 @@ public class LAndExp extends SyntacticComponent {
 
             EqExp eqExp1 = new EqExp();
             res = eqExp1.analyze(whetherOutput);
-            if (res != SyntacticAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
 
             this.value = this.value & eqExp1.value;
@@ -50,6 +49,6 @@ public class LAndExp extends SyntacticComponent {
         if (whetherOutput) {
             OutputIntoFile.appendToFile("<LAndExp>\n", "output.txt");
         }
-        return SyntacticAnalysisResult.SUCCESS;
+        return AnalysisResult.SUCCESS;
     }
 }

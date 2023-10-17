@@ -1,4 +1,4 @@
-package Error;
+package Result.Error;
 
 public class HandleError {
 

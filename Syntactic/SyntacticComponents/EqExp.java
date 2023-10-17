@@ -1,9 +1,8 @@
 package Syntactic.SyntacticComponents;
 
-import Lexical.LexicalAnalysisResult;
 import Other.ParamResult;
 import Output.OutputIntoFile;
-import Syntactic.SyntacticAnalysisResult;
+import Result.AnalysisResult;
 
 public class EqExp extends SyntacticComponent {
 
@@ -15,24 +14,24 @@ public class EqExp extends SyntacticComponent {
     }
 
     @Override
-    public int analyze(boolean whetherOutput) {
-        int res = 0;
+    public AnalysisResult analyze(boolean whetherOutput) {
+        AnalysisResult res;
         int operation = 0;
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
         RelExp relExp = new RelExp();
         res = relExp.analyze(whetherOutput);
-        if (res != SyntacticAnalysisResult.SUCCESS) {
-            return SyntacticAnalysisResult.ERROR;
+        if (res != AnalysisResult.SUCCESS) {
+            return AnalysisResult.FAIL;
         }
 
         this.value = relExp.value;
 
         while (true) {
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
-            if (res != LexicalAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
             if (nextWordCategoryCode.getValue().equals("EQL")) {
                 operation = EQL;
@@ -50,8 +49,8 @@ public class EqExp extends SyntacticComponent {
 
             RelExp relExp1 = new RelExp();
             res = relExp1.analyze(whetherOutput);
-            if (res != SyntacticAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
 
             if (operation == EQL && this.value == relExp1.value) {
@@ -68,6 +67,6 @@ public class EqExp extends SyntacticComponent {
         if (whetherOutput) {
             OutputIntoFile.appendToFile("<EqExp>\n", "output.txt");
         }
-        return SyntacticAnalysisResult.SUCCESS;
+        return AnalysisResult.SUCCESS;
     }
 }

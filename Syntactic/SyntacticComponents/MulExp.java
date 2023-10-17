@@ -1,9 +1,8 @@
 package Syntactic.SyntacticComponents;
 
-import Lexical.LexicalAnalysisResult;
 import Other.ParamResult;
 import Output.OutputIntoFile;
-import Syntactic.SyntacticAnalysisResult;
+import Result.AnalysisResult;
 
 public class MulExp extends SyntacticComponent {
 
@@ -12,22 +11,22 @@ public class MulExp extends SyntacticComponent {
     }
 
     @Override
-    public int analyze(boolean whetherOutput) {
-        int res = 0;
+    public AnalysisResult analyze(boolean whetherOutput) {
+        AnalysisResult res;
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
         UnaryExp unaryExp = new UnaryExp();
         res = unaryExp.analyze(whetherOutput);
-        if (res != SyntacticAnalysisResult.SUCCESS) {
-            return SyntacticAnalysisResult.ERROR;
+        if (res != AnalysisResult.SUCCESS) {
+            return AnalysisResult.FAIL;
         }
         this.value = unaryExp.value;
 
         while (true) {
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
-            if (res != LexicalAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
             if (!(nextWordCategoryCode.getValue().equals("MULT")
                 || nextWordCategoryCode.getValue().equals("DIV")
@@ -42,8 +41,8 @@ public class MulExp extends SyntacticComponent {
 
             UnaryExp unaryExp1 = new UnaryExp();
             res = unaryExp1.analyze(whetherOutput);
-            if (res != SyntacticAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
 
             if (nextWordCategoryCode.getValue().equals("MULT")) {
@@ -61,6 +60,6 @@ public class MulExp extends SyntacticComponent {
         if (whetherOutput) {
             OutputIntoFile.appendToFile("<MulExp>\n", "output.txt");
         }
-        return SyntacticAnalysisResult.SUCCESS;
+        return AnalysisResult.SUCCESS;
     }
 }

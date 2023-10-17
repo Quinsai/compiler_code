@@ -1,9 +1,8 @@
 package Syntactic.SyntacticComponents;
 
-import Lexical.LexicalAnalysisResult;
 import Other.ParamResult;
 import Output.OutputIntoFile;
-import Syntactic.SyntacticAnalysisResult;
+import Result.AnalysisResult;
 
 public class ConstDecl extends SyntacticComponent {
 
@@ -12,35 +11,35 @@ public class ConstDecl extends SyntacticComponent {
    }
 
     @Override
-    public int analyze(boolean whetherOutput) {
-        int res = 0;
+    public AnalysisResult analyze(boolean whetherOutput) {
+        AnalysisResult res;
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
         res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode,nextWordValue);
-        if (res != LexicalAnalysisResult.SUCCESS) {
-            return SyntacticAnalysisResult.ERROR;
+        if (res != AnalysisResult.SUCCESS) {
+            return AnalysisResult.FAIL;
         }
         else if (!nextWordCategoryCode.getValue().equals("CONSTTK")) {
-            return SyntacticAnalysisResult.ERROR;
+            return AnalysisResult.FAIL;
         }
 
         BType bType = new BType();
         res = bType.analyze(whetherOutput);
-        if (res != SyntacticAnalysisResult.SUCCESS) {
-            return SyntacticAnalysisResult.ERROR;
+        if (res != AnalysisResult.SUCCESS) {
+            return AnalysisResult.FAIL;
         }
 
         ConstDef constDef = new ConstDef();
         res = constDef.analyze(whetherOutput);
-        if (res != SyntacticAnalysisResult.SUCCESS) {
-            return SyntacticAnalysisResult.ERROR;
+        if (res != AnalysisResult.SUCCESS) {
+            return AnalysisResult.FAIL;
         }
 
         while (true) {
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
-            if (res == LexicalAnalysisResult.ERROR) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res == AnalysisResult.FAIL) {
+                return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("COMMA")) {
                 break;
@@ -49,22 +48,22 @@ public class ConstDecl extends SyntacticComponent {
 
             ConstDef constDef1 = new ConstDef();
             res = constDef1.analyze(whetherOutput);
-            if (res != SyntacticAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
         }
 
         res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
-        if (res == LexicalAnalysisResult.ERROR) {
-            return SyntacticAnalysisResult.ERROR;
+        if (res == AnalysisResult.FAIL) {
+            return AnalysisResult.FAIL;
         }
         if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
-            return SyntacticAnalysisResult.ERROR;
+            return AnalysisResult.FAIL;
         }
 
         if (whetherOutput) {
             OutputIntoFile.appendToFile("<ConstDecl>\n", "output.txt");
         }
-        return SyntacticAnalysisResult.SUCCESS;
+        return AnalysisResult.SUCCESS;
     }
 }

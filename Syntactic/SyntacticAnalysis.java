@@ -3,6 +3,7 @@ package Syntactic;
 import Input.InputSourceCode;
 import Lexical.LexicalAnalysis;
 import Syntactic.SyntacticComponents.CompUnit;
+import Result.AnalysisResult;
 
 /**
  * 语法分析器类
@@ -53,7 +54,7 @@ public class SyntacticAnalysis {
      */
     public void run(boolean whetherOutput) {
         CompUnit compUnit = new CompUnit();
-        if (compUnit.analyze(whetherOutput) != SyntacticAnalysisResult.SUCCESS) {
+        if (compUnit.analyze(whetherOutput) != AnalysisResult.SUCCESS) {
             System.out.println("error!");
         }
     }

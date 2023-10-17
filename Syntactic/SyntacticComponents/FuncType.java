@@ -1,11 +1,8 @@
 package Syntactic.SyntacticComponents;
 
-import Lexical.LexicalAnalysisResult;
 import Other.ParamResult;
 import Output.OutputIntoFile;
-import Syntactic.SyntacticAnalysisResult;
-
-import javax.management.loading.ClassLoaderRepository;
+import Result.AnalysisResult;
 
 public class FuncType extends SyntacticComponent {
 
@@ -14,24 +11,24 @@ public class FuncType extends SyntacticComponent {
     }
 
     @Override
-    public int analyze(boolean whetherOutput) {
-        int res = 0;
+    public AnalysisResult analyze(boolean whetherOutput) {
+        AnalysisResult res;
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
         res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
-        if (res != LexicalAnalysisResult.SUCCESS) {
-            return SyntacticAnalysisResult.ERROR;
+        if (res != AnalysisResult.SUCCESS) {
+            return AnalysisResult.FAIL;
         }
         if (!(nextWordCategoryCode.getValue().equals("VOIDTK")
             || nextWordCategoryCode.getValue().equals("INTTK")
         )) {
-            return SyntacticAnalysisResult.ERROR;
+            return AnalysisResult.FAIL;
         }
 
         if (whetherOutput) {
             OutputIntoFile.appendToFile("<FuncType>\n", "output.txt");
         }
-        return SyntacticAnalysisResult.SUCCESS;
+        return AnalysisResult.SUCCESS;
     }
 }

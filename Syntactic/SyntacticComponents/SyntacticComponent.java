@@ -1,6 +1,7 @@
 package Syntactic.SyntacticComponents;
 
 import Lexical.LexicalAnalysis;
+import Result.AnalysisResult;
 
 /**
  * 各个语法成分的父类
@@ -22,8 +23,8 @@ public class SyntacticComponent {
         this.value = -1;
     }
 
-    public int analyze(boolean whetherOutput) {
+    public AnalysisResult analyze(boolean whetherOutput) {
         System.out.println("can u see me");
-        return 0;
+        return AnalysisResult.SUCCESS;
     }
 }

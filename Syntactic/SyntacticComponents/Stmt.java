@@ -1,11 +1,8 @@
 package Syntactic.SyntacticComponents;
 
-import Lexical.LexicalAnalysisResult;
 import Other.ParamResult;
 import Output.OutputIntoFile;
-import Syntactic.SyntacticAnalysisResult;
-
-import java.util.concurrent.Callable;
+import Result.AnalysisResult;
 
 public class Stmt extends SyntacticComponent {
 
@@ -14,8 +11,8 @@ public class Stmt extends SyntacticComponent {
     }
 
     @Override
-    public int analyze(boolean whetherOutput) {
-        int res = 0;
+    public AnalysisResult analyze(boolean whetherOutput) {
+        AnalysisResult res;
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
         ParamResult<String>[] nextWordCategoryCodeArray = new ParamResult[2];
@@ -26,63 +23,63 @@ public class Stmt extends SyntacticComponent {
         }
 
         res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
-        if (res != LexicalAnalysisResult.SUCCESS) {
-            return SyntacticAnalysisResult.ERROR;
+        if (res != AnalysisResult.SUCCESS) {
+            return AnalysisResult.FAIL;
         }
         if (nextWordCategoryCode.getValue().equals("SEMICN")) {
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
             if (whetherOutput) {
                 OutputIntoFile.appendToFile("<Stmt>\n", "output.txt");
             }
-            return SyntacticAnalysisResult.SUCCESS;
+            return AnalysisResult.SUCCESS;
         }
 
         res = lexicalAnalysis.peekMany(2, nextWordCategoryCodeArray, nextWordValueArray);
-        if (res != LexicalAnalysisResult.SUCCESS) {
-            return SyntacticAnalysisResult.ERROR;
+        if (res != AnalysisResult.SUCCESS) {
+            return AnalysisResult.FAIL;
         }
         if (nextWordCategoryCodeArray[0].getValue().equals("IFTK")) {
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
-            if (res != LexicalAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("LPARENT")) {
-                return SyntacticAnalysisResult.ERROR;
+                return AnalysisResult.FAIL;
             }
 
             Cond cond = new Cond();
             res = cond.analyze(whetherOutput);
-            if (res != SyntacticAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
 
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
-            if (res != LexicalAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("RPARENT")) {
-                return SyntacticAnalysisResult.ERROR;
+                return AnalysisResult.FAIL;
             }
 
             Stmt stmt = new Stmt();
             res = stmt.analyze(whetherOutput);
-            if (res != SyntacticAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
 
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
-            if (res != LexicalAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
             if (nextWordCategoryCode.getValue().equals("ELSETK")) {
                 res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
                 Stmt stmt1 = new Stmt();
                 res = stmt1.analyze(whetherOutput);
-                if (res != SyntacticAnalysisResult.SUCCESS) {
-                    return SyntacticAnalysisResult.ERROR;
+                if (res != AnalysisResult.SUCCESS) {
+                    return AnalysisResult.FAIL;
                 }
             }
         }
@@ -90,171 +87,171 @@ public class Stmt extends SyntacticComponent {
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
-            if (res != LexicalAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("LPARENT")) {
-                return SyntacticAnalysisResult.ERROR;
+                return AnalysisResult.FAIL;
             }
 
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
-            if (res != LexicalAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
                 ForStmt forStmt = new ForStmt();
                 res = forStmt.analyze(whetherOutput);
-                if (res != SyntacticAnalysisResult.SUCCESS) {
-                    return SyntacticAnalysisResult.ERROR;
+                if (res != AnalysisResult.SUCCESS) {
+                    return AnalysisResult.FAIL;
                 }
             }
 
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
-            if (res != LexicalAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
-                return SyntacticAnalysisResult.ERROR;
+                return AnalysisResult.FAIL;
             }
 
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
-            if (res != LexicalAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
                 Cond cond = new Cond();
                 res = cond.analyze(whetherOutput);
-                if (res != SyntacticAnalysisResult.SUCCESS) {
-                    return SyntacticAnalysisResult.ERROR;
+                if (res != AnalysisResult.SUCCESS) {
+                    return AnalysisResult.FAIL;
                 }
             }
 
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
-            if (res != LexicalAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
-                return SyntacticAnalysisResult.ERROR;
+                return AnalysisResult.FAIL;
             }
 
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
-            if (res != LexicalAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("RPARENT")) {
                 ForStmt forStmt = new ForStmt();
                 res = forStmt.analyze(whetherOutput);
-                if (res != SyntacticAnalysisResult.SUCCESS) {
-                    return SyntacticAnalysisResult.ERROR;
+                if (res != AnalysisResult.SUCCESS) {
+                    return AnalysisResult.FAIL;
                 }
             }
 
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
-            if (res != LexicalAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("RPARENT")) {
-                return SyntacticAnalysisResult.ERROR;
+                return AnalysisResult.FAIL;
             }
 
             Stmt stmt = new Stmt();
             res = stmt.analyze(whetherOutput);
-            if (res != SyntacticAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("BREAKTK")) {
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
-            if (res != LexicalAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("BREAKTK")) {
-                return SyntacticAnalysisResult.ERROR;
+                return AnalysisResult.FAIL;
             }
 
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
-            if (res != LexicalAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
-                return SyntacticAnalysisResult.ERROR;
+                return AnalysisResult.FAIL;
             }
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("CONTINUETK")) {
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
-            if (res != LexicalAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("CONTINUETK")) {
-                return SyntacticAnalysisResult.ERROR;
+                return AnalysisResult.FAIL;
             }
 
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
-            if (res != LexicalAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
-                return SyntacticAnalysisResult.ERROR;
+                return AnalysisResult.FAIL;
             }
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("RETURNTK")) {
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
-            if (res != LexicalAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("RETURNTK")) {
-                return SyntacticAnalysisResult.ERROR;
+                return AnalysisResult.FAIL;
             }
 
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
-            if (res != LexicalAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
                 Exp exp = new Exp();
                 res = exp.analyze(whetherOutput);
-                if (res != SyntacticAnalysisResult.SUCCESS) {
-                    return SyntacticAnalysisResult.ERROR;
+                if (res != AnalysisResult.SUCCESS) {
+                    return AnalysisResult.FAIL;
                 }
             }
 
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
-            if (res != LexicalAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
-                return SyntacticAnalysisResult.ERROR;
+                return AnalysisResult.FAIL;
             }
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("PRINTFTK")) {
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
-            if (res != LexicalAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("PRINTFTK")) {
-                return SyntacticAnalysisResult.ERROR;
+                return AnalysisResult.FAIL;
             }
 
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
-            if (res != LexicalAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("LPARENT")) {
-                return SyntacticAnalysisResult.ERROR;
+                return AnalysisResult.FAIL;
             }
 
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
-            if (res != LexicalAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("STRCON")) {
-                return SyntacticAnalysisResult.ERROR;
+                return AnalysisResult.FAIL;
             }
 
             while (true) {
                 res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
-                if (res != LexicalAnalysisResult.SUCCESS) {
-                    return SyntacticAnalysisResult.ERROR;
+                if (res != AnalysisResult.SUCCESS) {
+                    return AnalysisResult.FAIL;
                 }
                 if (!nextWordCategoryCode.getValue().equals("COMMA")) {
                     break;
@@ -263,32 +260,32 @@ public class Stmt extends SyntacticComponent {
 
                 Exp exp = new Exp();
                 res = exp.analyze(whetherOutput);
-                if (res != SyntacticAnalysisResult.SUCCESS) {
-                    return SyntacticAnalysisResult.ERROR;
+                if (res != AnalysisResult.SUCCESS) {
+                    return AnalysisResult.FAIL;
                 }
             }
 
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
-            if (res != LexicalAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("RPARENT")) {
-                return SyntacticAnalysisResult.ERROR;
+                return AnalysisResult.FAIL;
             }
 
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
-            if (res != LexicalAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
-                return SyntacticAnalysisResult.ERROR;
+                return AnalysisResult.FAIL;
             }
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("LBRACE")) {
             Block block = new Block();
             res = block.analyze(whetherOutput);
-            if (res != SyntacticAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("IDENFR")) {
@@ -296,78 +293,78 @@ public class Stmt extends SyntacticComponent {
             if (hadAssignBeforeSemicn) {
                 LVal lVal = new LVal();
                 res = lVal.analyze(whetherOutput);
-                if (res != SyntacticAnalysisResult.SUCCESS) {
-                    return SyntacticAnalysisResult.ERROR;
+                if (res != AnalysisResult.SUCCESS) {
+                    return AnalysisResult.FAIL;
                 }
 
                 res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
-                if (res != LexicalAnalysisResult.SUCCESS) {
-                    return SyntacticAnalysisResult.ERROR;
+                if (res != AnalysisResult.SUCCESS) {
+                    return AnalysisResult.FAIL;
                 }
                 if (!nextWordCategoryCode.getValue().equals("ASSIGN")) {
-                    return SyntacticAnalysisResult.ERROR;
+                    return AnalysisResult.FAIL;
                 }
 
                 res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
-                if (res != LexicalAnalysisResult.SUCCESS) {
-                    return SyntacticAnalysisResult.ERROR;
+                if (res != AnalysisResult.SUCCESS) {
+                    return AnalysisResult.FAIL;
                 }
                 if (nextWordCategoryCode.getValue().equals("GETINTTK")) {
                     res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
                     res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
-                    if (res != LexicalAnalysisResult.SUCCESS) {
-                        return SyntacticAnalysisResult.ERROR;
+                    if (res != AnalysisResult.SUCCESS) {
+                        return AnalysisResult.FAIL;
                     }
                     if (!nextWordCategoryCode.getValue().equals("LPARENT")) {
-                        return SyntacticAnalysisResult.ERROR;
+                        return AnalysisResult.FAIL;
                     }
 
                     res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
-                    if (res != LexicalAnalysisResult.SUCCESS) {
-                        return SyntacticAnalysisResult.ERROR;
+                    if (res != AnalysisResult.SUCCESS) {
+                        return AnalysisResult.FAIL;
                     }
                     if (!nextWordCategoryCode.getValue().equals("RPARENT")) {
-                        return SyntacticAnalysisResult.ERROR;
+                        return AnalysisResult.FAIL;
                     }
 
                     res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
-                    if (res != LexicalAnalysisResult.SUCCESS) {
-                        return SyntacticAnalysisResult.ERROR;
+                    if (res != AnalysisResult.SUCCESS) {
+                        return AnalysisResult.FAIL;
                     }
                     if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
-                        return SyntacticAnalysisResult.ERROR;
+                        return AnalysisResult.FAIL;
                     }
                 }
                 else {
                     Exp exp = new Exp();
                     res = exp.analyze(whetherOutput);
-                    if (res != SyntacticAnalysisResult.SUCCESS) {
-                        return SyntacticAnalysisResult.ERROR;
+                    if (res != AnalysisResult.SUCCESS) {
+                        return AnalysisResult.FAIL;
                     }
 
                     res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
-                    if (res != LexicalAnalysisResult.SUCCESS) {
-                        return SyntacticAnalysisResult.ERROR;
+                    if (res != AnalysisResult.SUCCESS) {
+                        return AnalysisResult.FAIL;
                     }
                     if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
-                        return SyntacticAnalysisResult.ERROR;
+                        return AnalysisResult.FAIL;
                     }
                 }
             }
             else {
                 Exp exp =  new Exp();
                 res = exp.analyze(whetherOutput);
-                if (res != SyntacticAnalysisResult.SUCCESS) {
-                    return SyntacticAnalysisResult.ERROR;
+                if (res != AnalysisResult.SUCCESS) {
+                    return AnalysisResult.FAIL;
                 }
 
                 res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
-                if (res != LexicalAnalysisResult.SUCCESS) {
-                    return SyntacticAnalysisResult.ERROR;
+                if (res != AnalysisResult.SUCCESS) {
+                    return AnalysisResult.FAIL;
                 }
                 if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
-                    return SyntacticAnalysisResult.ERROR;
+                    return AnalysisResult.FAIL;
                 }
             }
         }
@@ -379,25 +376,25 @@ public class Stmt extends SyntacticComponent {
         ) {
             Exp exp = new Exp();
             res = exp.analyze(whetherOutput);
-            if (res != SyntacticAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
 
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
-            if (res != LexicalAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
-                return SyntacticAnalysisResult.ERROR;
+                return AnalysisResult.FAIL;
             }
         }
         else {
-            return SyntacticAnalysisResult.ERROR;
+            return AnalysisResult.FAIL;
         }
 
         if (whetherOutput) {
             OutputIntoFile.appendToFile("<Stmt>\n", "output.txt");
         }
-        return SyntacticAnalysisResult.SUCCESS;
+        return AnalysisResult.SUCCESS;
     }
 }

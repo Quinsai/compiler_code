@@ -1,7 +1,7 @@
 package Syntactic.SyntacticComponents;
 
 import Output.OutputIntoFile;
-import Syntactic.SyntacticAnalysisResult;
+import Result.AnalysisResult;
 
 public class ConstExp extends SyntacticComponent {
 
@@ -10,11 +10,11 @@ public class ConstExp extends SyntacticComponent {
     }
 
     @Override
-    public int analyze(boolean whetherOutput) {
+    public AnalysisResult analyze(boolean whetherOutput) {
         AddExp addExp = new AddExp();
-        int res = addExp.analyze(whetherOutput);
-        if (res != SyntacticAnalysisResult.SUCCESS) {
-            return SyntacticAnalysisResult.ERROR;
+        AnalysisResult res = addExp.analyze(whetherOutput);
+        if (res != AnalysisResult.SUCCESS) {
+            return AnalysisResult.FAIL;
         }
 
         this.value = addExp.value;
@@ -22,6 +22,6 @@ public class ConstExp extends SyntacticComponent {
         if (whetherOutput) {
             OutputIntoFile.appendToFile("<ConstExp>\n", "output.txt");
         }
-        return SyntacticAnalysisResult.SUCCESS;
+        return AnalysisResult.SUCCESS;
     }
 }

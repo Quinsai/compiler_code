@@ -1,9 +1,7 @@
 package Syntactic.SyntacticComponents;
 
-import Lexical.LexicalAnalysisResult;
 import Other.ParamResult;
-import Output.OutputIntoFile;
-import Syntactic.SyntacticAnalysisResult;
+import Result.AnalysisResult;
 
 public class BlockItem extends SyntacticComponent {
 
@@ -13,30 +11,30 @@ public class BlockItem extends SyntacticComponent {
     }
 
     @Override
-    public int analyze(boolean whetherOutput) {
-        int res = 0;
+    public AnalysisResult analyze(boolean whetherOutput) {
+        AnalysisResult res;
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
         res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
-        if (res != LexicalAnalysisResult.SUCCESS) {
-            return SyntacticAnalysisResult.ERROR;
+        if (res != AnalysisResult.SUCCESS) {
+            return Result.AnalysisResult.FAIL;
         }
         if (nextWordCategoryCode.getValue().equals("CONSTTK") || nextWordCategoryCode.getValue().equals("INTTK")) {
             Decl decl = new Decl();
             res = decl.analyze(whetherOutput);
-            if (res != SyntacticAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != Result.AnalysisResult.SUCCESS) {
+                return Result.AnalysisResult.FAIL;
             }
         }
         else {
             Stmt stmt = new Stmt();
             res = stmt.analyze(whetherOutput);
-            if (res != SyntacticAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != Result.AnalysisResult.SUCCESS) {
+                return Result.AnalysisResult.FAIL;
             }
         }
 
-        return SyntacticAnalysisResult.SUCCESS;
+        return Result.AnalysisResult.SUCCESS;
     }
 }

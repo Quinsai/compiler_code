@@ -1,9 +1,8 @@
 package Syntactic.SyntacticComponents;
 
-import Lexical.LexicalAnalysisResult;
 import Other.ParamResult;
 import Output.OutputIntoFile;
-import Syntactic.SyntacticAnalysisResult;
+import Result.AnalysisResult;
 
 public class ConstInitVal extends SyntacticComponent {
 
@@ -12,23 +11,23 @@ public class ConstInitVal extends SyntacticComponent {
     }
 
     @Override
-    public int analyze(boolean whetherOutput) {
+    public AnalysisResult analyze(boolean whetherOutput) {
 
-        int res;
+        AnalysisResult res;
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
         res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
-        if (res != LexicalAnalysisResult.SUCCESS) {
-            return SyntacticAnalysisResult.ERROR;
+        if (res != AnalysisResult.SUCCESS) {
+            return AnalysisResult.FAIL;
         }
         if (nextWordCategoryCode.getValue().equals("LBRACE")) {
 
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
-            if (res != LexicalAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
             if (nextWordCategoryCode.getValue().equals("RBRACE")) {
                 res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
@@ -36,14 +35,14 @@ public class ConstInitVal extends SyntacticComponent {
             else {
                 ConstInitVal constInitVal = new ConstInitVal();
                 res = constInitVal.analyze(whetherOutput);
-                if (res != SyntacticAnalysisResult.SUCCESS) {
-                    return SyntacticAnalysisResult.ERROR;
+                if (res != AnalysisResult.SUCCESS) {
+                    return AnalysisResult.FAIL;
                 }
 
                 while (true) {
                     res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
-                    if (res != LexicalAnalysisResult.SUCCESS) {
-                        return SyntacticAnalysisResult.ERROR;
+                    if (res != AnalysisResult.SUCCESS) {
+                        return AnalysisResult.FAIL;
                     }
                     if (!nextWordCategoryCode.getValue().equals("COMMA")) {
                         break;
@@ -52,31 +51,31 @@ public class ConstInitVal extends SyntacticComponent {
 
                     ConstInitVal constInitVal1 = new ConstInitVal();
                     res = constInitVal1.analyze(whetherOutput);
-                    if (res == SyntacticAnalysisResult.ERROR) {
-                        return SyntacticAnalysisResult.ERROR;
+                    if (res == AnalysisResult.FAIL) {
+                        return AnalysisResult.FAIL;
                     }
                 }
 
                 res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
-                if (res != LexicalAnalysisResult.SUCCESS) {
-                    return SyntacticAnalysisResult.ERROR;
+                if (res != AnalysisResult.SUCCESS) {
+                    return AnalysisResult.FAIL;
                 }
                 if (!nextWordCategoryCode.getValue().equals("RBRACE")) {
-                    return SyntacticAnalysisResult.ERROR;
+                    return AnalysisResult.FAIL;
                 }
             }
         }
         else {
             ConstExp constExp = new ConstExp();
             res = constExp.analyze(whetherOutput);
-            if (res != SyntacticAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
         }
 
         if (whetherOutput) {
             OutputIntoFile.appendToFile("<ConstInitVal>\n", "output.txt");
         }
-        return SyntacticAnalysisResult.SUCCESS;
+        return AnalysisResult.SUCCESS;
     }
 }

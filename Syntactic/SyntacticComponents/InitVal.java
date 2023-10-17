@@ -1,9 +1,8 @@
 package Syntactic.SyntacticComponents;
 
-import Lexical.LexicalAnalysisResult;
 import Other.ParamResult;
 import Output.OutputIntoFile;
-import Syntactic.SyntacticAnalysisResult;
+import Result.AnalysisResult;
 
 public class InitVal extends SyntacticComponent {
 
@@ -12,28 +11,28 @@ public class InitVal extends SyntacticComponent {
     }
 
     @Override
-    public int analyze(boolean whetherOutput) {
-        int res = 0;
+    public AnalysisResult analyze(boolean whetherOutput) {
+        AnalysisResult res;
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
         res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
-        if (res != LexicalAnalysisResult.SUCCESS) {
-            return SyntacticAnalysisResult.ERROR;
+        if (res != AnalysisResult.SUCCESS) {
+            return AnalysisResult.FAIL;
         }
         if (!nextWordCategoryCode.getValue().equals("LBRACE")) {
             Exp exp = new Exp();
             res = exp.analyze(whetherOutput);
-            if (res != SyntacticAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
         }
         else {
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
-            if (res != LexicalAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
             if (nextWordCategoryCode.getValue().equals("RBRACE")) {
                 res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
@@ -41,14 +40,14 @@ public class InitVal extends SyntacticComponent {
             else {
                 InitVal initVal = new InitVal();
                 res = initVal.analyze(whetherOutput);
-                if (res != SyntacticAnalysisResult.SUCCESS) {
-                    return SyntacticAnalysisResult.ERROR;
+                if (res != AnalysisResult.SUCCESS) {
+                    return AnalysisResult.FAIL;
                 }
 
                 while (true) {
                     res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
-                    if (res != LexicalAnalysisResult.SUCCESS) {
-                        return SyntacticAnalysisResult.ERROR;
+                    if (res != AnalysisResult.SUCCESS) {
+                        return AnalysisResult.FAIL;
                     }
                     if (!nextWordCategoryCode.getValue().equals("COMMA")) {
                         break;
@@ -57,17 +56,17 @@ public class InitVal extends SyntacticComponent {
 
                     InitVal initVal1 = new InitVal();
                     res = initVal1.analyze(whetherOutput);
-                    if (res != SyntacticAnalysisResult.SUCCESS) {
-                        return SyntacticAnalysisResult.ERROR;
+                    if (res != AnalysisResult.SUCCESS) {
+                        return AnalysisResult.FAIL;
                     }
                 }
 
                 res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
-                if (res != LexicalAnalysisResult.SUCCESS) {
-                    return SyntacticAnalysisResult.ERROR;
+                if (res != AnalysisResult.SUCCESS) {
+                    return AnalysisResult.FAIL;
                 }
                 if (!nextWordCategoryCode.getValue().equals("RBRACE")) {
-                    return SyntacticAnalysisResult.ERROR;
+                    return AnalysisResult.FAIL;
                 }
             }
         }
@@ -75,6 +74,6 @@ public class InitVal extends SyntacticComponent {
         if (whetherOutput) {
             OutputIntoFile.appendToFile("<InitVal>\n", "output.txt");
         }
-        return SyntacticAnalysisResult.SUCCESS;
+        return AnalysisResult.SUCCESS;
     }
 }

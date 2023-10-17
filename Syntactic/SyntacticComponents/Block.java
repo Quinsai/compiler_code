@@ -1,9 +1,8 @@
 package Syntactic.SyntacticComponents;
 
-import Lexical.LexicalAnalysisResult;
 import Other.ParamResult;
 import Output.OutputIntoFile;
-import Syntactic.SyntacticAnalysisResult;
+import Result.AnalysisResult;
 
 public class Block extends SyntacticComponent {
 
@@ -12,23 +11,23 @@ public class Block extends SyntacticComponent {
     }
 
     @Override
-    public int analyze(boolean whetherOutput) {
-        int res = 0;
+    public AnalysisResult analyze(boolean whetherOutput) {
+        AnalysisResult res;
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
         res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
-        if (res != LexicalAnalysisResult.SUCCESS) {
-            return SyntacticAnalysisResult.ERROR;
+        if (res != AnalysisResult.SUCCESS) {
+            return Result.AnalysisResult.FAIL;
         }
         if (!nextWordCategoryCode.getValue().equals("LBRACE")) {
-            return SyntacticAnalysisResult.ERROR;
+            return Result.AnalysisResult.FAIL;
         }
 
         while (true) {
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
-            if (res != LexicalAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return Result.AnalysisResult.FAIL;
             }
             if (nextWordCategoryCode.getValue().equals("RBRACE")) {
                 break;
@@ -36,22 +35,22 @@ public class Block extends SyntacticComponent {
 
             BlockItem blockItem = new BlockItem();
             res = blockItem.analyze(whetherOutput);
-            if (res != SyntacticAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != Result.AnalysisResult.SUCCESS) {
+                return Result.AnalysisResult.FAIL;
             }
         }
 
         res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
-        if (res != LexicalAnalysisResult.SUCCESS) {
-            return SyntacticAnalysisResult.ERROR;
+        if (res != AnalysisResult.SUCCESS) {
+            return Result.AnalysisResult.FAIL;
         }
         if (!nextWordCategoryCode.getValue().equals("RBRACE")) {
-            return SyntacticAnalysisResult.ERROR;
+            return Result.AnalysisResult.FAIL;
         }
 
         if (whetherOutput) {
             OutputIntoFile.appendToFile("<Block>\n", "output.txt");
         }
-        return SyntacticAnalysisResult.SUCCESS;
+        return Result.AnalysisResult.SUCCESS;
     }
 }

@@ -1,11 +1,7 @@
 package Syntactic.SyntacticComponents;
 
-import Input.InputSourceCode;
-import Lexical.LexicalAnalysis;
-import Lexical.LexicalAnalysisResult;
 import Other.ParamResult;
-import Output.OutputIntoFile;
-import Syntactic.SyntacticAnalysisResult;
+import Result.AnalysisResult;
 
 public class Decl extends SyntacticComponent {
 
@@ -14,14 +10,14 @@ public class Decl extends SyntacticComponent {
     }
 
     @Override
-    public int analyze(boolean whetherOutput) {
-        int res = 0;
+    public AnalysisResult analyze(boolean whetherOutput) {
+        AnalysisResult res;
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
         res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
-        if (res != LexicalAnalysisResult.SUCCESS) {
-            return SyntacticAnalysisResult.ERROR;
+        if (res != AnalysisResult.SUCCESS) {
+            return AnalysisResult.FAIL;
         }
         String categoryCode = nextWordCategoryCode.getValue();
         if (categoryCode.equals("CONSTTK")) {
@@ -33,12 +29,12 @@ public class Decl extends SyntacticComponent {
             res = varDecl.analyze(whetherOutput);
         }
         else {
-            res = SyntacticAnalysisResult.ERROR;
+            res = AnalysisResult.FAIL;
         }
-        if (res != SyntacticAnalysisResult.SUCCESS) {
-            return SyntacticAnalysisResult.ERROR;
+        if (res != AnalysisResult.SUCCESS) {
+            return AnalysisResult.FAIL;
         }
 
-        return SyntacticAnalysisResult.SUCCESS;
+        return AnalysisResult.SUCCESS;
     }
 }

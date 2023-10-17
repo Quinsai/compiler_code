@@ -1,9 +1,8 @@
 package Syntactic.SyntacticComponents;
 
-import Lexical.LexicalAnalysisResult;
 import Other.ParamResult;
 import Output.OutputIntoFile;
-import Syntactic.SyntacticAnalysisResult;
+import Result.AnalysisResult;
 
 public class AddExp extends SyntacticComponent {
 
@@ -15,24 +14,24 @@ public class AddExp extends SyntacticComponent {
     }
 
     @Override
-    public int analyze(boolean whetherOutput) {
-        int res = 0;
+    public AnalysisResult analyze(boolean whetherOutput) {
+        AnalysisResult res;
         int operation = 0;
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
         MulExp mulExp = new MulExp();
         res = mulExp.analyze(whetherOutput);
-        if (res != SyntacticAnalysisResult.SUCCESS) {
-            return SyntacticAnalysisResult.ERROR;
+        if (res != Result.AnalysisResult.SUCCESS) {
+            return Result.AnalysisResult.FAIL;
         }
 
         this.value = mulExp.value;
 
         while (true) {
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
-            if (res != LexicalAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return Result.AnalysisResult.FAIL;
             }
             if (nextWordCategoryCode.getValue().equals("PLUS")) {
                 operation = PLUS;
@@ -50,8 +49,8 @@ public class AddExp extends SyntacticComponent {
 
             MulExp mulExp1 = new MulExp();
             res = mulExp1.analyze(whetherOutput);
-            if (res != SyntacticAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != Result.AnalysisResult.SUCCESS) {
+                return Result.AnalysisResult.FAIL;
             }
 
             if (operation == PLUS) {
@@ -65,6 +64,6 @@ public class AddExp extends SyntacticComponent {
         if (whetherOutput) {
             OutputIntoFile.appendToFile("<AddExp>\n", "output.txt");
         }
-        return SyntacticAnalysisResult.SUCCESS;
+        return Result.AnalysisResult.SUCCESS;
     }
 }

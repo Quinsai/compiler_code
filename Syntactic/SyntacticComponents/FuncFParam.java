@@ -1,9 +1,8 @@
 package Syntactic.SyntacticComponents;
 
-import Lexical.LexicalAnalysisResult;
 import Other.ParamResult;
 import Output.OutputIntoFile;
-import Syntactic.SyntacticAnalysisResult;
+import Result.AnalysisResult;
 
 public class FuncFParam extends SyntacticComponent {
 
@@ -12,44 +11,44 @@ public class FuncFParam extends SyntacticComponent {
     }
 
     @Override
-    public int analyze(boolean whetherOutput) {
-        int res = 0;
+    public AnalysisResult analyze(boolean whetherOutput) {
+        AnalysisResult res;
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
         BType bType = new BType();
         res = bType.analyze(whetherOutput);
-        if (res != SyntacticAnalysisResult.SUCCESS) {
-            return SyntacticAnalysisResult.ERROR;
+        if (res != AnalysisResult.SUCCESS) {
+            return AnalysisResult.FAIL;
         }
 
         res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
-        if (res != LexicalAnalysisResult.SUCCESS) {
-            return SyntacticAnalysisResult.ERROR;
+        if (res != AnalysisResult.SUCCESS) {
+            return AnalysisResult.FAIL;
         }
         if (!nextWordCategoryCode.getValue().equals("IDENFR")) {
-            return SyntacticAnalysisResult.ERROR;
+            return AnalysisResult.FAIL;
         }
 
         res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
-        if (res != LexicalAnalysisResult.SUCCESS) {
-            return SyntacticAnalysisResult.ERROR;
+        if (res != AnalysisResult.SUCCESS) {
+            return AnalysisResult.FAIL;
         }
         if (nextWordCategoryCode.getValue().equals("LBRACK")) {
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
-            if (res != LexicalAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("RBRACK")) {
-                return SyntacticAnalysisResult.ERROR;
+                return AnalysisResult.FAIL;
             }
 
             while (true) {
                 res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
-                if (res != LexicalAnalysisResult.SUCCESS) {
-                    return SyntacticAnalysisResult.ERROR;
+                if (res != AnalysisResult.SUCCESS) {
+                    return AnalysisResult.FAIL;
                 }
                 if (!nextWordCategoryCode.getValue().equals("LBRACK")) {
                     break;
@@ -58,16 +57,16 @@ public class FuncFParam extends SyntacticComponent {
 
                 ConstExp constExp = new ConstExp();
                 res = constExp.analyze(whetherOutput);
-                if (res != SyntacticAnalysisResult.SUCCESS) {
-                    return SyntacticAnalysisResult.ERROR;
+                if (res != AnalysisResult.SUCCESS) {
+                    return AnalysisResult.FAIL;
                 }
 
                 res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
-                if (res != LexicalAnalysisResult.SUCCESS) {
-                    return SyntacticAnalysisResult.ERROR;
+                if (res != AnalysisResult.SUCCESS) {
+                    return AnalysisResult.FAIL;
                 }
                 if (!nextWordCategoryCode.getValue().equals("RBRACK")) {
-                    return SyntacticAnalysisResult.ERROR;
+                    return AnalysisResult.FAIL;
                 }
             }
         }
@@ -75,6 +74,6 @@ public class FuncFParam extends SyntacticComponent {
         if (whetherOutput) {
             OutputIntoFile.appendToFile("<FuncFParam>\n", "output.txt");
         }
-        return SyntacticAnalysisResult.SUCCESS;
+        return AnalysisResult.SUCCESS;
     }
 }

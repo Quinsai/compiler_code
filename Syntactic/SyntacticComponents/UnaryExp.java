@@ -1,11 +1,8 @@
 package Syntactic.SyntacticComponents;
 
-import Lexical.LexicalAnalysisResult;
 import Other.ParamResult;
 import Output.OutputIntoFile;
-import Syntactic.SyntacticAnalysisResult;
-
-import javax.naming.ldap.StartTlsRequest;
+import Result.AnalysisResult;
 
 public class UnaryExp extends SyntacticComponent {
 
@@ -14,8 +11,8 @@ public class UnaryExp extends SyntacticComponent {
     }
 
     @Override
-    public int analyze(boolean whetherOutput) {
-        int res = 0;
+    public AnalysisResult analyze(boolean whetherOutput) {
+        AnalysisResult res;
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
         ParamResult<String>[] nextWordCategoryCodeArray = new ParamResult[2];
@@ -27,14 +24,14 @@ public class UnaryExp extends SyntacticComponent {
         }
 
         res = lexicalAnalysis.peekMany(2, nextWordCategoryCodeArray, nextWordValueArray);
-        if (res != LexicalAnalysisResult.SUCCESS) {
-            return LexicalAnalysisResult.ERROR;
+        if (res != AnalysisResult.SUCCESS) {
+            return AnalysisResult.FAIL;
         }
         if (nextWordCategoryCodeArray[0].getValue().equals("LPARENT")) {
             PrimaryExp primaryExp = new PrimaryExp();
             res = primaryExp.analyze(whetherOutput);
-            if (res != SyntacticAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
             this.value = primaryExp.value;
         }
@@ -44,23 +41,23 @@ public class UnaryExp extends SyntacticComponent {
                 res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
                 res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
-                if (res != LexicalAnalysisResult.SUCCESS) {
-                    return SyntacticAnalysisResult.ERROR;
+                if (res != AnalysisResult.SUCCESS) {
+                    return AnalysisResult.FAIL;
                 }
                 if (!nextWordCategoryCode.getValue().equals("RPARENT")) {
                     FuncRParams funcRParams = new FuncRParams();
                     res = funcRParams.analyze(whetherOutput);
-                    if (res != SyntacticAnalysisResult.SUCCESS) {
-                        return SyntacticAnalysisResult.ERROR;
+                    if (res != AnalysisResult.SUCCESS) {
+                        return AnalysisResult.FAIL;
                     }
                 }
 
                 res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
-                if (res != LexicalAnalysisResult.SUCCESS) {
-                    return SyntacticAnalysisResult.ERROR;
+                if (res != AnalysisResult.SUCCESS) {
+                    return AnalysisResult.FAIL;
                 }
                 if (!nextWordCategoryCode.getValue().equals("RPARENT")) {
-                    return SyntacticAnalysisResult.ERROR;
+                    return AnalysisResult.FAIL;
                 }
 
                 this.value = 1;
@@ -68,8 +65,8 @@ public class UnaryExp extends SyntacticComponent {
             else {
                 PrimaryExp primaryExp = new PrimaryExp();
                 res = primaryExp.analyze(whetherOutput);
-                if (res != SyntacticAnalysisResult.SUCCESS) {
-                    return SyntacticAnalysisResult.ERROR;
+                if (res != AnalysisResult.SUCCESS) {
+                    return AnalysisResult.FAIL;
                 }
 
                 this.value = primaryExp.value;
@@ -81,14 +78,14 @@ public class UnaryExp extends SyntacticComponent {
         ) {
             UnaryOp unaryOp = new UnaryOp();
             res = unaryOp.analyze(whetherOutput);
-            if (res != SyntacticAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
 
             UnaryExp unaryExp1 = new UnaryExp();
             res = unaryExp1.analyze(whetherOutput);
-            if (res != SyntacticAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
 
             this.value = unaryExp1.value;
@@ -107,19 +104,19 @@ public class UnaryExp extends SyntacticComponent {
         else if (nextWordCategoryCodeArray[0].getValue().equals("INTCON")) {
             PrimaryExp primaryExp = new PrimaryExp();
             res = primaryExp.analyze(whetherOutput);
-            if (res != SyntacticAnalysisResult.SUCCESS) {
-                return SyntacticAnalysisResult.ERROR;
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
             }
 
             this.value = primaryExp.value;
         }
         else {
-            return SyntacticAnalysisResult.ERROR;
+            return AnalysisResult.FAIL;
         }
 
         if (whetherOutput) {
             OutputIntoFile.appendToFile("<UnaryExp>\n", "output.txt");
         }
-        return SyntacticAnalysisResult.SUCCESS;
+        return AnalysisResult.SUCCESS;
     }
 }
