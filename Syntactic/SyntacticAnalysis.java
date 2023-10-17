@@ -14,10 +14,12 @@ public class SyntacticAnalysis {
      * 词法分析器
      */
     private LexicalAnalysis lexicalAnalysis;
+
     /**
      * 字符串形式的源代码
      */
     private String source;
+
     /**
      * 字符串形式的源代码的长度
      */
