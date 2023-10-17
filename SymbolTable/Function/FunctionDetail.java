@@ -1,6 +1,8 @@
 package SymbolTable.Function;
 
 import SymbolTable.MasterTableItem;
+import SymbolTable.Scope.ScopeStack;
+import SymbolTable.SymbolConst;
 
 import java.util.ArrayList;
 
@@ -12,7 +14,7 @@ public class FunctionDetail {
     /**
      * 返回值类型
      */
-    private int returnType;
+    private SymbolConst returnType;
 
     /**
      * 参数列表
@@ -21,7 +23,7 @@ public class FunctionDetail {
 
     private boolean isSetParams;
 
-    public FunctionDetail(int returnType) {
+    public FunctionDetail(SymbolConst returnType) {
         this.returnType = returnType;
         this.params = new ArrayList<>();
         this.isSetParams = false;

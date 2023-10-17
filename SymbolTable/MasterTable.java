@@ -6,6 +6,7 @@ import Result.Error.AnalysisErrorType;
 import Result.Error.HandleError;
 import SymbolTable.Array.ArrayDetail;
 import SymbolTable.Function.FunctionDetail;
+import SymbolTable.Scope.ScopeStack;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -70,10 +71,10 @@ public class MasterTable {
      * @param category 种类（常量、变量、函数）
      * @param type 类型（int，数组）
      * @param item 刚刚插入的item
-     * @param currentScope 现在的作用域ID
      */
-    public AnalysisResult insertIntoTable(String name, SymbolConst category, SymbolConst type, int currentScope, ParamResult<MasterTableItem> item) {
+    public AnalysisResult insertIntoTable(String name, SymbolConst category, SymbolConst type, ParamResult<MasterTableItem> item) {
 
+        int currentScope = ScopeStack.getInstance().getCurrentScope();
         SymbolTableResult res;
         ParamResult<MasterTableItem> former = new ParamResult<>(null);
         res = getItemByName(name, former);
@@ -94,12 +95,11 @@ public class MasterTable {
      * @param category 种类（常量、变量、函数）
      * @param type 类型（int，数组）
      * @param returnType 函数返回值类型
-     * @param params 函数参数列表
      * @param item 刚刚插入的值
-     * @param currentScope 现在的作用域ID
      */
-    public AnalysisResult insertIntoTable(String name, SymbolConst category, SymbolConst type, int returnType, MasterTableItem[] params, int currentScope, ParamResult<MasterTableItem> item) {
+    public AnalysisResult insertIntoTable(String name, SymbolConst category, SymbolConst type, SymbolConst returnType, ParamResult<MasterTableItem> item) {
 
+        int currentScope = ScopeStack.getInstance().getCurrentScope();
         SymbolTableResult res;
         ParamResult<MasterTableItem> former = new ParamResult<>(null);
         res = getItemByName(name, former);
@@ -123,10 +123,10 @@ public class MasterTable {
      * @param type 类型
      * @param firstSize 第一维大小
      * @param item 刚刚插入的值
-     * @param currentScope 现在的作用域ID
      */
-    public AnalysisResult insertIntoTable(String name, SymbolConst category, SymbolConst type, int firstSize, int currentScope, ParamResult<MasterTableItem> item) {
+    public AnalysisResult insertIntoTable(String name, SymbolConst category, SymbolConst type, int firstSize, ParamResult<MasterTableItem> item) {
 
+        int currentScope = ScopeStack.getInstance().getCurrentScope();
         SymbolTableResult res;
         ParamResult<MasterTableItem> former = new ParamResult<>(null);
         res = getItemByName(name, former);
@@ -151,10 +151,10 @@ public class MasterTable {
      * @param firstSize 第一维大小
      * @param secondSize 第二维大小
      * @param item 刚刚插入的值
-     * @param currentScope 现在的作用域ID
      */
-    public AnalysisResult insertIntoTable(String name, SymbolConst category, SymbolConst type, int firstSize, int secondSize, int currentScope, ParamResult<MasterTableItem> item) {
+    public AnalysisResult insertIntoTable(String name, SymbolConst category, SymbolConst type, int firstSize, int secondSize, ParamResult<MasterTableItem> item) {
 
+        int currentScope = ScopeStack.getInstance().getCurrentScope();
         SymbolTableResult res;
         ParamResult<MasterTableItem> former = new ParamResult<>(null);
         res = getItemByName(name, former);
