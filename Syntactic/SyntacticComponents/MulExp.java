@@ -23,8 +23,6 @@ public class MulExp extends SyntacticComponent {
             return SyntacticAnalysisResult.ERROR;
         }
         this.value = unaryExp.value;
-//        System.out.println("-----------------------");
-//        System.out.println(this.value);
 
         while (true) {
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
@@ -47,9 +45,6 @@ public class MulExp extends SyntacticComponent {
             if (res != SyntacticAnalysisResult.SUCCESS) {
                 return SyntacticAnalysisResult.ERROR;
             }
-
-//            System.out.println(nextWordCategoryCode.getValue());
-//            System.out.println(unaryExp1.value);
 
             if (nextWordCategoryCode.getValue().equals("MULT")) {
                 this.value *= unaryExp1.value;
