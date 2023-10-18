@@ -171,16 +171,6 @@ public class MasterTable {
         return AnalysisResult.SUCCESS;
     }
 
-    private boolean isIdentifierNotExist(String name, ParamResult<MasterTableItem> result) {
-        SymbolTableResult res;
-        res = getItemByName(name, result);
-        if (res == SymbolTableResult.NOT_EXIST) {
-            HandleError.handleError(AnalysisErrorType.IDENTIFIER_NOT_DEFINE);
-            return true;
-        }
-        return false;
-    }
-
     /**
      * a = 12; 类型的赋值
      */
@@ -189,7 +179,8 @@ public class MasterTable {
         SymbolTableResult res;
         ParamResult<MasterTableItem> item =  new ParamResult<>(null);
 
-        if(isIdentifierNotExist(name, item)) {
+        if(getItemByName(name, item) == SymbolTableResult.NOT_EXIST) {
+            HandleError.handleError(AnalysisErrorType.IDENTIFIER_NOT_DEFINE);
             return AnalysisResult.FAIL;
         }
 
@@ -221,7 +212,8 @@ public class MasterTable {
         SymbolTableResult res;
         ParamResult<MasterTableItem> item =  new ParamResult<>(null);
 
-        if(isIdentifierNotExist(name, item)) {
+        if(getItemByName(name, item) == SymbolTableResult.NOT_EXIST) {
+            HandleError.handleError(AnalysisErrorType.IDENTIFIER_NOT_DEFINE);
             return AnalysisResult.FAIL;
         }
 
@@ -259,7 +251,8 @@ public class MasterTable {
         SymbolTableResult res;
         ParamResult<MasterTableItem> item =  new ParamResult<>(null);
 
-        if(isIdentifierNotExist(name, item)) {
+        if(getItemByName(name, item) == SymbolTableResult.NOT_EXIST) {
+            HandleError.handleError(AnalysisErrorType.IDENTIFIER_NOT_DEFINE);
             return AnalysisResult.FAIL;
         }
 
@@ -297,7 +290,8 @@ public class MasterTable {
         SymbolTableResult res;
         ParamResult<MasterTableItem> item =  new ParamResult<>(null);
 
-        if(isIdentifierNotExist(name, item)) {
+        if(getItemByName(name, item) == SymbolTableResult.NOT_EXIST) {
+            HandleError.handleError(AnalysisErrorType.IDENTIFIER_NOT_DEFINE);
             return AnalysisResult.FAIL;
         }
 
@@ -335,7 +329,8 @@ public class MasterTable {
         SymbolTableResult res;
         ParamResult<MasterTableItem> item =  new ParamResult<>(null);
 
-        if(isIdentifierNotExist(name, item)) {
+        if(getItemByName(name, item) == SymbolTableResult.NOT_EXIST) {
+            HandleError.handleError(AnalysisErrorType.IDENTIFIER_NOT_DEFINE);
             return AnalysisResult.FAIL;
         }
 
@@ -373,7 +368,8 @@ public class MasterTable {
         SymbolTableResult res;
         ParamResult<MasterTableItem> item =  new ParamResult<>(null);
 
-        if (isIdentifierNotExist(name, item)) {
+        if (getItemByName(name, item) == SymbolTableResult.NOT_EXIST) {
+            HandleError.handleError(AnalysisErrorType.IDENTIFIER_NOT_DEFINE);
             return AnalysisResult.FAIL;
         }
 
@@ -393,7 +389,8 @@ public class MasterTable {
         SymbolTableResult res;
         ParamResult<MasterTableItem> item =  new ParamResult<>(null);
 
-        if (isIdentifierNotExist(name, item)) {
+        if (getItemByName(name, item) == SymbolTableResult.NOT_EXIST) {
+            HandleError.handleError(AnalysisErrorType.IDENTIFIER_NOT_DEFINE);
             return AnalysisResult.FAIL;
         }
 
@@ -413,7 +410,8 @@ public class MasterTable {
         SymbolTableResult res;
         ParamResult<MasterTableItem> item =  new ParamResult<>(null);
 
-        if (isIdentifierNotExist(name, item)) {
+        if (getItemByName(name, item) == SymbolTableResult.NOT_EXIST) {
+            HandleError.handleError(AnalysisErrorType.IDENTIFIER_NOT_DEFINE);
             return AnalysisResult.FAIL;
         }
 
@@ -440,6 +438,7 @@ public class MasterTable {
         SymbolTableResult res = getItemByName(name, functionItem);
 
         if (res == SymbolTableResult.NOT_EXIST) {
+            HandleError.handleError(AnalysisErrorType.IDENTIFIER_NOT_DEFINE);
             return AnalysisResult.FAIL;
         }
 
@@ -453,5 +452,26 @@ public class MasterTable {
         }
 
         return AnalysisResult.SUCCESS;
+    }
+
+    /**
+     * 获取函数参数列表
+     * @param name 函数名
+     * @param params 参数列表
+     */
+    public AnalysisResult getFunctionParams(String name, ParamResult<MasterTableItem[]> params) {
+
+        SymbolTableResult res;
+        ParamResult<MasterTableItem> item = new ParamResult<>(null);
+
+        res = getItemByName(name, item);
+        if (res == SymbolTableResult.NOT_EXIST) {
+            HandleError.handleError(AnalysisErrorType.IDENTIFIER_NOT_DEFINE);
+            return AnalysisResult.FAIL;
+        }
+
+        if (!item.getValue().isFunction()) {
+            HandleError.handleError();
+        }
     }
 }
