@@ -85,11 +85,20 @@ public class FuncDef extends SyntacticComponent {
             return AnalysisResult.FAIL;
         }
 
+        if (returnType == SymbolConst.INT) {
+            Stmt.functionReturnType = ComponentValueType.INT;
+        }
+        else if (returnType == SymbolConst.VOID) {
+            Stmt.functionReturnType = ComponentValueType.VOID;
+        }
+
         Block block = new Block();
         res = block.analyze(whetherOutput);
         if (res != AnalysisResult.SUCCESS) {
             return AnalysisResult.FAIL;
         }
+
+        Stmt.functionReturnType = ComponentValueType.NO_MEANING;
 
         ScopeStack.getInstance().quitScope();
 

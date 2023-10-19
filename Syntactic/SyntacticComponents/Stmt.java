@@ -9,19 +9,20 @@ import SymbolTable.Scope.ScopeStack;
 
 public class Stmt extends SyntacticComponent {
 
-    public static final int INT = 312;
-    public static final int VOID = 969;
-    public static final int NOT_IN_FUNCTION = 239;
-
     /**
      * （如果在函数中的）函数返回值类型
      */
-    private static int functionReturnType;
+    public static ComponentValueType functionReturnType;
 
     /**
      * 是否在循环中
      */
-    private static boolean isInCirculate;
+    public static boolean isInCirculate;
+
+    static {
+        functionReturnType = ComponentValueType.NO_MEANING;
+        isInCirculate = false;
+    }
 
     public Stmt() {
         super();
@@ -236,6 +237,8 @@ public class Stmt extends SyntacticComponent {
             }
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("RETURNTK")) {
+            boolean hasReturnValue = false;
+
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;
@@ -251,9 +254,16 @@ public class Stmt extends SyntacticComponent {
             if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
                 Exp exp = new Exp();
                 res = exp.analyze(whetherOutput);
+                hasReturnValue = true;
                 if (res != AnalysisResult.SUCCESS) {
                     return AnalysisResult.FAIL;
                 }
+            }
+
+            // TODO 解决函数返回报错的问题
+            if (Stmt.functionReturnType != ComponentValueType.INT && hasReturnValue) {
+                HandleError.handleError(AnalysisErrorType.VOID_FUNCTION_WITH_RETURN);
+                return AnalysisResult.SUCCESS;
             }
 
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
