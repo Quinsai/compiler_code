@@ -10,6 +10,7 @@ public class HandleError {
     }
 
     public static void handleError(AnalysisErrorType errorType) {
-        OutputIntoFile.appendToFile(LexicalAnalysis.getInstance().getCurrentLine() + " " + errorType.name(), "error.txt");
+        OutputIntoFile.appendToFile(LexicalAnalysis.getInstance().getCurrentLine() + " " + errorType.name() + "\n", "error.txt");
+        LexicalAnalysis.getInstance().skipToNextLine();
     }
 }

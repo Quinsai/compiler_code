@@ -8,40 +8,7 @@ int func(int a, int b, int c) {
 
 int main() {
 	int b[2] = {1, 2};
-	// int c = func(1, 2, b);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	int c = func(1, 2, b);
 	int d = func(1, 2);
 
 	return 0;

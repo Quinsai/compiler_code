@@ -493,5 +493,23 @@ public class LexicalAnalysis {
     public int getCurrentLine() {
         return currentLine;
     }
+
+    /**
+     * 跳转到下一行
+     * 当发现error的时候，由于一行中只会有一个报错
+     * 所以此时要把词法分析器中读取的“光标”，也就是currentIndex挪到下一行开始
+     */
+    public void skipToNextLine() {
+        while (true) {
+            char c = source.charAt(currentIndex);
+            if (c == '\n') {
+                this.currentLine ++;
+                break;
+            }
+            currentIndex ++;
+        }
+
+        currentIndex ++;
+    }
 }
 
