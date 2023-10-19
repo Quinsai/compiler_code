@@ -260,7 +260,6 @@ public class Stmt extends SyntacticComponent {
                 }
             }
 
-            // TODO 解决函数返回报错的问题
             if (Stmt.functionReturnType != ComponentValueType.INT && hasReturnValue) {
                 HandleError.handleError(AnalysisErrorType.VOID_FUNCTION_WITH_RETURN);
                 return AnalysisResult.SUCCESS;
