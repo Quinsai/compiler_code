@@ -2,6 +2,7 @@ package Syntactic.SyntacticComponents;
 
 import Lexical.LexicalAnalysis;
 import Result.AnalysisResult;
+import SymbolTable.MasterTable;
 
 /**
  * 各个语法成分的父类
@@ -13,14 +14,20 @@ public class SyntacticComponent {
     LexicalAnalysis lexicalAnalysis;
 
     /**
+     * 符号表
+     */
+    MasterTable masterTable;
+
+    /**
      * 这个非终结符的值
      * 或者0表示假，1表示真
      */
-    int value;
+    int intValue;
 
     public SyntacticComponent() {
         this.lexicalAnalysis = LexicalAnalysis.getInstance();
-        this.value = -1;
+        this.masterTable = MasterTable.getInstance();
+        this.intValue = -1;
     }
 
     public AnalysisResult analyze(boolean whetherOutput) {

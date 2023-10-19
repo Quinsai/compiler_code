@@ -26,7 +26,7 @@ public class EqExp extends SyntacticComponent {
             return AnalysisResult.FAIL;
         }
 
-        this.value = relExp.value;
+        this.intValue = relExp.intValue;
 
         while (true) {
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
@@ -53,14 +53,14 @@ public class EqExp extends SyntacticComponent {
                 return AnalysisResult.FAIL;
             }
 
-            if (operation == EQL && this.value == relExp1.value) {
-                this.value = 1;
+            if (operation == EQL && this.intValue == relExp1.intValue) {
+                this.intValue = 1;
             }
-            else if (operation == NEQ && this.value != relExp1.value) {
-                this.value = 1;
+            else if (operation == NEQ && this.intValue != relExp1.intValue) {
+                this.intValue = 1;
             }
             else {
-                this.value = 0;
+                this.intValue = 0;
             }
         }
 

@@ -3,11 +3,17 @@ package Syntactic.SyntacticComponents;
 import Other.ParamResult;
 import Output.OutputIntoFile;
 import Result.AnalysisResult;
+import SymbolTable.MasterTableItem;
+
+import java.util.ArrayList;
 
 public class FuncRParams extends SyntacticComponent {
 
+    private ArrayList<MasterTableItem> realParamsItem;
+
     public FuncRParams() {
         super();
+        this.realParamsItem = new ArrayList<>();
     }
 
     @Override
@@ -44,4 +50,6 @@ public class FuncRParams extends SyntacticComponent {
         }
         return AnalysisResult.SUCCESS;
     }
+
+
 }

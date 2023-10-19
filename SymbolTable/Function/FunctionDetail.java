@@ -33,4 +33,8 @@ public class FunctionDetail {
         this.params.add(param);
         this.isSetParams = true;
     }
+
+    public ArrayList<MasterTableItem> getParams() {
+        return params;
+    }
 }

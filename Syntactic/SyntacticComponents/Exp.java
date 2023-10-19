@@ -17,7 +17,7 @@ public class Exp extends SyntacticComponent {
             return AnalysisResult.FAIL;
         }
 
-        this.value = addExp.value;
+        this.intValue = addExp.intValue;
 
         if (whetherOutput) {
             OutputIntoFile.appendToFile("<Exp>\n", "output.txt");

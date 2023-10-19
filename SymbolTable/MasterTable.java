@@ -8,6 +8,7 @@ import SymbolTable.Array.ArrayDetail;
 import SymbolTable.Function.FunctionDetail;
 import SymbolTable.Scope.ScopeStack;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
@@ -471,7 +472,18 @@ public class MasterTable {
         }
 
         if (!item.getValue().isFunction()) {
-            HandleError.handleError();
+            HandleError.handleError(AnalysisErrorType.NOT_FUNCTION);
+            return AnalysisResult.FAIL;
         }
+
+        ArrayList<MasterTableItem> paramsList = item.getValue().getFunctionParamsList();
+        int size = paramsList.size();
+        MasterTableItem[] paramsArray = new MasterTableItem[size];
+        for (int i = 0; i < size; i++) {
+            paramsArray[i] = paramsList.get(i);
+        }
+        params.setValue(paramsArray);
+
+        return AnalysisResult.SUCCESS;
     }
 }

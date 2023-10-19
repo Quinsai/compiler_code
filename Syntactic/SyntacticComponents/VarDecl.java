@@ -25,7 +25,8 @@ public class VarDecl extends SyntacticComponent {
         VarDef varDef = new VarDef();
         res = varDef.analyze(whetherOutput);
         if (res != AnalysisResult.SUCCESS) {
-            return AnalysisResult.FAIL;
+//            return AnalysisResult.FAIL;
+            return AnalysisResult.SUCCESS;
         }
 
         while (true) {
@@ -41,7 +42,8 @@ public class VarDecl extends SyntacticComponent {
             VarDef varDef1 = new VarDef();
             res = varDef1.analyze(whetherOutput);
             if (res != AnalysisResult.SUCCESS) {
-                return AnalysisResult.FAIL;
+//                return AnalysisResult.FAIL;
+                return AnalysisResult.SUCCESS;
             }
         }
 

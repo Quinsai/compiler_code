@@ -37,7 +37,7 @@ public class PrimaryExp extends SyntacticComponent {
                 return AnalysisResult.FAIL;
             }
 
-            this.value = exp.value;
+            this.intValue = exp.intValue;
         }
         else if (nextWordCategoryCode.getValue().equals("IDENFR")) {
             LVal lVal = new LVal();
@@ -46,7 +46,7 @@ public class PrimaryExp extends SyntacticComponent {
                 return AnalysisResult.FAIL;
             }
 
-            this.value = lVal.value;
+            this.intValue = lVal.intValue;
         }
         else if (nextWordCategoryCode.getValue().equals("INTCON")) {
             Number number = new Number();
@@ -55,7 +55,7 @@ public class PrimaryExp extends SyntacticComponent {
                 return AnalysisResult.FAIL;
             }
 
-            this.value = number.value;
+            this.intValue = number.intValue;
         }
         else {
             return AnalysisResult.FAIL;

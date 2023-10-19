@@ -6,6 +6,8 @@ import Result.Error.HandleError;
 import SymbolTable.Array.ArrayDetail;
 import SymbolTable.Function.FunctionDetail;
 
+import java.util.ArrayList;
+
 /**
  * 符号表主表中的一行
  */
@@ -175,7 +177,15 @@ public class MasterTableItem {
         return this.hasAssigned;
     }
 
+    public boolean isFunction() {
+        return this.category == SymbolConst.FUNCTION && this.type == SymbolConst.NO_MEANING;
+    }
+
     public void addIntoParams(MasterTableItem param) {
         this.functionLink.addIntoParams(param);
+    }
+
+    public ArrayList<MasterTableItem> getFunctionParamsList() {
+        return this.functionLink.getParams();
     }
 }

@@ -17,7 +17,7 @@ public class Cond extends SyntacticComponent {
             return AnalysisResult.FAIL;
         }
 
-        this.value = lOrExp.value;
+        this.intValue = lOrExp.intValue;
 
         if (whetherOutput) {
             OutputIntoFile.appendToFile("<Cond>\n", "output.txt");

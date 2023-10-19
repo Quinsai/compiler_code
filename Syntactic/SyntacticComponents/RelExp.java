@@ -28,7 +28,7 @@ public class RelExp extends SyntacticComponent {
             return AnalysisResult.FAIL;
         }
 
-        this.value = addExp.value;
+        this.intValue = addExp.intValue;
 
         while (true) {
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
@@ -61,20 +61,20 @@ public class RelExp extends SyntacticComponent {
                 return AnalysisResult.FAIL;
             }
 
-            if (operation == LSS && this.value < addExp1.value) {
-                this.value = 1;
+            if (operation == LSS && this.intValue < addExp1.intValue) {
+                this.intValue = 1;
             }
-            else if (operation == LEQ && this.value <= addExp1.value) {
-                this.value = 1;
+            else if (operation == LEQ && this.intValue <= addExp1.intValue) {
+                this.intValue = 1;
             }
-            else if (operation == GRE && this.value > addExp1.value) {
-                this.value = 1;
+            else if (operation == GRE && this.intValue > addExp1.intValue) {
+                this.intValue = 1;
             }
-            else if (operation == GEQ && this.value >= addExp1.value) {
-                this.value = 1;
+            else if (operation == GEQ && this.intValue >= addExp1.intValue) {
+                this.intValue = 1;
             }
             else {
-                this.value = 0;
+                this.intValue = 0;
             }
         }
 

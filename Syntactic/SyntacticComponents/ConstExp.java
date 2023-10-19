@@ -17,7 +17,7 @@ public class ConstExp extends SyntacticComponent {
             return AnalysisResult.FAIL;
         }
 
-        this.value = addExp.value;
+        this.intValue = 1;
 
         if (whetherOutput) {
             OutputIntoFile.appendToFile("<ConstExp>\n", "output.txt");

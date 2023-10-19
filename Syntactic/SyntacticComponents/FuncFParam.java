@@ -3,6 +3,10 @@ package Syntactic.SyntacticComponents;
 import Other.ParamResult;
 import Output.OutputIntoFile;
 import Result.AnalysisResult;
+import Result.Error.AnalysisErrorType;
+import Result.Error.HandleError;
+import SymbolTable.MasterTableItem;
+import SymbolTable.SymbolConst;
 
 public class FuncFParam extends SyntacticComponent {
 
@@ -15,6 +19,8 @@ public class FuncFParam extends SyntacticComponent {
         AnalysisResult res;
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
+        String name;
+        ParamResult<MasterTableItem> item = new ParamResult<>(null);
 
         BType bType = new BType();
         res = bType.analyze(whetherOutput);
@@ -29,12 +35,15 @@ public class FuncFParam extends SyntacticComponent {
         if (!nextWordCategoryCode.getValue().equals("IDENFR")) {
             return AnalysisResult.FAIL;
         }
+        name = nextWordValue.getValue();
 
         res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
         if (res != AnalysisResult.SUCCESS) {
             return AnalysisResult.FAIL;
         }
         if (nextWordCategoryCode.getValue().equals("LBRACK")) {
+            int dimension = 0;
+            int secondSize = 0;
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
@@ -42,8 +51,10 @@ public class FuncFParam extends SyntacticComponent {
                 return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("RBRACK")) {
+                HandleError.handleError(AnalysisErrorType.LACK_OF_RBRACK);
                 return AnalysisResult.FAIL;
             }
+            dimension ++;
 
             while (true) {
                 res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
@@ -54,20 +65,43 @@ public class FuncFParam extends SyntacticComponent {
                     break;
                 }
                 res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+                dimension ++;
+                if (dimension == 3) {
+                    HandleError.handleError(AnalysisErrorType.ARRAY_DIMENSION_BEYOND_TWO);
+                    return AnalysisResult.FAIL;
+                }
 
                 ConstExp constExp = new ConstExp();
                 res = constExp.analyze(whetherOutput);
                 if (res != AnalysisResult.SUCCESS) {
                     return AnalysisResult.FAIL;
                 }
+                secondSize = constExp.intValue;
 
                 res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
                 if (res != AnalysisResult.SUCCESS) {
                     return AnalysisResult.FAIL;
                 }
                 if (!nextWordCategoryCode.getValue().equals("RBRACK")) {
+                    HandleError.handleError(AnalysisErrorType.LACK_OF_RBRACK);
                     return AnalysisResult.FAIL;
                 }
+            }
+
+            if (dimension == 1) {
+                res = masterTable.insertIntoTable(name, SymbolConst.VAR, SymbolConst.ARRAY, Integer.MAX_VALUE, item);
+            }
+            else {
+                res = masterTable.insertIntoTable(name, SymbolConst.VAR, SymbolConst.ARRAY, Integer.MAX_VALUE, secondSize, item);
+            }
+            if (res == AnalysisResult.FAIL) {
+                return AnalysisResult.FAIL;
+            }
+        }
+        else {
+            res = masterTable.insertIntoTable(name, SymbolConst.VAR, SymbolConst.INT, item);
+            if (res == AnalysisResult.FAIL) {
+                return AnalysisResult.FAIL;
             }
         }
 

@@ -3,6 +3,8 @@ package Syntactic.SyntacticComponents;
 import Other.ParamResult;
 import Output.OutputIntoFile;
 import Result.AnalysisResult;
+import Result.Error.AnalysisErrorType;
+import Result.Error.HandleError;
 
 public class UnaryExp extends SyntacticComponent {
 
@@ -33,7 +35,7 @@ public class UnaryExp extends SyntacticComponent {
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;
             }
-            this.value = primaryExp.value;
+            this.intValue = primaryExp.intValue;
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("IDENFR")) {
             if (nextWordCategoryCodeArray[1].getValue().equals("LPARENT")) {
@@ -52,15 +54,18 @@ public class UnaryExp extends SyntacticComponent {
                     }
                 }
 
+                // TODO 实参与形参是否匹配
+
                 res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
                 if (res != AnalysisResult.SUCCESS) {
                     return AnalysisResult.FAIL;
                 }
                 if (!nextWordCategoryCode.getValue().equals("RPARENT")) {
+                    HandleError.handleError(AnalysisErrorType.LACK_OF_RPARENT);
                     return AnalysisResult.FAIL;
                 }
 
-                this.value = 1;
+                this.intValue = 1;
             }
             else {
                 PrimaryExp primaryExp = new PrimaryExp();
@@ -69,7 +74,7 @@ public class UnaryExp extends SyntacticComponent {
                     return AnalysisResult.FAIL;
                 }
 
-                this.value = primaryExp.value;
+                this.intValue = primaryExp.intValue;
             }
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("PLUS")
@@ -88,16 +93,16 @@ public class UnaryExp extends SyntacticComponent {
                 return AnalysisResult.FAIL;
             }
 
-            this.value = unaryExp1.value;
+            this.intValue = unaryExp1.intValue;
 
             if (nextWordCategoryCodeArray[0].getValue().equals("PLUS")) {
-                this.value = unaryExp1.value;
+                this.intValue = unaryExp1.intValue;
             }
             else if (nextWordCategoryCodeArray[0].getValue().equals("MINU")) {
-                this.value = -1 * unaryExp1.value;
+                this.intValue = -1 * unaryExp1.intValue;
             }
             else if (nextWordCategoryCodeArray[0].getValue().equals("NOT")) {
-                this.value = 1 - unaryExp1.value;
+                this.intValue = 1 - unaryExp1.intValue;
             }
 
         }
@@ -108,7 +113,7 @@ public class UnaryExp extends SyntacticComponent {
                 return AnalysisResult.FAIL;
             }
 
-            this.value = primaryExp.value;
+            this.intValue = primaryExp.intValue;
         }
         else {
             return AnalysisResult.FAIL;

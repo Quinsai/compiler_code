@@ -26,7 +26,7 @@ public class AddExp extends SyntacticComponent {
             return Result.AnalysisResult.FAIL;
         }
 
-        this.value = mulExp.value;
+        this.intValue = mulExp.intValue;
 
         while (true) {
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
@@ -54,10 +54,10 @@ public class AddExp extends SyntacticComponent {
             }
 
             if (operation == PLUS) {
-                this.value += mulExp1.value;
+                this.intValue += mulExp1.intValue;
             }
             else if (operation == MINU) {
-                this.value -= mulExp1.value;
+                this.intValue -= mulExp1.intValue;
             }
         }
 

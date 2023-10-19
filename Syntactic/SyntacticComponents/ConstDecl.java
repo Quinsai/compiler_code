@@ -33,7 +33,8 @@ public class ConstDecl extends SyntacticComponent {
         ConstDef constDef = new ConstDef();
         res = constDef.analyze(whetherOutput);
         if (res != AnalysisResult.SUCCESS) {
-            return AnalysisResult.FAIL;
+//            return AnalysisResult.FAIL;
+            return AnalysisResult.SUCCESS;
         }
 
         while (true) {
@@ -49,7 +50,8 @@ public class ConstDecl extends SyntacticComponent {
             ConstDef constDef1 = new ConstDef();
             res = constDef1.analyze(whetherOutput);
             if (res != AnalysisResult.SUCCESS) {
-                return AnalysisResult.FAIL;
+//                return AnalysisResult.FAIL;
+                return AnalysisResult.SUCCESS;
             }
         }
 

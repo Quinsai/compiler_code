@@ -24,7 +24,7 @@ public class Number extends SyntacticComponent {
             return AnalysisResult.FAIL;
         }
 
-        this.value = Integer.parseInt(nextWordValue.getValue());
+        this.intValue = Integer.parseInt(nextWordValue.getValue());
 
         if (whetherOutput) {
             OutputIntoFile.appendToFile("<Number>\n", "output.txt");
