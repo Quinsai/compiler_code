@@ -43,7 +43,6 @@ public class FuncFParam extends SyntacticComponent {
         }
         if (nextWordCategoryCode.getValue().equals("LBRACK")) {
             int dimension = 0;
-            int secondSize = 0;
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
@@ -76,7 +75,6 @@ public class FuncFParam extends SyntacticComponent {
                 if (res != AnalysisResult.SUCCESS) {
                     return AnalysisResult.FAIL;
                 }
-                secondSize = constExp.intValue;
 
                 res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
                 if (res != AnalysisResult.SUCCESS) {
@@ -88,12 +86,7 @@ public class FuncFParam extends SyntacticComponent {
                 }
             }
 
-            if (dimension == 1) {
-                res = masterTable.insertIntoTable(name, SymbolConst.VAR, SymbolConst.ARRAY, Integer.MAX_VALUE, item);
-            }
-            else {
-                res = masterTable.insertIntoTable(name, SymbolConst.VAR, SymbolConst.ARRAY, Integer.MAX_VALUE, secondSize, item);
-            }
+            res = masterTable.insertIntoTable(name, SymbolConst.VAR, SymbolConst.ARRAY, 1, item);
             if (res == AnalysisResult.FAIL) {
                 return AnalysisResult.FAIL;
             }

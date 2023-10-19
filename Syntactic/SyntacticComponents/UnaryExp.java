@@ -35,7 +35,6 @@ public class UnaryExp extends SyntacticComponent {
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;
             }
-            this.intValue = primaryExp.intValue;
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("IDENFR")) {
             if (nextWordCategoryCodeArray[1].getValue().equals("LPARENT")) {
@@ -65,7 +64,6 @@ public class UnaryExp extends SyntacticComponent {
                     return AnalysisResult.FAIL;
                 }
 
-                this.intValue = 1;
             }
             else {
                 PrimaryExp primaryExp = new PrimaryExp();
@@ -74,7 +72,6 @@ public class UnaryExp extends SyntacticComponent {
                     return AnalysisResult.FAIL;
                 }
 
-                this.intValue = primaryExp.intValue;
             }
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("PLUS")
@@ -93,18 +90,6 @@ public class UnaryExp extends SyntacticComponent {
                 return AnalysisResult.FAIL;
             }
 
-            this.intValue = unaryExp1.intValue;
-
-            if (nextWordCategoryCodeArray[0].getValue().equals("PLUS")) {
-                this.intValue = unaryExp1.intValue;
-            }
-            else if (nextWordCategoryCodeArray[0].getValue().equals("MINU")) {
-                this.intValue = -1 * unaryExp1.intValue;
-            }
-            else if (nextWordCategoryCodeArray[0].getValue().equals("NOT")) {
-                this.intValue = 1 - unaryExp1.intValue;
-            }
-
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("INTCON")) {
             PrimaryExp primaryExp = new PrimaryExp();
@@ -113,7 +98,6 @@ public class UnaryExp extends SyntacticComponent {
                 return AnalysisResult.FAIL;
             }
 
-            this.intValue = primaryExp.intValue;
         }
         else {
             return AnalysisResult.FAIL;

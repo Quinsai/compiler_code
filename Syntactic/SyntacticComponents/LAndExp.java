@@ -21,7 +21,6 @@ public class LAndExp extends SyntacticComponent {
         if (res != AnalysisResult.SUCCESS) {
             return AnalysisResult.FAIL;
         }
-        this.intValue = eqExp.intValue;
 
         while (true) {
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
@@ -43,7 +42,6 @@ public class LAndExp extends SyntacticComponent {
                 return AnalysisResult.FAIL;
             }
 
-            this.intValue = this.intValue & eqExp1.intValue;
         }
 
         if (whetherOutput) {

@@ -18,16 +18,9 @@ public class SyntacticComponent {
      */
     MasterTable masterTable;
 
-    /**
-     * 这个非终结符的值
-     * 或者0表示假，1表示真
-     */
-    int intValue;
-
     public SyntacticComponent() {
         this.lexicalAnalysis = LexicalAnalysis.getInstance();
         this.masterTable = MasterTable.getInstance();
-        this.intValue = -1;
     }
 
     public AnalysisResult analyze(boolean whetherOutput) {

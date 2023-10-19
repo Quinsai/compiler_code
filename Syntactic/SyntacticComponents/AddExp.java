@@ -6,9 +6,6 @@ import Result.AnalysisResult;
 
 public class AddExp extends SyntacticComponent {
 
-    private static final int PLUS = 123;
-    private static final int MINU = 435;
-
     public AddExp() {
         super();
     }
@@ -16,7 +13,6 @@ public class AddExp extends SyntacticComponent {
     @Override
     public AnalysisResult analyze(boolean whetherOutput) {
         AnalysisResult res;
-        int operation = 0;
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
@@ -26,20 +22,14 @@ public class AddExp extends SyntacticComponent {
             return Result.AnalysisResult.FAIL;
         }
 
-        this.intValue = mulExp.intValue;
-
         while (true) {
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
             if (res != AnalysisResult.SUCCESS) {
                 return Result.AnalysisResult.FAIL;
             }
-            if (nextWordCategoryCode.getValue().equals("PLUS")) {
-                operation = PLUS;
-            }
-            else if (nextWordCategoryCode.getValue().equals("MINU")) {
-                operation = MINU;
-            }
-            else {
+            if (!(nextWordCategoryCode.getValue().equals("PLUS")
+                || nextWordCategoryCode.getValue().equals("MINU")
+            )) {
                 break;
             }
             if (whetherOutput) {
@@ -53,12 +43,6 @@ public class AddExp extends SyntacticComponent {
                 return Result.AnalysisResult.FAIL;
             }
 
-            if (operation == PLUS) {
-                this.intValue += mulExp1.intValue;
-            }
-            else if (operation == MINU) {
-                this.intValue -= mulExp1.intValue;
-            }
         }
 
         if (whetherOutput) {

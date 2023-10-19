@@ -21,7 +21,6 @@ public class MulExp extends SyntacticComponent {
         if (res != AnalysisResult.SUCCESS) {
             return AnalysisResult.FAIL;
         }
-        this.intValue = unaryExp.intValue;
 
         while (true) {
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
@@ -45,16 +44,6 @@ public class MulExp extends SyntacticComponent {
                 return AnalysisResult.FAIL;
             }
 
-            if (nextWordCategoryCode.getValue().equals("MULT")) {
-                this.intValue *= unaryExp1.intValue;
-            }
-            else if (nextWordCategoryCode.getValue().equals("DIV")) {
-                // System.out.println(this.value);
-                this.intValue = this.intValue / unaryExp1.intValue;
-            }
-            else if (nextWordCategoryCode.getValue().equals("MOD")) {
-                this.intValue %= unaryExp1.intValue;
-            }
         }
 
         if (whetherOutput) {

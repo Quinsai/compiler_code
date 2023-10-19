@@ -21,7 +21,6 @@ public class LOrExp extends SyntacticComponent {
         if (res != AnalysisResult.SUCCESS) {
             return AnalysisResult.FAIL;
         }
-        this.intValue = lAndExp.intValue;
 
         while (true) {
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
@@ -42,7 +41,6 @@ public class LOrExp extends SyntacticComponent {
                 return AnalysisResult.FAIL;
             }
 
-            this.intValue = this.intValue | lAndExp1.intValue;
         }
 
         if (whetherOutput) {

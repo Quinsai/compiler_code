@@ -20,7 +20,6 @@ public class LVal extends SyntacticComponent {
         ParamResult<String> nextWordValue = new ParamResult<>("");
         ParamResult<MasterTableItem> item = new ParamResult<>(null);
         int dimension = 0;
-        int[] index = new int[2];
         String name;
 
         res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
@@ -55,8 +54,6 @@ public class LVal extends SyntacticComponent {
                 return AnalysisResult.FAIL;
             }
 
-            index[dimension - 1] = exp.intValue;
-
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;
@@ -66,21 +63,6 @@ public class LVal extends SyntacticComponent {
                 return AnalysisResult.FAIL;
             }
         }
-
-        ParamResult<Integer> val = new ParamResult<>(null);
-        if (dimension == 0) {
-            res = masterTable.gainValue(name, val);
-        }
-        else if (dimension == 1) {
-            res = masterTable.gainValue(name, index[0], val);
-        }
-        else if (dimension == 2) {
-            res = masterTable.gainValue(name, index[0], index[1], val);
-        }
-        if (res == AnalysisResult.FAIL) {
-            return AnalysisResult.FAIL;
-        }
-        this.intValue = val.getValue();
 
         if (whetherOutput) {
             OutputIntoFile.appendToFile("<LVal>\n", "output.txt");
