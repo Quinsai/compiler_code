@@ -308,7 +308,7 @@ public class Stmt extends SyntacticComponent {
         else if (nextWordCategoryCodeArray[0].getValue().equals("IDENFR")) {
             boolean hadAssignBeforeSemicn = lexicalAnalysis.haveAssignBeforeSemicn();
             if (hadAssignBeforeSemicn) {
-                LVal lVal = new LVal();
+                LVal lVal = new LVal(LVal.ASSIGN);
                 res = lVal.analyze(whetherOutput);
                 if (res != AnalysisResult.SUCCESS) {
                     return AnalysisResult.FAIL;

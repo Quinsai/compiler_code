@@ -26,6 +26,7 @@ public class ScopeStack {
     private ScopeStack() {
         this.stack = new Stack<>();
         this.scopeCounter = 0;
+        this.stack.push(this.scopeCounter);
     }
 
     static {

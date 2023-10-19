@@ -9,11 +9,14 @@ import java.util.ArrayList;
 
 public class FuncRParams extends SyntacticComponent {
 
-    private ArrayList<MasterTableItem> realParamsItem;
+    /**
+     * 实参类型列表
+     */
+    private ArrayList<ComponentValueType> realParamsTypeList;
 
     public FuncRParams() {
         super();
-        this.realParamsItem = new ArrayList<>();
+        this.realParamsTypeList = new ArrayList<>();
     }
 
     @Override
@@ -27,6 +30,8 @@ public class FuncRParams extends SyntacticComponent {
         if (res != AnalysisResult.SUCCESS) {
             return AnalysisResult.FAIL;
         }
+
+        this.realParamsTypeList.add(exp.valueType);
 
         while (true) {
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
@@ -43,6 +48,8 @@ public class FuncRParams extends SyntacticComponent {
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;
             }
+
+            this.realParamsTypeList.add(exp1.valueType);
         }
 
         if (whetherOutput) {
@@ -51,5 +58,7 @@ public class FuncRParams extends SyntacticComponent {
         return AnalysisResult.SUCCESS;
     }
 
-
+    public ArrayList<ComponentValueType> getRealParamsTypeList() {
+        return realParamsTypeList;
+    }
 }

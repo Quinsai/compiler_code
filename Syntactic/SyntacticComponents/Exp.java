@@ -7,6 +7,7 @@ public class Exp extends SyntacticComponent {
 
     public Exp() {
         super();
+        this.valueType = ComponentValueType.INT;
     }
 
     @Override
@@ -16,6 +17,8 @@ public class Exp extends SyntacticComponent {
         if (res != AnalysisResult.SUCCESS) {
             return AnalysisResult.FAIL;
         }
+
+        this.valueType = addExp.valueType;
 
         if (whetherOutput) {
             OutputIntoFile.appendToFile("<Exp>\n", "output.txt");

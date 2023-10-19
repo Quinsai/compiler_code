@@ -86,7 +86,7 @@ public class FuncFParam extends SyntacticComponent {
                 }
             }
 
-            res = masterTable.insertIntoTable(name, SymbolConst.VAR, SymbolConst.ARRAY, 1, item);
+            res = masterTable.insertIntoTable(name, SymbolConst.VAR, SymbolConst.ARRAY, dimension, item);
             if (res == AnalysisResult.FAIL) {
                 return AnalysisResult.FAIL;
             }

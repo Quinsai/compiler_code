@@ -22,6 +22,7 @@ public class InitVal extends SyntacticComponent {
         AnalysisResult res;
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
+        ComponentValueType partValueType = ComponentValueType.INT;
 
         res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
         if (res != AnalysisResult.SUCCESS) {
@@ -55,9 +56,11 @@ public class InitVal extends SyntacticComponent {
                 }
 
                 if (initVal.getValueType() == ComponentValueType.INT) {
+                    partValueType = ComponentValueType.INT;
                     this.valueType = ComponentValueType.ONE_DIMENSION_ARRAY;
                 }
                 else if (initVal.getValueType() == ComponentValueType.ONE_DIMENSION_ARRAY) {
+                    partValueType = ComponentValueType.ONE_DIMENSION_ARRAY;
                     this.valueType = ComponentValueType.TWO_DIMENSION_ARRAY;
                 }
                 else if (initVal.getValueType() == ComponentValueType.TWO_DIMENSION_ARRAY) {
@@ -81,7 +84,7 @@ public class InitVal extends SyntacticComponent {
                         return AnalysisResult.FAIL;
                     }
 
-                    if (initVal1.getValueType() != this.valueType) {
+                    if (initVal1.getValueType() != partValueType) {
                         HandleError.handleError(AnalysisErrorType.ARRAY_DIMENSION_NOT_MATCH);
                         return AnalysisResult.FAIL;
                     }

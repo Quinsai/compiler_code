@@ -95,9 +95,11 @@ public class VarDef extends SyntacticComponent {
                 return AnalysisResult.FAIL;
             }
 
+            res = masterTable.checkAssign(name);
             if (res == AnalysisResult.FAIL) {
                 return AnalysisResult.FAIL;
             }
+
         }
 
         if (whetherOutput) {

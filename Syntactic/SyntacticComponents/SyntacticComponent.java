@@ -18,9 +18,15 @@ public class SyntacticComponent {
      */
     MasterTable masterTable;
 
+    /**
+     * 值的类型
+     */
+    ComponentValueType valueType;
+
     public SyntacticComponent() {
         this.lexicalAnalysis = LexicalAnalysis.getInstance();
         this.masterTable = MasterTable.getInstance();
+        this.valueType = ComponentValueType.NO_MEANING;
     }
 
     public AnalysisResult analyze(boolean whetherOutput) {

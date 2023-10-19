@@ -18,4 +18,8 @@ public class ArrayDetail {
     public ArrayDetail(int dimension) {
         this.dimension = dimension;
     }
+
+    public int getDimension() {
+        return dimension;
+    }
 }

@@ -8,6 +8,7 @@ public class PrimaryExp extends SyntacticComponent {
 
     public PrimaryExp() {
         super();
+        this.valueType = ComponentValueType.INT;
     }
 
     @Override
@@ -39,11 +40,13 @@ public class PrimaryExp extends SyntacticComponent {
 
         }
         else if (nextWordCategoryCode.getValue().equals("IDENFR")) {
-            LVal lVal = new LVal();
+            LVal lVal = new LVal(LVal.REFERENCE);
             res = lVal.analyze(whetherOutput);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;
             }
+
+            this.valueType = lVal.valueType;
 
         }
         else if (nextWordCategoryCode.getValue().equals("INTCON")) {

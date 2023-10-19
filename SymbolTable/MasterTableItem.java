@@ -1,10 +1,10 @@
 package SymbolTable;
 
-import Other.ParamResult;
 import Result.Error.AnalysisErrorType;
 import Result.Error.HandleError;
 import SymbolTable.Array.ArrayDetail;
 import SymbolTable.Function.FunctionDetail;
+import Syntactic.SyntacticComponents.ComponentValueType;
 
 import java.util.ArrayList;
 
@@ -77,30 +77,54 @@ public class MasterTableItem {
      * @param name 符号名
      */
     boolean match(String name) {
-        if (!this.name.equals(name)) {
-            return false;
-        }
-        return true;
+        return this.name.equals(name);
     }
 
     public int getScope() {
         return scope;
     }
 
-    public boolean isConstInt() {
-        return this.category == SymbolConst.CONST && this.type == SymbolConst.INT;
+    /**
+     * 是否可以被赋值
+     */
+    public boolean canBeAssigned() {
+        if (this.category == SymbolConst.VAR) {
+            return true;
+        }
+        else if (this.category == SymbolConst.CONST) {
+            if (!this.hasAssigned) {
+                this.hasAssigned = true;
+                return true;
+            }
+            else {
+                HandleError.handleError(AnalysisErrorType.ASSIGN_TO_CONST);
+                return false;
+            }
+        }
+        else if (this.category == SymbolConst.FUNCTION) {
+            HandleError.handleError(AnalysisErrorType.ASSIGN_TO_FUNCTION);
+            return false;
+        }
+        else {
+            HandleError.handleError(AnalysisErrorType.UNEXPECTED_ERROR);
+            return false;
+        }
     }
 
-    public boolean isVarInt() {
-        return this.category == SymbolConst.VAR && this.type == SymbolConst.INT;
+    public boolean isInt() {
+        return this.type == SymbolConst.INT;
     }
 
-    public boolean isConstArray() {
-        return this.category == SymbolConst.CONST && this.type == SymbolConst.ARRAY;
+    public boolean isOneDimensionArray() {
+        return this.type == SymbolConst.ARRAY && this.arrayLink.getDimension() == 1;
     }
 
-    public boolean isVarArray() {
-        return this.category == SymbolConst.VAR && this.type == SymbolConst.ARRAY;
+    public boolean isTwoDimensionArray() {
+        return this.type == SymbolConst.ARRAY && this.arrayLink.getDimension() == 2;
+    }
+
+    public SymbolConst getFunctionReturnType() {
+        return this.functionLink.getReturnType();
     }
 
     public boolean isHasAssigned() {
@@ -117,5 +141,20 @@ public class MasterTableItem {
 
     public ArrayList<MasterTableItem> getFunctionParamsList() {
         return this.functionLink.getParams();
+    }
+
+    public ComponentValueType getComponentValueType() {
+        if (this.type == SymbolConst.INT) {
+            return ComponentValueType.INT;
+        }
+        else if (this.type == SymbolConst.ARRAY && this.arrayLink.getDimension() == 1) {
+            return ComponentValueType.ONE_DIMENSION_ARRAY;
+        }
+        else if (this.type == SymbolConst.ARRAY && this.arrayLink.getDimension() == 2) {
+            return ComponentValueType.TWO_DIMENSION_ARRAY;
+        }
+        else {
+            return ComponentValueType.NO_MEANING;
+        }
     }
 }

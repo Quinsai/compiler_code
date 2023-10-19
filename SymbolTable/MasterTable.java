@@ -7,6 +7,7 @@ import Result.Error.HandleError;
 import SymbolTable.Array.ArrayDetail;
 import SymbolTable.Function.FunctionDetail;
 import SymbolTable.Scope.ScopeStack;
+import Syntactic.SyntacticComponents.ComponentValueType;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -50,13 +51,15 @@ public class MasterTable {
         Iterator<MasterTableItem> masterTableItemIterator = this.table.descendingIterator();
         MasterTableItem item = null;
         SymbolTableResult res;
+        boolean hasMatched = false;
         while (masterTableItemIterator.hasNext()) {
             item = masterTableItemIterator.next();
             if (item.match(name)) {
+                hasMatched = true;
                 break;
             }
         }
-        if (item != null) {
+        if (hasMatched) {
             res = SymbolTableResult.EXIST;
         }
         else {
@@ -64,6 +67,22 @@ public class MasterTable {
         }
         result.setValue(item);
         return res;
+    }
+
+    /**
+     * 当前作用域下这个名字是否重复
+     */
+    private boolean isNameRepeatInCurrentScope(String name) {
+
+        int currentScope = ScopeStack.getInstance().getCurrentScope();
+        SymbolTableResult res;
+        ParamResult<MasterTableItem> former = new ParamResult<>(null);
+        res = getItemByName(name, former);
+        if (res == SymbolTableResult.EXIST && former.getValue().getScope() == currentScope) {
+            HandleError.handleError(AnalysisErrorType.NAME_REPEAT);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -75,16 +94,11 @@ public class MasterTable {
      */
     public AnalysisResult insertIntoTable(String name, SymbolConst category, SymbolConst type, ParamResult<MasterTableItem> item) {
 
-        int currentScope = ScopeStack.getInstance().getCurrentScope();
-        SymbolTableResult res;
-        ParamResult<MasterTableItem> former = new ParamResult<>(null);
-        res = getItemByName(name, former);
-        if (res == SymbolTableResult.EXIST && former.getValue().getScope() == currentScope) {
-            HandleError.handleError(AnalysisErrorType.NAME_REPETITION);
+        if (isNameRepeatInCurrentScope(name)) {
             return AnalysisResult.FAIL;
         }
 
-        MasterTableItem masterTableItem =  new MasterTableItem(name, category, type, currentScope);
+        MasterTableItem masterTableItem =  new MasterTableItem(name, category, type, ScopeStack.getInstance().getCurrentScope());
         this.table.addLast(masterTableItem);
         item.setValue(masterTableItem);
         return AnalysisResult.SUCCESS;
@@ -100,17 +114,13 @@ public class MasterTable {
      */
     public AnalysisResult insertIntoTable(String name, SymbolConst category, SymbolConst type, SymbolConst returnType, ParamResult<MasterTableItem> item) {
 
-        int currentScope = ScopeStack.getInstance().getCurrentScope();
-        SymbolTableResult res;
-        ParamResult<MasterTableItem> former = new ParamResult<>(null);
-        res = getItemByName(name, former);
-        if (res == SymbolTableResult.EXIST && currentScope == former.getValue().getScope()) {
-            HandleError.handleError(AnalysisErrorType.NAME_REPETITION);
+        if (isNameRepeatInCurrentScope(name)) {
+
             return AnalysisResult.FAIL;
         }
 
         FunctionDetail functionDetail = new FunctionDetail(returnType);
-        MasterTableItem masterTableItem = new MasterTableItem(name, category, type, currentScope);
+        MasterTableItem masterTableItem = new MasterTableItem(name, category, type, ScopeStack.getInstance().getCurrentScope());
         masterTableItem.setFunctionLink(functionDetail);
         this.table.addLast(masterTableItem);
         item.setValue(masterTableItem);
@@ -127,20 +137,43 @@ public class MasterTable {
      */
     public AnalysisResult insertIntoTable(String name, SymbolConst category, SymbolConst type, int dimension, ParamResult<MasterTableItem> item) {
 
-        int currentScope = ScopeStack.getInstance().getCurrentScope();
-        SymbolTableResult res;
-        ParamResult<MasterTableItem> former = new ParamResult<>(null);
-        res = getItemByName(name, former);
-        if (res == SymbolTableResult.EXIST && former.getValue().getScope() == currentScope) {
-            HandleError.handleError(AnalysisErrorType.NAME_REPETITION);
+        if (isNameRepeatInCurrentScope(name)) {
             return AnalysisResult.FAIL;
         }
 
         ArrayDetail arrayDetail = new ArrayDetail(dimension);
-        MasterTableItem masterTableItem = new MasterTableItem(name, category, type, currentScope);
+        MasterTableItem masterTableItem = new MasterTableItem(name, category, type, ScopeStack.getInstance().getCurrentScope());
         masterTableItem.setArrayLink(arrayDetail);
         this.table.addLast(masterTableItem);
         item.setValue(masterTableItem);
+        return AnalysisResult.SUCCESS;
+    }
+
+    /**
+     * 检查是否可以赋值
+     */
+    public AnalysisResult checkAssign(String name) {
+        ParamResult<MasterTableItem> item = new ParamResult<>(null);
+        if (getItemByName(name, item) == SymbolTableResult.NOT_EXIST) {
+            HandleError.handleError(AnalysisErrorType.IDENTIFIER_NOT_DEFINE);
+            return AnalysisResult.FAIL;
+        }
+
+        if (!item.getValue().canBeAssigned()) {
+            return AnalysisResult.FAIL;
+        }
+        return AnalysisResult.SUCCESS;
+    }
+
+    /**
+     * 检查是否可以被引用
+     */
+    public AnalysisResult checkReference(String name) {
+        ParamResult<MasterTableItem> item = new ParamResult<>(null);
+        if (getItemByName(name, item) == SymbolTableResult.NOT_EXIST) {
+            HandleError.handleError(AnalysisErrorType.IDENTIFIER_NOT_DEFINE);
+            return AnalysisResult.FAIL;
+        }
         return AnalysisResult.SUCCESS;
     }
 
@@ -180,7 +213,7 @@ public class MasterTable {
      * @param name 函数名
      * @param params 参数列表
      */
-    public AnalysisResult getFunctionParams(String name, ParamResult<MasterTableItem[]> params) {
+    private AnalysisResult getFunctionParams(String name, ParamResult<MasterTableItem[]> params) {
 
         SymbolTableResult res;
         ParamResult<MasterTableItem> item = new ParamResult<>(null);
@@ -204,6 +237,87 @@ public class MasterTable {
         }
         params.setValue(paramsArray);
 
+        return AnalysisResult.SUCCESS;
+    }
+
+    /**
+     * 检查函数参数
+     */
+    public AnalysisResult checkFunctionParams(String name, ArrayList<ComponentValueType> realParams) {
+        AnalysisResult res;
+        ParamResult<MasterTableItem[]> formParamsReturn = new ParamResult<>(null);
+
+        res = getFunctionParams(name, formParamsReturn);
+        if (res == AnalysisResult.FAIL) {
+            return res;
+        }
+
+        MasterTableItem[] formParams = formParamsReturn.getValue();
+        int length = realParams.size();
+        if (formParams.length != length) {
+            HandleError.handleError(AnalysisErrorType.FUNCTION_PARAMS_NUMBER_NOT_MATCH);
+            return AnalysisResult.FAIL;
+        }
+
+        for (int i = 0; i < length; i++) {
+
+            ComponentValueType realType = realParams.get(i);
+
+            if (formParams[i].isInt() && realType == ComponentValueType.INT) {
+                continue;
+            }
+            else if (formParams[i].isOneDimensionArray() && realType == ComponentValueType.ONE_DIMENSION_ARRAY) {
+                continue;
+            }
+            else if (formParams[i].isTwoDimensionArray() && realType == ComponentValueType.TWO_DIMENSION_ARRAY) {
+                continue;
+            }
+            else {
+                HandleError.handleError(AnalysisErrorType.FUNCTION_PARAMS_TYPE_NOT_MATCH);
+                return AnalysisResult.FAIL;
+            }
+        }
+
+        return AnalysisResult.SUCCESS;
+    }
+
+    /**
+     * 获取函数返回值类型
+     */
+    public AnalysisResult getFunctionReturnType(String name, ParamResult<SymbolConst> returnType) {
+
+        ParamResult<MasterTableItem> item = new ParamResult<>(null);
+        SymbolTableResult res;
+
+        res = getItemByName(name, item);
+        if (res == SymbolTableResult.NOT_EXIST) {
+            HandleError.handleError(AnalysisErrorType.IDENTIFIER_NOT_DEFINE);
+            return AnalysisResult.FAIL;
+        }
+
+        MasterTableItem functionItem = item.getValue();
+        if (!functionItem.isFunction()) {
+            HandleError.handleError(AnalysisErrorType.NOT_FUNCTION);
+            return AnalysisResult.FAIL;
+        }
+
+        returnType.setValue(functionItem.getFunctionReturnType());
+        return AnalysisResult.SUCCESS;
+    }
+
+    public AnalysisResult getComponentValueType(String name, ParamResult<ComponentValueType> returnValueType) {
+
+        ParamResult<MasterTableItem> returnItem = new ParamResult<>(null);
+        SymbolTableResult res;
+
+        res = getItemByName(name, returnItem);
+        if (res == SymbolTableResult.NOT_EXIST) {
+            HandleError.handleError(AnalysisErrorType.IDENTIFIER_NOT_DEFINE);
+            return AnalysisResult.FAIL;
+        }
+
+        MasterTableItem item = returnItem.getValue();
+        returnValueType.setValue(item.getComponentValueType());
         return AnalysisResult.SUCCESS;
     }
 }

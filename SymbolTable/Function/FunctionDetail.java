@@ -37,4 +37,8 @@ public class FunctionDetail {
     public ArrayList<MasterTableItem> getParams() {
         return params;
     }
+
+    public SymbolConst getReturnType() {
+        return returnType;
+    }
 }

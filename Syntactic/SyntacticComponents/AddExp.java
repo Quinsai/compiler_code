@@ -8,6 +8,7 @@ public class AddExp extends SyntacticComponent {
 
     public AddExp() {
         super();
+        this.valueType = ComponentValueType.INT;
     }
 
     @Override
@@ -21,6 +22,8 @@ public class AddExp extends SyntacticComponent {
         if (res != Result.AnalysisResult.SUCCESS) {
             return Result.AnalysisResult.FAIL;
         }
+
+        this.valueType = mulExp.valueType;
 
         while (true) {
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);

@@ -16,7 +16,7 @@ public class ForStmt extends SyntacticComponent {
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
-        LVal lVal = new LVal();
+        LVal lVal = new LVal(LVal.ASSIGN);
         res = lVal.analyze(whetherOutput);
         if (res != AnalysisResult.SUCCESS) {
             return AnalysisResult.FAIL;

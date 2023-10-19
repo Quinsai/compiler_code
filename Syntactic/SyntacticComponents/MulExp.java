@@ -8,6 +8,7 @@ public class MulExp extends SyntacticComponent {
 
     public MulExp() {
         super();
+        this.valueType = ComponentValueType.INT;
     }
 
     @Override
@@ -21,6 +22,8 @@ public class MulExp extends SyntacticComponent {
         if (res != AnalysisResult.SUCCESS) {
             return AnalysisResult.FAIL;
         }
+
+        this.valueType = unaryExp.valueType;
 
         while (true) {
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);

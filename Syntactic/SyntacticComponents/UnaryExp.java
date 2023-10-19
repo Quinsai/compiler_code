@@ -5,11 +5,15 @@ import Output.OutputIntoFile;
 import Result.AnalysisResult;
 import Result.Error.AnalysisErrorType;
 import Result.Error.HandleError;
+import SymbolTable.SymbolConst;
+
+import java.util.ArrayList;
 
 public class UnaryExp extends SyntacticComponent {
 
     public UnaryExp() {
         super();
+        this.valueType = ComponentValueType.INT;
     }
 
     @Override
@@ -35,10 +39,23 @@ public class UnaryExp extends SyntacticComponent {
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;
             }
+
+            this.valueType = primaryExp.valueType;
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("IDENFR")) {
             if (nextWordCategoryCodeArray[1].getValue().equals("LPARENT")) {
+
+                String functionName;
+                ArrayList<ComponentValueType> functionRealParams = new ArrayList<>();
+
                 res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+
+                functionName = nextWordValue.getValue();
+                res = masterTable.checkReference(functionName);
+                if (res == AnalysisResult.FAIL) {
+                    return AnalysisResult.FAIL;
+                }
+
                 res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
                 res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
@@ -51,9 +68,14 @@ public class UnaryExp extends SyntacticComponent {
                     if (res != AnalysisResult.SUCCESS) {
                         return AnalysisResult.FAIL;
                     }
+
+                    functionRealParams.addAll(funcRParams.getRealParamsTypeList());
                 }
 
-                // TODO 实参与形参是否匹配
+                res = masterTable.checkFunctionParams(functionName, functionRealParams);
+                if (res == AnalysisResult.FAIL) {
+                    return AnalysisResult.FAIL;
+                }
 
                 res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
                 if (res != AnalysisResult.SUCCESS) {
@@ -64,6 +86,18 @@ public class UnaryExp extends SyntacticComponent {
                     return AnalysisResult.FAIL;
                 }
 
+                ParamResult<SymbolConst> returnType = new ParamResult<>(null);
+                res = masterTable.getFunctionReturnType(functionName, returnType);
+                if (res == AnalysisResult.FAIL) {
+                    return AnalysisResult.FAIL;
+                }
+
+                if (returnType.getValue() == SymbolConst.INT) {
+                    this.valueType = ComponentValueType.INT;
+                }
+                else if (returnType.getValue() == SymbolConst.VOID) {
+                    this.valueType = ComponentValueType.VOID;
+                }
             }
             else {
                 PrimaryExp primaryExp = new PrimaryExp();
@@ -72,6 +106,7 @@ public class UnaryExp extends SyntacticComponent {
                     return AnalysisResult.FAIL;
                 }
 
+                this.valueType = primaryExp.valueType;
             }
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("PLUS")
@@ -98,6 +133,7 @@ public class UnaryExp extends SyntacticComponent {
                 return AnalysisResult.FAIL;
             }
 
+            this.valueType = primaryExp.valueType;
         }
         else {
             return AnalysisResult.FAIL;
