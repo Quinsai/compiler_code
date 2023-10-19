@@ -3,9 +3,25 @@ package Syntactic.SyntacticComponents;
 import Other.ParamResult;
 import Output.OutputIntoFile;
 import Result.AnalysisResult;
+import Result.Error.AnalysisErrorType;
+import Result.Error.HandleError;
 import SymbolTable.Scope.ScopeStack;
 
 public class Stmt extends SyntacticComponent {
+
+    public static final int INT = 312;
+    public static final int VOID = 969;
+    public static final int NOT_IN_FUNCTION = 239;
+
+    /**
+     * （如果在函数中的）函数返回值类型
+     */
+    private static int functionReturnType;
+
+    /**
+     * 是否在循环中
+     */
+    private static boolean isInCirculate;
 
     public Stmt() {
         super();
@@ -166,11 +182,13 @@ public class Stmt extends SyntacticComponent {
             ScopeStack.getInstance().enterScope();
 
             Stmt stmt = new Stmt();
+            Stmt.isInCirculate = true;
             res = stmt.analyze(whetherOutput);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;
             }
 
+            Stmt.isInCirculate = false;
             ScopeStack.getInstance().quitScope();
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("BREAKTK")) {
@@ -180,6 +198,11 @@ public class Stmt extends SyntacticComponent {
             }
             if (!nextWordCategoryCode.getValue().equals("BREAKTK")) {
                 return AnalysisResult.FAIL;
+            }
+
+            if (!isInCirculate) {
+                HandleError.handleError(AnalysisErrorType.UNEXPECTED_BREAK_OR_CONTINUE);
+                return AnalysisResult.SUCCESS;
             }
 
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
@@ -197,6 +220,11 @@ public class Stmt extends SyntacticComponent {
             }
             if (!nextWordCategoryCode.getValue().equals("CONTINUETK")) {
                 return AnalysisResult.FAIL;
+            }
+
+            if (!isInCirculate) {
+                HandleError.handleError(AnalysisErrorType.UNEXPECTED_BREAK_OR_CONTINUE);
+                return AnalysisResult.SUCCESS;
             }
 
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);

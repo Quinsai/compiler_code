@@ -21,6 +21,18 @@ int main() {
 
 	int e = 1 + r;
 
+	break;
+
+
+	continue;
+
+	int i = 1;
+	for(i = 1; i < 12; i = i + 1) {
+		break;
+
+		continue;
+	}
+
 	r = 12;
 
 	return 0;
