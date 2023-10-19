@@ -320,4 +320,19 @@ public class MasterTable {
         returnValueType.setValue(item.getComponentValueType());
         return AnalysisResult.SUCCESS;
     }
+
+    /**
+     * 在退出某一作用域的时候，清除其对应的表
+     */
+    public void cleanTableWhenQuitScope(int scope) {
+        while (!this.table.isEmpty()) {
+            MasterTableItem item = this.table.getLast();
+            if (item.getScope() == scope) {
+                this.table.removeLast();
+            }
+            else {
+                break;
+            }
+        }
+    }
 }

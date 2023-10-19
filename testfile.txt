@@ -1,4 +1,8 @@
+const int r = 3214;
+
 int func(int a, int b, int c) {
+	int d = a + b + c;
+	int r = 12;
 	return 0;
 }
 
@@ -6,10 +10,18 @@ int func(int a, int b, int c) {
 	唤醒波罗的海！
 */
 
+int f1() {
+	return 1;
+}
+
 int main() {
 	int b[2] = {1, 2};
-	int c = func(1, 2, b);
+	int c = func(1, 2, f1());
 	int d = func(1, 2);
+
+	int e = 1 + r;
+
+	r = 12;
 
 	return 0;
 }

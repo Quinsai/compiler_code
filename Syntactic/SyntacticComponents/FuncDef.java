@@ -52,6 +52,8 @@ public class FuncDef extends SyntacticComponent {
             return AnalysisResult.SUCCESS;
         }
 
+        ScopeStack.getInstance().enterScope();
+
         res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
         if (res != AnalysisResult.SUCCESS) {
             return AnalysisResult.FAIL;
@@ -82,8 +84,6 @@ public class FuncDef extends SyntacticComponent {
             HandleError.handleError(AnalysisErrorType.LACK_OF_RPARENT);
             return AnalysisResult.FAIL;
         }
-
-        ScopeStack.getInstance().enterScope();
 
         Block block = new Block();
         res = block.analyze(whetherOutput);

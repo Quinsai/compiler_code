@@ -1,5 +1,7 @@
 package SymbolTable.Scope;
 
+import SymbolTable.MasterTable;
+
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -49,7 +51,8 @@ public class ScopeStack {
      * 退出作用域（层次）
      */
     public void quitScope() {
-        this.stack.pop();
+        int former = this.stack.pop();
+        MasterTable.getInstance().cleanTableWhenQuitScope(former);
     }
 
     public int getCurrentScope() {

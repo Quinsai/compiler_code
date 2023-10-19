@@ -34,6 +34,8 @@ public class MainFuncDef extends SyntacticComponent {
             return AnalysisResult.FAIL;
         }
 
+        ScopeStack.getInstance().enterScope();
+
         res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
         if (res != AnalysisResult.SUCCESS) {
             return AnalysisResult.FAIL;
@@ -49,8 +51,6 @@ public class MainFuncDef extends SyntacticComponent {
         if (!nextWordCategoryCode.getValue().equals("RPARENT")) {
             return AnalysisResult.FAIL;
         }
-
-        ScopeStack.getInstance().enterScope();
 
         Block block = new Block();
         res = block.analyze(whetherOutput);
