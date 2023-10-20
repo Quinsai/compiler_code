@@ -9,6 +9,8 @@ import SymbolTable.MasterTableItem;
 import SymbolTable.Scope.ScopeStack;
 import SymbolTable.SymbolConst;
 
+import java.net.http.HttpRequest;
+
 public class FuncDef extends SyntacticComponent {
 
     public FuncDef() {
@@ -96,6 +98,11 @@ public class FuncDef extends SyntacticComponent {
         res = block.analyze(whetherOutput);
         if (res != AnalysisResult.SUCCESS) {
             return AnalysisResult.FAIL;
+        }
+
+        if (BlockItem.isReturnWithValue && Stmt.functionReturnType == ComponentValueType.INT) {
+            HandleError.handleError(AnalysisErrorType.INT_FUNCTION_WITHOUT_RETURN);
+            return AnalysisResult.SUCCESS;
         }
 
         Stmt.functionReturnType = ComponentValueType.NO_MEANING;

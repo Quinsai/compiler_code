@@ -272,6 +272,8 @@ public class Stmt extends SyntacticComponent {
             if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
                 return AnalysisResult.FAIL;
             }
+
+            BlockItem.isReturnWithValue = true;
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("PRINTFTK")) {
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);

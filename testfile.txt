@@ -3,7 +3,11 @@ const int r = 3214;
 int func(int a, int b, int c) {
 	int d = a + b + c;
 	int r = 12;
-	return 0;
+	if (r == 12) {
+		return 1;
+	}
+	return 1;
+	return;
 }
 
 /*
@@ -11,7 +15,7 @@ int func(int a, int b, int c) {
 */
 
 void f1() {
-	return 1;
+	return (1);
 }
 
 int main() {

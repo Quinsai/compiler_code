@@ -5,9 +5,16 @@ import Result.AnalysisResult;
 
 public class BlockItem extends SyntacticComponent {
 
+    public static boolean isReturnWithValue;
+
+    static {
+        isReturnWithValue = false;
+    }
+
 
     public BlockItem() {
         super();
+        isReturnWithValue = false;
     }
 
     @Override
