@@ -56,6 +56,8 @@ public class MainFuncDef extends SyntacticComponent {
         }
         res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
+        Stmt.functionReturnType = ComponentValueType.INT;
+
         Block block = new Block();
         res = block.analyze(whetherOutput);
         if (res != AnalysisResult.SUCCESS) {
@@ -63,6 +65,8 @@ public class MainFuncDef extends SyntacticComponent {
         }
 
         ScopeStack.getInstance().quitScope();
+
+        Stmt.functionReturnType = ComponentValueType.NO_MEANING;
 
         if (whetherOutput) {
             OutputIntoFile.appendToFile("<MainFuncDef>\n", "output.txt");
