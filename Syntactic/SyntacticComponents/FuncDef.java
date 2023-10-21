@@ -44,7 +44,6 @@ public class FuncDef extends SyntacticComponent {
         name = nextWordValue.getValue();
         res = masterTable.insertIntoTable(name, SymbolConst.FUNCTION, SymbolConst.NO_MEANING, returnType, item);
         if (res == AnalysisResult.FAIL) {
-//            lexicalAnalysis.skipToNextLBrace();
             ScopeStack.getInstance().enterScope();
             Block block = new Block();
             res = block.analyze(whetherOutput);
