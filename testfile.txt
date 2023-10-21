@@ -15,11 +15,7 @@ int func(int a, int b, int c) {
 	唤醒波罗的海！
 */
 
-int f1() {
-	return (1);
-}
-
-int f2(int a[[12]) {
+void f1() {
 	return 1;
 }
 

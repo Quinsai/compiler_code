@@ -281,7 +281,7 @@ public class Stmt extends SyntacticComponent {
             }
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
-            BlockItem.isReturnWithValue = true;
+            BlockItem.isReturnWithValue = hasReturnValue;
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("PRINTFTK")) {
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);

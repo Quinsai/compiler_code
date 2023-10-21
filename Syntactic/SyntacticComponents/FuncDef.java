@@ -101,7 +101,7 @@ public class FuncDef extends SyntacticComponent {
             return AnalysisResult.FAIL;
         }
 
-        if (BlockItem.isReturnWithValue && Stmt.functionReturnType == ComponentValueType.INT) {
+        if (!BlockItem.isReturnWithValue && Stmt.functionReturnType == ComponentValueType.INT) {
             HandleError.handleError(AnalysisErrorType.INT_FUNCTION_WITHOUT_RETURN);
             return AnalysisResult.SUCCESS;
         }
