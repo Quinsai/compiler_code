@@ -26,6 +26,9 @@ int f1() {
 }
 
 int main() {
+
+	printf("/53");
+
 	int b[2] = {1, 2}
 	int c = func(1, 2, f1();
 	int d = func(1, 2);

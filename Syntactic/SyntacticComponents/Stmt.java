@@ -352,7 +352,7 @@ public class Stmt extends SyntacticComponent {
 
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
             if (res != AnalysisResult.SUCCESS) {
-                return AnalysisResult.FAIL;
+                return AnalysisResult.SUCCESS;
             }
             if (!nextWordCategoryCode.getValue().equals("STRCON")) {
                 return AnalysisResult.FAIL;

@@ -28,4 +28,5 @@ public enum AnalysisErrorType {
     LACK_OF_SEMICN, // 缺少分号
     PRINTF_NOT_MATCH, // printf中格式字符与表达式个数不匹配
     UNEXPECTED_BREAK_OR_CONTINUE, // 在非循环块中使用break和continue语句
+    FORMAT_STRING_WITH_ILLEGAL_CHAR, // 格式字符串中有非法符号
 }

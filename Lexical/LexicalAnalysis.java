@@ -2,6 +2,7 @@ package Lexical;
 
 import java.util.LinkedList;
 
+import Result.Error.AnalysisErrorType;
 import Result.Error.HandleError;
 import Input.InputSourceCode;
 import Other.ParamResult;
@@ -192,6 +193,11 @@ public class LexicalAnalysis {
             token += '"';
 
             currentIndex = tempIndex;
+
+            res = checkFormatString(token);
+            if (res == AnalysisResult.FAIL) {
+                return AnalysisResult.FAIL;
+            }
 
             storeWordResult("STRCON", token, whetherOutput);
             res = AnalysisResult.SUCCESS;
@@ -396,11 +402,6 @@ public class LexicalAnalysis {
         }
         else {
             res = AnalysisResult.FAIL;
-//            System.out.println("------------------");
-//            System.out.println(c);
-//            System.out.println(currentIndex);
-//            System.out.println(currentLine);
-//            System.out.println("------------------");
         }
 
         if (res == AnalysisResult.SUCCESS) {
@@ -558,6 +559,48 @@ public class LexicalAnalysis {
         if (delta == NEXT_LINE) {
             currentIndex ++;
         }
+    }
+
+    /**
+     * 检查格式化字符串是否没有错误
+     * @param formatString 待检查地串
+     */
+    private AnalysisResult checkFormatString(String formatString) {
+        char[] arrayString = formatString.toCharArray();
+        int length = arrayString.length;
+        for (int i = 0; i< length; i++) {
+            char c = arrayString[i];
+            int delta = c;
+            if (delta == 32 || delta == 33 || (delta >= 40 && delta <= 126 && delta != 92)) {
+                continue;
+            }
+            else if (delta == 92 && c == '\\') {
+                if (i + 1 < length && arrayString[i+1] == 'n') {
+                    i++;
+                    continue;
+                }
+                else {
+                    HandleError.handleError(AnalysisErrorType.FORMAT_STRING_WITH_ILLEGAL_CHAR);
+                    return AnalysisResult.FAIL;
+                }
+            }
+            else if (delta == 37 && c == '&') {
+                if (i + 1 < length && arrayString[i+1] == 'd') {
+                    i++;
+                    continue;
+                }
+                else {
+                    HandleError.handleError(AnalysisErrorType.FORMAT_STRING_WITH_ILLEGAL_CHAR);
+                    return AnalysisResult.FAIL;
+                }
+            }
+            else {
+                HandleError.handleError(AnalysisErrorType.FORMAT_STRING_WITH_ILLEGAL_CHAR);
+                return AnalysisResult.FAIL;
+            }
+        }
+
+        return AnalysisResult.SUCCESS;
     }
 }
 
