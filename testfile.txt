@@ -1,64 +1,12 @@
-const int r = 3214
-int hh = 3
-int i = 534;
-
-int func(int a, int b, int c) {
-	int d = a + b + c;
-	int r = 12;
-	if (r == 12) {
-		return 1;
-	}
-	return 1;
-	return;
+const int const1 = 1, const2 = -100;
+int change1;
+int gets1(int var1,int var2){
+   const1 = 999;
+   change1 = var1 + var2
+   return (change1);
 }
-
-/*
-	唤醒波罗的海！
-*/
-
-void f1() {
-	return 1;
-}
-
-int f1() {
-	int r = 1;
-	int r = 2;
-}
-
-int main() {
-
-	printf("%d %d \4234", 432, 42342);
-
-	int b[2] = {1, 2}
-	int c = func(1, 2, f1();
-	int d = func(1, 2);
-
-	int e = 1 + r
-
-	break;
-
-
-	continue;
-
-	for(i = 1; i < 12; i = i + 1
-	{
-		break;
-
-		continue
-	}
-
-	if (e == 12 {
-		int t = 43
-	}
-
-	for(i = 1; i < 12; i = i + 1
-    	{
-    		break;
-
-    		continue
-    	}
-
-	r = 12;
-
-	return 0;
+int main(){
+   change1 = 10;
+   printf("Hello World$");
+   return 0;
 }
