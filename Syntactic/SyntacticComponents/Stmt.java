@@ -70,6 +70,13 @@ public class Stmt extends SyntacticComponent {
             Cond cond = new Cond();
             res = cond.analyze(whetherOutput);
             if (res != AnalysisResult.SUCCESS) {
+                ScopeStack.getInstance().enterScope();
+                Stmt stmt = new Stmt();
+                res = stmt.analyze(whetherOutput);
+                if (res != AnalysisResult.SUCCESS) {
+                    return AnalysisResult.FAIL;
+                }
+                ScopeStack.getInstance().quitScope();
                 return AnalysisResult.FAIL;
             }
 
@@ -79,6 +86,13 @@ public class Stmt extends SyntacticComponent {
             }
             if (!nextWordCategoryCode.getValue().equals("RPARENT")) {
                 HandleError.handleError(AnalysisErrorType.LACK_OF_RPARENT);
+                ScopeStack.getInstance().enterScope();
+                Stmt stmt = new Stmt();
+                res = stmt.analyze(whetherOutput);
+                if (res != AnalysisResult.SUCCESS) {
+                    return AnalysisResult.FAIL;
+                }
+                ScopeStack.getInstance().quitScope();
                 return AnalysisResult.SUCCESS;
             }
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
@@ -130,7 +144,16 @@ public class Stmt extends SyntacticComponent {
                 ForStmt forStmt = new ForStmt();
                 res = forStmt.analyze(whetherOutput);
                 if (res != AnalysisResult.SUCCESS) {
-                    return AnalysisResult.FAIL;
+                    ScopeStack.getInstance().enterScope();
+                    Stmt.isInCirculate = true;
+                    Stmt stmt = new Stmt();
+                    res = stmt.analyze(whetherOutput);
+                    if (res != AnalysisResult.SUCCESS) {
+                        return AnalysisResult.FAIL;
+                    }
+                    Stmt.isInCirculate = false;
+                    ScopeStack.getInstance().quitScope();
+                    return AnalysisResult.SUCCESS;
                 }
             }
 
@@ -150,7 +173,16 @@ public class Stmt extends SyntacticComponent {
                 Cond cond = new Cond();
                 res = cond.analyze(whetherOutput);
                 if (res != AnalysisResult.SUCCESS) {
-                    return AnalysisResult.FAIL;
+                    ScopeStack.getInstance().enterScope();
+                    Stmt.isInCirculate = true;
+                    Stmt stmt = new Stmt();
+                    res = stmt.analyze(whetherOutput);
+                    if (res != AnalysisResult.SUCCESS) {
+                        return AnalysisResult.FAIL;
+                    }
+                    Stmt.isInCirculate = false;
+                    ScopeStack.getInstance().quitScope();
+                    return AnalysisResult.SUCCESS;
                 }
             }
 
@@ -170,7 +202,16 @@ public class Stmt extends SyntacticComponent {
                 ForStmt forStmt = new ForStmt();
                 res = forStmt.analyze(whetherOutput);
                 if (res != AnalysisResult.SUCCESS) {
-                    return AnalysisResult.FAIL;
+                    ScopeStack.getInstance().enterScope();
+                    Stmt.isInCirculate = true;
+                    Stmt stmt = new Stmt();
+                    res = stmt.analyze(whetherOutput);
+                    if (res != AnalysisResult.SUCCESS) {
+                        return AnalysisResult.FAIL;
+                    }
+                    Stmt.isInCirculate = false;
+                    ScopeStack.getInstance().quitScope();
+                    return AnalysisResult.SUCCESS;
                 }
             }
 
@@ -180,6 +221,15 @@ public class Stmt extends SyntacticComponent {
             }
             if (!nextWordCategoryCode.getValue().equals("RPARENT")) {
                 HandleError.handleError(AnalysisErrorType.LACK_OF_RPARENT);
+                ScopeStack.getInstance().enterScope();
+                Stmt.isInCirculate = true;
+                Stmt stmt = new Stmt();
+                res = stmt.analyze(whetherOutput);
+                if (res != AnalysisResult.SUCCESS) {
+                    return AnalysisResult.FAIL;
+                }
+                Stmt.isInCirculate = false;
+                ScopeStack.getInstance().quitScope();
                 return AnalysisResult.SUCCESS;
             }
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
