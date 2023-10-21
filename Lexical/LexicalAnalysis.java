@@ -495,21 +495,69 @@ public class LexicalAnalysis {
     }
 
     /**
-     * 跳转到下一行
-     * 当发现error的时候，由于一行中只会有一个报错
-     * 所以此时要把词法分析器中读取的“光标”，也就是currentIndex挪到下一行开始
+     * 跳转到下一个特定的字符的后面
+     * 保证执行后的currentIndex指向的是t后面的那个字符的下标
+     * @param t 特定的字符
      */
-    public void skipToNextLine() {
-        while (true) {
+    private void skipToNextChar(char t) {
+        while (currentIndex < sourceLength) {
             char c = source.charAt(currentIndex);
             if (c == '\n') {
                 this.currentLine ++;
+            }
+            if (c == t) {
                 break;
             }
             currentIndex ++;
         }
 
         currentIndex ++;
+    }
+
+    /**
+     * 跳转到下一行
+     * 当发现error的时候，由于一行中只会有一个报错
+     * 所以此时要把词法分析器中读取的“光标”，也就是currentIndex挪到下一行开始
+     */
+    public void skipToNextLine() {
+        skipToNextChar('\n');
+    }
+
+    /**
+     * 跳转到下一个左大括号
+     */
+    public void skipToNextLBrace() {
+        skipToNextChar('{');
+    }
+
+    /**
+     * 跳转到下一个左大括号或者下一行
+     */
+    public void skipToNextLBraceOrLine() {
+        final int NEXT_LINE = 1322;
+        final int NEXT_LBRACE = 8690;
+
+        int delta = 0;
+
+        while (currentIndex < sourceLength) {
+            char c = source.charAt(currentIndex);
+            if (c == '\n') {
+                this.currentLine ++;
+            }
+            if (c == '\n') {
+                delta = NEXT_LINE;
+                break;
+            }
+            else if (c == '{') {
+                delta = NEXT_LBRACE;
+                break;
+            }
+            currentIndex ++;
+        }
+
+        if (delta == NEXT_LINE) {
+            currentIndex ++;
+        }
     }
 }
 
