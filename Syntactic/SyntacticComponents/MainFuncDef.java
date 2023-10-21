@@ -3,6 +3,8 @@ package Syntactic.SyntacticComponents;
 import Other.ParamResult;
 import Output.OutputIntoFile;
 import Result.AnalysisResult;
+import Result.Error.AnalysisErrorType;
+import Result.Error.HandleError;
 import SymbolTable.Scope.ScopeStack;
 
 public class MainFuncDef extends SyntacticComponent {
@@ -44,13 +46,15 @@ public class MainFuncDef extends SyntacticComponent {
             return AnalysisResult.FAIL;
         }
 
-        res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+        res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
         if (res != AnalysisResult.SUCCESS) {
             return AnalysisResult.FAIL;
         }
         if (!nextWordCategoryCode.getValue().equals("RPARENT")) {
+            HandleError.handleError(AnalysisErrorType.LACK_OF_RPARENT);
             return AnalysisResult.FAIL;
         }
+        res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
         Block block = new Block();
         res = block.analyze(whetherOutput);

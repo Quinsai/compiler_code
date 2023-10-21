@@ -45,7 +45,7 @@ public class FuncFParam extends SyntacticComponent {
             int dimension = 0;
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
-            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;
             }
@@ -53,6 +53,7 @@ public class FuncFParam extends SyntacticComponent {
                 HandleError.handleError(AnalysisErrorType.LACK_OF_RBRACK);
                 return AnalysisResult.FAIL;
             }
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
             dimension ++;
 
             while (true) {
@@ -76,7 +77,7 @@ public class FuncFParam extends SyntacticComponent {
                     return AnalysisResult.FAIL;
                 }
 
-                res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+                res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
                 if (res != AnalysisResult.SUCCESS) {
                     return AnalysisResult.FAIL;
                 }
@@ -84,6 +85,7 @@ public class FuncFParam extends SyntacticComponent {
                     HandleError.handleError(AnalysisErrorType.LACK_OF_RBRACK);
                     return AnalysisResult.FAIL;
                 }
+                res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
             }
 
             res = masterTable.insertIntoTable(name, SymbolConst.VAR, SymbolConst.ARRAY, dimension, item);

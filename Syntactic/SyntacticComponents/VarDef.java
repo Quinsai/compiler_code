@@ -59,7 +59,7 @@ public class VarDef extends SyntacticComponent {
                 return AnalysisResult.FAIL;
             }
 
-            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;
             }
@@ -67,6 +67,7 @@ public class VarDef extends SyntacticComponent {
                 HandleError.handleError(AnalysisErrorType.LACK_OF_RBRACK);
                 return AnalysisResult.FAIL;
             }
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
         }
 
         if (dimension == 0) {

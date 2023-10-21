@@ -77,7 +77,7 @@ public class UnaryExp extends SyntacticComponent {
                     return AnalysisResult.FAIL;
                 }
 
-                res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+                res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
                 if (res != AnalysisResult.SUCCESS) {
                     return AnalysisResult.FAIL;
                 }
@@ -85,6 +85,7 @@ public class UnaryExp extends SyntacticComponent {
                     HandleError.handleError(AnalysisErrorType.LACK_OF_RPARENT);
                     return AnalysisResult.FAIL;
                 }
+                res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
                 ParamResult<SymbolConst> returnType = new ParamResult<>(null);
                 res = masterTable.getFunctionReturnType(functionName, returnType);

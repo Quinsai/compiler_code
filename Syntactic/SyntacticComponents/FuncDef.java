@@ -78,7 +78,7 @@ public class FuncDef extends SyntacticComponent {
 
         masterTable.setFunctionParams(name);
 
-        res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+        res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
         if (res != AnalysisResult.SUCCESS) {
             return AnalysisResult.FAIL;
         }
@@ -86,6 +86,7 @@ public class FuncDef extends SyntacticComponent {
             HandleError.handleError(AnalysisErrorType.LACK_OF_RPARENT);
             return AnalysisResult.FAIL;
         }
+        res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
         if (returnType == SymbolConst.INT) {
             Stmt.functionReturnType = ComponentValueType.INT;

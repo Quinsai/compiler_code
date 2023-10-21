@@ -73,13 +73,15 @@ public class Stmt extends SyntacticComponent {
                 return AnalysisResult.FAIL;
             }
 
-            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("RPARENT")) {
-                return AnalysisResult.FAIL;
+                HandleError.handleError(AnalysisErrorType.LACK_OF_RPARENT);
+                return AnalysisResult.SUCCESS;
             }
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
             ScopeStack.getInstance().enterScope();
 
@@ -172,13 +174,15 @@ public class Stmt extends SyntacticComponent {
                 }
             }
 
-            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("RPARENT")) {
-                return AnalysisResult.FAIL;
+                HandleError.handleError(AnalysisErrorType.LACK_OF_RPARENT);
+                return AnalysisResult.SUCCESS;
             }
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
             ScopeStack.getInstance().enterScope();
 
@@ -321,13 +325,15 @@ public class Stmt extends SyntacticComponent {
                 }
             }
 
-            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("RPARENT")) {
-                return AnalysisResult.FAIL;
+                HandleError.handleError(AnalysisErrorType.LACK_OF_RPARENT);
+                return AnalysisResult.SUCCESS;
             }
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
             if (res != AnalysisResult.SUCCESS) {
@@ -382,13 +388,15 @@ public class Stmt extends SyntacticComponent {
                         return AnalysisResult.FAIL;
                     }
 
-                    res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+                    res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
                     if (res != AnalysisResult.SUCCESS) {
                         return AnalysisResult.FAIL;
                     }
                     if (!nextWordCategoryCode.getValue().equals("RPARENT")) {
-                        return AnalysisResult.FAIL;
+                        HandleError.handleError(AnalysisErrorType.LACK_OF_RPARENT);
+                        return AnalysisResult.SUCCESS;
                     }
+                    res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
                     res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
                     if (res != AnalysisResult.SUCCESS) {
