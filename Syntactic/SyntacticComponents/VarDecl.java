@@ -3,6 +3,8 @@ package Syntactic.SyntacticComponents;
 import Other.ParamResult;
 import Output.OutputIntoFile;
 import Result.AnalysisResult;
+import Result.Error.AnalysisErrorType;
+import Result.Error.HandleError;
 
 public class VarDecl extends SyntacticComponent {
 
@@ -47,13 +49,15 @@ public class VarDecl extends SyntacticComponent {
             }
         }
 
-        res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+        res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
         if (res != AnalysisResult.SUCCESS) {
             return AnalysisResult.FAIL;
         }
         if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
-            return AnalysisResult.FAIL;
+            HandleError.handleError(AnalysisErrorType.LACK_OF_SEMICN);
+            return AnalysisResult.SUCCESS;
         }
+        res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
         if (whetherOutput) {
             OutputIntoFile.appendToFile("<VarDecl>\n", "output.txt");

@@ -228,13 +228,15 @@ public class Stmt extends SyntacticComponent {
                 return AnalysisResult.SUCCESS;
             }
 
-            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
-                return AnalysisResult.FAIL;
+                HandleError.handleError(AnalysisErrorType.LACK_OF_SEMICN);
+                return AnalysisResult.SUCCESS;
             }
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("RETURNTK")) {
             boolean hasReturnValue = false;
@@ -265,13 +267,15 @@ public class Stmt extends SyntacticComponent {
                 return AnalysisResult.SUCCESS;
             }
 
-            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
-                return AnalysisResult.FAIL;
+                HandleError.handleError(AnalysisErrorType.LACK_OF_SEMICN);
+                return AnalysisResult.SUCCESS;
             }
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
             BlockItem.isReturnWithValue = true;
         }
@@ -325,13 +329,15 @@ public class Stmt extends SyntacticComponent {
                 return AnalysisResult.FAIL;
             }
 
-            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
-                return AnalysisResult.FAIL;
+                HandleError.handleError(AnalysisErrorType.LACK_OF_SEMICN);
+                return AnalysisResult.SUCCESS;
             }
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("LBRACE")) {
             ScopeStack.getInstance().enterScope();
@@ -384,13 +390,15 @@ public class Stmt extends SyntacticComponent {
                         return AnalysisResult.FAIL;
                     }
 
-                    res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+                    res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
                     if (res != AnalysisResult.SUCCESS) {
                         return AnalysisResult.FAIL;
                     }
                     if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
-                        return AnalysisResult.FAIL;
+                        HandleError.handleError(AnalysisErrorType.LACK_OF_SEMICN);
+                        return AnalysisResult.SUCCESS;
                     }
+                    res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
                 }
                 else {
                     Exp exp = new Exp();
@@ -399,13 +407,15 @@ public class Stmt extends SyntacticComponent {
                         return AnalysisResult.FAIL;
                     }
 
-                    res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+                    res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
                     if (res != AnalysisResult.SUCCESS) {
                         return AnalysisResult.FAIL;
                     }
                     if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
-                        return AnalysisResult.FAIL;
+                        HandleError.handleError(AnalysisErrorType.LACK_OF_SEMICN);
+                        return AnalysisResult.SUCCESS;
                     }
+                    res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
                 }
             }
             else {
@@ -415,13 +425,15 @@ public class Stmt extends SyntacticComponent {
                     return AnalysisResult.FAIL;
                 }
 
-                res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+                res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
                 if (res != AnalysisResult.SUCCESS) {
                     return AnalysisResult.FAIL;
                 }
                 if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
-                    return AnalysisResult.FAIL;
+                    HandleError.handleError(AnalysisErrorType.LACK_OF_SEMICN);
+                    return AnalysisResult.SUCCESS;
                 }
+                res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
             }
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("PLUS")
@@ -436,16 +448,19 @@ public class Stmt extends SyntacticComponent {
                 return AnalysisResult.FAIL;
             }
 
-            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+            res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
-                return AnalysisResult.FAIL;
+                HandleError.handleError(AnalysisErrorType.LACK_OF_SEMICN);
+                return AnalysisResult.SUCCESS;
             }
+            res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
         }
         else {
-            return AnalysisResult.FAIL;
+            HandleError.handleError(AnalysisErrorType.LACK_OF_SEMICN);
+            return AnalysisResult.SUCCESS;
         }
 
         if (whetherOutput) {
