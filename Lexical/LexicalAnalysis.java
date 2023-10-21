@@ -568,14 +568,14 @@ public class LexicalAnalysis {
     private AnalysisResult checkFormatString(String formatString) {
         char[] arrayString = formatString.toCharArray();
         int length = arrayString.length;
-        for (int i = 0; i< length; i++) {
+        for (int i = 1; i< length - 1; i++) {
             char c = arrayString[i];
             int delta = c;
             if (delta == 32 || delta == 33 || (delta >= 40 && delta <= 126 && delta != 92)) {
                 continue;
             }
-            else if (delta == 92 && c == '\\') {
-                if (i + 1 < length && arrayString[i+1] == 'n') {
+            else if (delta == 92) {
+                if (i + 1 < length - 1 && arrayString[i+1] == 'n') {
                     i++;
                     continue;
                 }
@@ -584,8 +584,8 @@ public class LexicalAnalysis {
                     return AnalysisResult.FAIL;
                 }
             }
-            else if (delta == 37 && c == '&') {
-                if (i + 1 < length && arrayString[i+1] == 'd') {
+            else if (delta == 37) {
+                if (i + 1 < length - 1 && arrayString[i+1] == 'd') {
                     i++;
                     continue;
                 }

@@ -27,7 +27,7 @@ int f1() {
 
 int main() {
 
-	printf("/53");
+	printf("%d %d \4234", 432, 42342);
 
 	int b[2] = {1, 2}
 	int c = func(1, 2, f1();

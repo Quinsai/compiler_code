@@ -28,6 +28,22 @@ public class Stmt extends SyntacticComponent {
         super();
     }
 
+    private int getNumberOfFormatCharInFormatString(String formatString) {
+        char[] arrayString = formatString.toCharArray();
+        int length = arrayString.length;
+        int number = 0;
+        for (int i = 0; i< length; i++) {
+            char c = arrayString[i];
+            if (c == '%') {
+                if (i + 1 < length && arrayString[i+1] == 'd') {
+                    i++;
+                    number ++;
+                }
+            }
+        }
+        return number;
+    }
+
     @Override
     public AnalysisResult analyze(boolean whetherOutput) {
         AnalysisResult res;
@@ -358,6 +374,9 @@ public class Stmt extends SyntacticComponent {
                 return AnalysisResult.FAIL;
             }
 
+            int numberOfFormatChar = getNumberOfFormatCharInFormatString(nextWordValue.getValue());
+            int numberOfExp = 0;
+
             while (true) {
                 res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
                 if (res != AnalysisResult.SUCCESS) {
@@ -373,6 +392,12 @@ public class Stmt extends SyntacticComponent {
                 if (res != AnalysisResult.SUCCESS) {
                     return AnalysisResult.FAIL;
                 }
+                numberOfExp ++;
+            }
+
+            if (numberOfFormatChar != numberOfExp) {
+                HandleError.handleError(AnalysisErrorType.FORMAT_CHAR_NUMBER_NOT_MATCH);
+                return AnalysisResult.SUCCESS;
             }
 
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
