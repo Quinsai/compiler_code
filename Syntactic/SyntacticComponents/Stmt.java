@@ -332,6 +332,8 @@ public class Stmt extends SyntacticComponent {
                 }
             }
 
+            BlockItem.isReturnWithValue = hasReturnValue;
+
             if (Stmt.functionReturnType != ComponentValueType.INT && hasReturnValue) {
                 HandleError.handleError(AnalysisErrorType.VOID_FUNCTION_WITH_RETURN);
                 return AnalysisResult.SUCCESS;
@@ -346,8 +348,6 @@ public class Stmt extends SyntacticComponent {
                 return AnalysisResult.SUCCESS;
             }
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
-
-            BlockItem.isReturnWithValue = hasReturnValue;
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("PRINTFTK")) {
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
@@ -437,7 +437,7 @@ public class Stmt extends SyntacticComponent {
                 LVal lVal = new LVal(LVal.ASSIGN);
                 res = lVal.analyze(whetherOutput);
                 if (res != AnalysisResult.SUCCESS) {
-                    return AnalysisResult.FAIL;
+                    return AnalysisResult.SUCCESS;
                 }
 
                 res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
@@ -505,7 +505,7 @@ public class Stmt extends SyntacticComponent {
                 Exp exp =  new Exp();
                 res = exp.analyze(whetherOutput);
                 if (res != AnalysisResult.SUCCESS) {
-                    return AnalysisResult.FAIL;
+                    return AnalysisResult.SUCCESS;
                 }
 
                 res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);

@@ -37,6 +37,7 @@ public class HandleError {
             c = 'h';
         }
         else if (errorType == AnalysisErrorType.LACK_OF_SEMICN) {
+            // LexicalAnalysis.getInstance().insertSemicn();
             c = 'i';
         }
         else if (errorType == AnalysisErrorType.LACK_OF_RPARENT) {

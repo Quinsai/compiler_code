@@ -64,6 +64,11 @@ public class MainFuncDef extends SyntacticComponent {
             return AnalysisResult.FAIL;
         }
 
+        if (!BlockItem.isReturnWithValue && Stmt.functionReturnType == ComponentValueType.INT) {
+            HandleError.handleError(AnalysisErrorType.INT_FUNCTION_WITHOUT_RETURN);
+            return AnalysisResult.SUCCESS;
+        }
+
         ScopeStack.getInstance().quitScope();
 
         Stmt.functionReturnType = ComponentValueType.NO_MEANING;

@@ -549,6 +549,7 @@ public class LexicalAnalysis {
                 delta = NEXT_LINE;
                 break;
             }
+            // else if (c == '{' || c == ';') {
             else if (c == '{') {
                 delta = NEXT_LBRACE;
                 break;
@@ -601,6 +602,13 @@ public class LexicalAnalysis {
         }
 
         return AnalysisResult.SUCCESS;
+    }
+
+    public void insertSemicn() {
+        StringBuilder stringBuilder =  new StringBuilder(this.source);
+        stringBuilder.insert(this.currentIndex, ';');
+        this.source = new String(stringBuilder);
+        this.sourceLength ++;
     }
 }
 

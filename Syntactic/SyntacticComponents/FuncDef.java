@@ -68,11 +68,19 @@ public class FuncDef extends SyntacticComponent {
         if (res != AnalysisResult.SUCCESS) {
             return AnalysisResult.FAIL;
         }
-        if (!nextWordCategoryCode.getValue().equals("RPARENT")) {
+        if (nextWordCategoryCode.getValue().equals("INTTK")) {
             FuncFParams funcFParams = new FuncFParams();
             res = funcFParams.analyze(whetherOutput);
             if (res != AnalysisResult.SUCCESS) {
-                return AnalysisResult.FAIL;
+                ScopeStack.getInstance().enterScope();
+                Block block = new Block();
+                res = block.analyze(whetherOutput);
+                if (res != AnalysisResult.SUCCESS) {
+                    return AnalysisResult.FAIL;
+                }
+                ScopeStack.getInstance().quitScope();
+                return AnalysisResult.SUCCESS;
+//                return AnalysisResult.FAIL;
             }
         }
 
@@ -84,7 +92,14 @@ public class FuncDef extends SyntacticComponent {
         }
         if (!nextWordCategoryCode.getValue().equals("RPARENT")) {
             HandleError.handleError(AnalysisErrorType.LACK_OF_RPARENT);
-            return AnalysisResult.FAIL;
+            Block block = new Block();
+            res = block.analyze(whetherOutput);
+            if (res != AnalysisResult.SUCCESS) {
+                return AnalysisResult.FAIL;
+            }
+            ScopeStack.getInstance().quitScope();
+            return AnalysisResult.SUCCESS;
+//            return AnalysisResult.FAIL;
         }
         res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
 
