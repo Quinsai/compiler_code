@@ -1,11 +1,21 @@
-const int const1 = 1, const2 = -100;
-int change1;
-int gets1(int var1,int var2){
-   const1 = 999;
-   change1 = var1 + var2          return (change1);
+
+const int laplaceCore[3][3 = {{0,-1,0}, {-1,4,-1}, {0,-1,0} };
+
+
+int a(int aa){
+    a1=1;
+    if(aa<5)
+    {
+        aa++;
+        a(aa);
+    }
+    return 5;
 }
-int main(){
-   change1 = 10;
-   printf("Hello World$");
-   return 0;
+
+int main() {
+    int a9=0
+    a1=laplaceCore[3][1];
+    a9=a2;
+    int a5;
+    return 4;
 }

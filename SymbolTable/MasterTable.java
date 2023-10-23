@@ -149,6 +149,14 @@ public class MasterTable {
         return AnalysisResult.SUCCESS;
     }
 
+    public AnalysisResult checkDeclare(String name) {
+        if (isNameRepeatInCurrentScope(name)) {
+            HandleError.handleError(AnalysisErrorType.NAME_REPEAT);
+            return AnalysisResult.FAIL;
+        }
+        return AnalysisResult.SUCCESS;
+    }
+
     /**
      * 检查是否可以赋值
      */
@@ -334,5 +342,15 @@ public class MasterTable {
                 break;
             }
         }
+    }
+
+    public AnalysisResult insertFailDeclareIdentifier(String name) {
+        if (isNameRepeatInCurrentScope(name)) {
+            return AnalysisResult.FAIL;
+        }
+
+        MasterTableItem masterTableItem =  new MasterTableItem(name, SymbolConst.NO_MEANING, SymbolConst.NO_MEANING, ScopeStack.getInstance().getCurrentScope());
+        this.table.addLast(masterTableItem);
+        return AnalysisResult.SUCCESS;
     }
 }

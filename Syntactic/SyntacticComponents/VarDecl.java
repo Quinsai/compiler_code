@@ -1,5 +1,6 @@
 package Syntactic.SyntacticComponents;
 
+import Lexical.LexicalAnalysis;
 import Other.ParamResult;
 import Output.OutputIntoFile;
 import Result.AnalysisResult;
@@ -27,6 +28,7 @@ public class VarDecl extends SyntacticComponent {
         VarDef varDef = new VarDef();
         res = varDef.analyze(whetherOutput);
         if (res != AnalysisResult.SUCCESS) {
+            LexicalAnalysis.getInstance().skipErrorPart();
 //            return AnalysisResult.FAIL;
             return AnalysisResult.SUCCESS;
         }
@@ -44,6 +46,7 @@ public class VarDecl extends SyntacticComponent {
             VarDef varDef1 = new VarDef();
             res = varDef1.analyze(whetherOutput);
             if (res != AnalysisResult.SUCCESS) {
+                LexicalAnalysis.getInstance().skipErrorPart();
 //                return AnalysisResult.FAIL;
                 return AnalysisResult.SUCCESS;
             }

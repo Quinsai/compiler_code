@@ -1,5 +1,6 @@
 package Syntactic.SyntacticComponents;
 
+import Lexical.LexicalAnalysis;
 import Other.ParamResult;
 import Output.OutputIntoFile;
 import Result.AnalysisResult;
@@ -35,6 +36,7 @@ public class ConstDecl extends SyntacticComponent {
         ConstDef constDef = new ConstDef();
         res = constDef.analyze(whetherOutput);
         if (res != AnalysisResult.SUCCESS) {
+            LexicalAnalysis.getInstance().skipErrorPart();
 //            return AnalysisResult.FAIL;
             return AnalysisResult.SUCCESS;
         }
@@ -52,6 +54,7 @@ public class ConstDecl extends SyntacticComponent {
             ConstDef constDef1 = new ConstDef();
             res = constDef1.analyze(whetherOutput);
             if (res != AnalysisResult.SUCCESS) {
+                LexicalAnalysis.getInstance().skipErrorPart();
 //                return AnalysisResult.FAIL;
                 return AnalysisResult.SUCCESS;
             }

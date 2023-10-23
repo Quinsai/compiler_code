@@ -37,7 +37,7 @@ public class HandleError {
             c = 'h';
         }
         else if (errorType == AnalysisErrorType.LACK_OF_SEMICN) {
-            // LexicalAnalysis.getInstance().insertSemicn();
+            LexicalAnalysis.getInstance().insertSemicn();
             c = 'i';
         }
         else if (errorType == AnalysisErrorType.LACK_OF_RPARENT) {
@@ -57,6 +57,6 @@ public class HandleError {
         // OutputIntoFile.appendToFile(LexicalAnalysis.getInstance().getCurrentLine() + " " + errorType.name() + "\n", "error.txt");
         // 测评用，仅仅输出题目要求的
         OutputIntoFile.appendToFile(LexicalAnalysis.getInstance().getCurrentLine() + " " + c + "\n", "error.txt");
-        LexicalAnalysis.getInstance().skipToNextLBraceOrLine();
+        LexicalAnalysis.getInstance().skipErrorPart();
     }
 }

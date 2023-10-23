@@ -65,6 +65,8 @@ public class VarDef extends SyntacticComponent {
             }
             if (!nextWordCategoryCode.getValue().equals("RBRACK")) {
                 HandleError.handleError(AnalysisErrorType.LACK_OF_RBRACK);
+                ConstInitVal constInitVal = new ConstInitVal();
+                res = constInitVal.analyze(whetherOutput);
                 return AnalysisResult.FAIL;
             }
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);

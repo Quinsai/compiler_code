@@ -66,7 +66,9 @@ public class ConstDef extends SyntacticComponent {
             }
             if (!nextWordCategoryCode.getValue().equals("RBRACK")) {
                 HandleError.handleError(AnalysisErrorType.LACK_OF_RBRACK);
-                return  AnalysisResult.FAIL;
+                ConstInitVal constInitVal = new ConstInitVal();
+                res = constInitVal.analyze(whetherOutput);
+                return AnalysisResult.FAIL;
             }
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
         }
