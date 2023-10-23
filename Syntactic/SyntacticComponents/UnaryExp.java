@@ -62,7 +62,6 @@ public class UnaryExp extends SyntacticComponent {
                 if (res != AnalysisResult.SUCCESS) {
                     return AnalysisResult.FAIL;
                 }
-                // if (!nextWordCategoryCode.getValue().equals("RPARENT") && !nextWordCategoryCode.getValue().equals("SEMICN")) {
                 if (nextWordCategoryCode.getValue().equals("INTCON") ||
                     nextWordCategoryCode.getValue().equals("IDENFR") ||
                     nextWordCategoryCode.getValue().equals("LPARENT") ||

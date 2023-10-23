@@ -37,7 +37,6 @@ public class ConstDecl extends SyntacticComponent {
         res = constDef.analyze(whetherOutput);
         if (res != AnalysisResult.SUCCESS) {
             LexicalAnalysis.getInstance().skipErrorPart();
-//            return AnalysisResult.FAIL;
             return AnalysisResult.SUCCESS;
         }
 

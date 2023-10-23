@@ -29,7 +29,6 @@ public class VarDecl extends SyntacticComponent {
         res = varDef.analyze(whetherOutput);
         if (res != AnalysisResult.SUCCESS) {
             LexicalAnalysis.getInstance().skipErrorPart();
-//            return AnalysisResult.FAIL;
             return AnalysisResult.SUCCESS;
         }
 
@@ -47,7 +46,6 @@ public class VarDecl extends SyntacticComponent {
             res = varDef1.analyze(whetherOutput);
             if (res != AnalysisResult.SUCCESS) {
                 LexicalAnalysis.getInstance().skipErrorPart();
-//                return AnalysisResult.FAIL;
                 return AnalysisResult.SUCCESS;
             }
         }
