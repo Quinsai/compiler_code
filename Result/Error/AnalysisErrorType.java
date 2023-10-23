@@ -15,7 +15,6 @@ public enum AnalysisErrorType {
     ASSIGN_TO_FUNCTION, // 给函数赋值
     ARRAY_INDEX_OUT_OF_BOUND, // 数组下标越界
     VALUE_NOT_INITIALIZE, // 值未初始化
-    ARRAY_DIMENSION_NOT_MATCH, // 数组维度不匹配，比如说试图访问一维数组第二维的值或者相反的
     ARRAY_DIMENSION_NOT_NEAT, // 数组维度不整齐，{{1,2}, 3}这样的
     ARRAY_DIMENSION_BEYOND_TWO, // 数组维度超过二
     LACK_OF_RBRACK, // 缺少右中括号

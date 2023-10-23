@@ -92,11 +92,7 @@ public class LVal extends SyntacticComponent {
             this.valueType = componentValueType;
         }
         else if (dimension == 1) {
-            if (componentValueType == ComponentValueType.INT) {
-                HandleError.handleError(AnalysisErrorType.ARRAY_DIMENSION_NOT_MATCH);
-                return AnalysisResult.FAIL;
-            }
-            else if (componentValueType == ComponentValueType.ONE_DIMENSION_ARRAY) {
+            if (componentValueType == ComponentValueType.ONE_DIMENSION_ARRAY) {
                 this.valueType = ComponentValueType.INT;
             }
             else if (componentValueType == ComponentValueType.TWO_DIMENSION_ARRAY) {
@@ -107,14 +103,6 @@ public class LVal extends SyntacticComponent {
             if (componentValueType == ComponentValueType.TWO_DIMENSION_ARRAY) {
                 this.valueType = ComponentValueType.INT;
             }
-            else {
-                HandleError.handleError(AnalysisErrorType.ARRAY_DIMENSION_NOT_MATCH);
-                return AnalysisResult.FAIL;
-            }
-        }
-        else {
-            HandleError.handleError(AnalysisErrorType.ARRAY_DIMENSION_NOT_MATCH);
-            return AnalysisResult.FAIL;
         }
 
         if (whetherOutput) {

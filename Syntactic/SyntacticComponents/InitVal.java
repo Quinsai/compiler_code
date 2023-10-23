@@ -84,10 +84,6 @@ public class InitVal extends SyntacticComponent {
                         return AnalysisResult.FAIL;
                     }
 
-                    if (initVal1.getValueType() != partValueType) {
-                        HandleError.handleError(AnalysisErrorType.ARRAY_DIMENSION_NOT_MATCH);
-                        return AnalysisResult.FAIL;
-                    }
                 }
 
                 res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);

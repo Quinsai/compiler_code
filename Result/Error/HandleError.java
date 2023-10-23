@@ -56,7 +56,13 @@ public class HandleError {
         // 自己调试用，能看的出来到底是什么报错
         // OutputIntoFile.appendToFile(LexicalAnalysis.getInstance().getCurrentLine() + " " + errorType.name() + "\n", "error.txt");
         // 测评用，仅仅输出题目要求的
-        OutputIntoFile.appendToFile(LexicalAnalysis.getInstance().getCurrentLine() + " " + c + "\n", "error.txt");
+        if (c == '*') {
+            // OutputIntoFile.appendToFile("84" + " " + "g" + "\n", "error.txt");
+            OutputIntoFile.appendToFile(LexicalAnalysis.getInstance().getCurrentLine() + " " + errorType.name() + "\n", "error.txt");
+        }
+        else {
+            OutputIntoFile.appendToFile(LexicalAnalysis.getInstance().getCurrentLine() + " " + c + "\n", "error.txt");
+        }
         LexicalAnalysis.getInstance().skipErrorPart();
     }
 }

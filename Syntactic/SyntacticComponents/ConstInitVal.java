@@ -77,10 +77,6 @@ public class ConstInitVal extends SyntacticComponent {
                         return AnalysisResult.FAIL;
                     }
 
-                    if (constInitVal1.getValueType() != partValueType) {
-                        HandleError.handleError(AnalysisErrorType.ARRAY_DIMENSION_NOT_MATCH);
-                        return AnalysisResult.FAIL;
-                    }
                 }
 
                 res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
