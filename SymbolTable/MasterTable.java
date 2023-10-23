@@ -346,6 +346,7 @@ public class MasterTable {
 
     public AnalysisResult insertFailDeclareIdentifier(String name) {
         if (isNameRepeatInCurrentScope(name)) {
+            HandleError.handleError(AnalysisErrorType.NAME_REPEAT);
             return AnalysisResult.FAIL;
         }
 

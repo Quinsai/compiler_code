@@ -1,8 +1,9 @@
 
 const int laplaceCore[3][3 = {{0,-1,0}, {-1,4,-1}, {0,-1,0} };
 
+int laplaceCore = 13;
 
-int a(int aa){
+int a(int aa{
     a1=1;
     if(aa<5)
     {
@@ -12,10 +13,20 @@ int a(int aa){
     return 5;
 }
 
+void a() {
+	return 0;
+}
+
+int a = 123;
+
 int main() {
     int a9=0
     a1=laplaceCore[3][1];
     a9=a2;
     int a5;
+    int t = a(12);
+    if (t == a9) {
+            return ;
+        }
     return 4;
 }

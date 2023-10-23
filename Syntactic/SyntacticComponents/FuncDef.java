@@ -33,6 +33,13 @@ public class FuncDef extends SyntacticComponent {
         }
         returnType = funcType.getReturnType();
 
+        if (returnType == SymbolConst.INT) {
+            Stmt.functionReturnType = ComponentValueType.INT;
+        }
+        else if (returnType == SymbolConst.VOID) {
+            Stmt.functionReturnType = ComponentValueType.VOID;
+        }
+
         res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
         if (res != AnalysisResult.SUCCESS) {
             return AnalysisResult.FAIL;
@@ -102,13 +109,6 @@ public class FuncDef extends SyntacticComponent {
 //            return AnalysisResult.FAIL;
         }
         res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
-
-        if (returnType == SymbolConst.INT) {
-            Stmt.functionReturnType = ComponentValueType.INT;
-        }
-        else if (returnType == SymbolConst.VOID) {
-            Stmt.functionReturnType = ComponentValueType.VOID;
-        }
 
         Block block = new Block();
         res = block.analyze(whetherOutput);

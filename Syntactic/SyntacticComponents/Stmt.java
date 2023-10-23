@@ -487,6 +487,15 @@ public class Stmt extends SyntacticComponent {
                     Exp exp = new Exp();
                     res = exp.analyze(whetherOutput);
                     if (res != AnalysisResult.SUCCESS) {
+//                        res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
+//                        if (res != AnalysisResult.SUCCESS) {
+//                            return AnalysisResult.FAIL;
+//                        }
+//                        if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
+//                            HandleError.handleError(AnalysisErrorType.LACK_OF_SEMICN);
+//                            return AnalysisResult.SUCCESS;
+//                        }
+//                        res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
                         return AnalysisResult.FAIL;
                     }
 
