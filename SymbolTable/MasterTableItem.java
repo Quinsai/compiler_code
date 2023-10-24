@@ -16,22 +16,17 @@ public class MasterTableItem {
     /**
      * 符号名
      */
-    private String name;
+    private final String name;
 
     /**
      * 种类
      */
-    private SymbolConst category;
+    private final SymbolConst category;
 
     /**
      * 类型
      */
-    private SymbolConst type;
-
-    /**
-     * 值
-     */
-    private int value;
+    private final SymbolConst type;
 
     /**
      * 是否已经被赋值
@@ -51,13 +46,12 @@ public class MasterTableItem {
     /**
      * 作用域ID
      */
-    private int scope;
+    private final int scope;
 
     public MasterTableItem(String name, SymbolConst category, SymbolConst type, int scope) {
         this.name = name;
         this.category = category;
         this.type = type;
-        this.value = 0;
         this.hasAssigned = false;
         this.arrayLink = null;
         this.functionLink = null;
