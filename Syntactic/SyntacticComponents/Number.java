@@ -3,11 +3,15 @@ package Syntactic.SyntacticComponents;
 import Other.ParamResult;
 import Output.OutputIntoFile;
 import Result.AnalysisResult;
+import Syntactic.SyntacticTree.Tree;
+import Syntactic.SyntacticTree.TreeNode;
+import Syntactic.SyntacticTree.TreeNodeName;
 
 public class Number extends SyntacticComponent {
 
-    public Number() {
+    public Number(TreeNode parent) {
         super();
+        this.treeNode = new TreeNode(TreeNodeName.Number, "", parent);
     }
 
     @Override
@@ -23,6 +27,7 @@ public class Number extends SyntacticComponent {
         if (!nextWordCategoryCode.getValue().equals("INTCON")) {
             return AnalysisResult.FAIL;
         }
+        Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
         if (whetherOutput) {
             OutputIntoFile.appendToFile("<Number>\n", "output.txt");

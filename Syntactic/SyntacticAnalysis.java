@@ -4,6 +4,7 @@ import Input.InputSourceCode;
 import Lexical.LexicalAnalysis;
 import Syntactic.SyntacticComponents.CompUnit;
 import Result.AnalysisResult;
+import Syntactic.SyntacticTree.Tree;
 
 /**
  * 语法分析器类

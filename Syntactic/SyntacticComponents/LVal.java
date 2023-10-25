@@ -6,6 +6,9 @@ import Result.AnalysisResult;
 import Result.Error.AnalysisErrorType;
 import Result.Error.HandleError;
 import SymbolTable.MasterTableItem;
+import Syntactic.SyntacticTree.Tree;
+import Syntactic.SyntacticTree.TreeNode;
+import Syntactic.SyntacticTree.TreeNodeName;
 
 public class LVal extends SyntacticComponent {
 
@@ -14,9 +17,10 @@ public class LVal extends SyntacticComponent {
 
     private int assignOrReference;
 
-    public LVal(int assignOrReference) {
+    public LVal(int assignOrReference, TreeNode parent) {
         super();
         this.assignOrReference = assignOrReference;
+        this.treeNode = new TreeNode(TreeNodeName.LVal, "", parent);
     }
 
     @Override
@@ -36,6 +40,7 @@ public class LVal extends SyntacticComponent {
             return AnalysisResult.FAIL;
         }
         name = nextWordValue.getValue();
+        Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
         if (this.assignOrReference == ASSIGN) {
             res = masterTable.checkAssign(name);
@@ -56,6 +61,7 @@ public class LVal extends SyntacticComponent {
                 break;
             }
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+            Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
             dimension ++;
 
@@ -64,7 +70,7 @@ public class LVal extends SyntacticComponent {
                 return AnalysisResult.FAIL;
             }
 
-            Exp exp = new Exp();
+            Exp exp = new Exp(treeNode);
             res = exp.analyze(whetherOutput);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;
@@ -79,6 +85,7 @@ public class LVal extends SyntacticComponent {
                 return AnalysisResult.FAIL;
             }
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+            Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
         }
 
         ParamResult<ComponentValueType> componentValueTypeParamResult = new ParamResult<>(null);

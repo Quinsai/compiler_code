@@ -2,11 +2,14 @@ package Syntactic.SyntacticComponents;
 
 import Other.ParamResult;
 import Result.AnalysisResult;
+import Syntactic.SyntacticTree.TreeNode;
+import Syntactic.SyntacticTree.TreeNodeName;
 
 public class Decl extends SyntacticComponent {
 
-    public Decl() {
+    public Decl(TreeNode parent) {
         super();
+        this.treeNode = new TreeNode(TreeNodeName.Decl, "", parent);
     }
 
     @Override
@@ -21,11 +24,11 @@ public class Decl extends SyntacticComponent {
         }
         String categoryCode = nextWordCategoryCode.getValue();
         if (categoryCode.equals("CONSTTK")) {
-            ConstDecl constDecl = new ConstDecl();
+            ConstDecl constDecl = new ConstDecl(treeNode);
             res = constDecl.analyze(whetherOutput);
         }
         else if (categoryCode.equals("INTTK")) {
-            VarDecl varDecl = new VarDecl();
+            VarDecl varDecl = new VarDecl(treeNode);
             res = varDecl.analyze(whetherOutput);
         }
         else {

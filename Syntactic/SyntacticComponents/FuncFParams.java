@@ -3,11 +3,15 @@ package Syntactic.SyntacticComponents;
 import Other.ParamResult;
 import Output.OutputIntoFile;
 import Result.AnalysisResult;
+import Syntactic.SyntacticTree.Tree;
+import Syntactic.SyntacticTree.TreeNode;
+import Syntactic.SyntacticTree.TreeNodeName;
 
 public class FuncFParams extends SyntacticComponent {
 
-    public FuncFParams() {
+    public FuncFParams(TreeNode parent) {
         super();
+        this.treeNode = new TreeNode(TreeNodeName.FuncFParams, "", parent);
     }
 
     @Override
@@ -16,7 +20,7 @@ public class FuncFParams extends SyntacticComponent {
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
-        FuncFParam funcFParam = new FuncFParam();
+        FuncFParam funcFParam = new FuncFParam(treeNode);
         res = funcFParam.analyze(whetherOutput);
         if (res != AnalysisResult.SUCCESS) {
             return AnalysisResult.FAIL;
@@ -31,8 +35,9 @@ public class FuncFParams extends SyntacticComponent {
                 break;
             }
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+            Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
-            FuncFParam funcFParam1 = new FuncFParam();
+            FuncFParam funcFParam1 = new FuncFParam(treeNode);
             res = funcFParam1.analyze(whetherOutput);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;

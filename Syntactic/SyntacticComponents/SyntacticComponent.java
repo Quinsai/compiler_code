@@ -3,6 +3,7 @@ package Syntactic.SyntacticComponents;
 import Lexical.LexicalAnalysis;
 import Result.AnalysisResult;
 import SymbolTable.MasterTable;
+import Syntactic.SyntacticTree.TreeNode;
 
 /**
  * 各个语法成分的父类
@@ -22,6 +23,11 @@ public class SyntacticComponent {
      * 值的类型
      */
     ComponentValueType valueType;
+
+    /**
+     * 对应的在语法树中的结点
+     */
+    TreeNode treeNode;
 
     public SyntacticComponent() {
         this.lexicalAnalysis = LexicalAnalysis.getInstance();

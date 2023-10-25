@@ -6,11 +6,15 @@ import Output.OutputIntoFile;
 import Result.AnalysisResult;
 import Result.Error.AnalysisErrorType;
 import Result.Error.HandleError;
+import Syntactic.SyntacticTree.Tree;
+import Syntactic.SyntacticTree.TreeNode;
+import Syntactic.SyntacticTree.TreeNodeName;
 
 public class VarDecl extends SyntacticComponent {
 
-    public VarDecl() {
+    public VarDecl(TreeNode parent) {
         super();
+        this.treeNode = new TreeNode(TreeNodeName.VarDecl, "", parent);
     }
 
     @Override
@@ -19,13 +23,13 @@ public class VarDecl extends SyntacticComponent {
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
-        BType bType = new BType();
+        BType bType = new BType(treeNode);
         res = bType.analyze(whetherOutput);
         if (res != AnalysisResult.SUCCESS) {
             return AnalysisResult.FAIL;
         }
 
-        VarDef varDef = new VarDef();
+        VarDef varDef = new VarDef(treeNode);
         res = varDef.analyze(whetherOutput);
         if (res != AnalysisResult.SUCCESS) {
             LexicalAnalysis.getInstance().skipErrorPart();
@@ -41,8 +45,9 @@ public class VarDecl extends SyntacticComponent {
                 break;
             }
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+            Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
-            VarDef varDef1 = new VarDef();
+            VarDef varDef1 = new VarDef(treeNode);
             res = varDef1.analyze(whetherOutput);
             if (res != AnalysisResult.SUCCESS) {
                 LexicalAnalysis.getInstance().skipErrorPart();
@@ -59,6 +64,7 @@ public class VarDecl extends SyntacticComponent {
             return AnalysisResult.SUCCESS;
         }
         res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+        Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
         if (whetherOutput) {
             OutputIntoFile.appendToFile("<VarDecl>\n", "output.txt");

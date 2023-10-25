@@ -6,6 +6,9 @@ import Result.AnalysisResult;
 import Result.Error.AnalysisErrorType;
 import Result.Error.HandleError;
 import SymbolTable.Scope.ScopeStack;
+import Syntactic.SyntacticTree.Tree;
+import Syntactic.SyntacticTree.TreeNode;
+import Syntactic.SyntacticTree.TreeNodeName;
 
 public class Stmt extends SyntacticComponent {
 
@@ -24,8 +27,9 @@ public class Stmt extends SyntacticComponent {
         isInCirculate = false;
     }
 
-    public Stmt() {
+    public Stmt(TreeNode parent) {
         super();
+        this.treeNode = new TreeNode(TreeNodeName.Stmt, "", parent);
     }
 
     private int getNumberOfFormatCharInFormatString(String formatString) {
@@ -62,6 +66,7 @@ public class Stmt extends SyntacticComponent {
         }
         if (nextWordCategoryCode.getValue().equals("SEMICN")) {
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+            Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
             if (whetherOutput) {
                 OutputIntoFile.appendToFile("<Stmt>\n", "output.txt");
             }
@@ -74,8 +79,10 @@ public class Stmt extends SyntacticComponent {
         }
         if (nextWordCategoryCodeArray[0].getValue().equals("IFTK")) {
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+            Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+            Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;
             }
@@ -83,11 +90,11 @@ public class Stmt extends SyntacticComponent {
                 return AnalysisResult.FAIL;
             }
 
-            Cond cond = new Cond();
+            Cond cond = new Cond(treeNode);
             res = cond.analyze(whetherOutput);
             if (res != AnalysisResult.SUCCESS) {
                 ScopeStack.getInstance().enterScope();
-                Stmt stmt = new Stmt();
+                Stmt stmt = new Stmt(treeNode);
                 res = stmt.analyze(whetherOutput);
                 if (res != AnalysisResult.SUCCESS) {
                     return AnalysisResult.FAIL;
@@ -103,7 +110,7 @@ public class Stmt extends SyntacticComponent {
             if (!nextWordCategoryCode.getValue().equals("RPARENT")) {
                 HandleError.handleError(AnalysisErrorType.LACK_OF_RPARENT);
                 ScopeStack.getInstance().enterScope();
-                Stmt stmt = new Stmt();
+                Stmt stmt = new Stmt(treeNode);
                 res = stmt.analyze(whetherOutput);
                 if (res != AnalysisResult.SUCCESS) {
                     return AnalysisResult.FAIL;
@@ -112,10 +119,11 @@ public class Stmt extends SyntacticComponent {
                 return AnalysisResult.SUCCESS;
             }
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+            Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
             ScopeStack.getInstance().enterScope();
 
-            Stmt stmt = new Stmt();
+            Stmt stmt = new Stmt(treeNode);
             res = stmt.analyze(whetherOutput);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;
@@ -129,10 +137,11 @@ public class Stmt extends SyntacticComponent {
             }
             if (nextWordCategoryCode.getValue().equals("ELSETK")) {
                 res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+                Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
                 ScopeStack.getInstance().enterScope();
 
-                Stmt stmt1 = new Stmt();
+                Stmt stmt1 = new Stmt(treeNode);
                 res = stmt1.analyze(whetherOutput);
                 if (res != AnalysisResult.SUCCESS) {
                     return AnalysisResult.FAIL;
@@ -143,6 +152,7 @@ public class Stmt extends SyntacticComponent {
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("FORTK")) {
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+            Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
             if (res != AnalysisResult.SUCCESS) {
@@ -151,18 +161,19 @@ public class Stmt extends SyntacticComponent {
             if (!nextWordCategoryCode.getValue().equals("LPARENT")) {
                 return AnalysisResult.FAIL;
             }
+            Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
-                ForStmt forStmt = new ForStmt();
+                ForStmt forStmt = new ForStmt(treeNode);
                 res = forStmt.analyze(whetherOutput);
                 if (res != AnalysisResult.SUCCESS) {
                     ScopeStack.getInstance().enterScope();
                     Stmt.isInCirculate = true;
-                    Stmt stmt = new Stmt();
+                    Stmt stmt = new Stmt(treeNode);
                     res = stmt.analyze(whetherOutput);
                     if (res != AnalysisResult.SUCCESS) {
                         return AnalysisResult.FAIL;
@@ -180,18 +191,19 @@ public class Stmt extends SyntacticComponent {
             if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
                 return AnalysisResult.FAIL;
             }
+            Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
-                Cond cond = new Cond();
+                Cond cond = new Cond(treeNode);
                 res = cond.analyze(whetherOutput);
                 if (res != AnalysisResult.SUCCESS) {
                     ScopeStack.getInstance().enterScope();
                     Stmt.isInCirculate = true;
-                    Stmt stmt = new Stmt();
+                    Stmt stmt = new Stmt(treeNode);
                     res = stmt.analyze(whetherOutput);
                     if (res != AnalysisResult.SUCCESS) {
                         return AnalysisResult.FAIL;
@@ -209,18 +221,19 @@ public class Stmt extends SyntacticComponent {
             if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
                 return AnalysisResult.FAIL;
             }
+            Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("RPARENT")) {
-                ForStmt forStmt = new ForStmt();
+                ForStmt forStmt = new ForStmt(treeNode);
                 res = forStmt.analyze(whetherOutput);
                 if (res != AnalysisResult.SUCCESS) {
                     ScopeStack.getInstance().enterScope();
                     Stmt.isInCirculate = true;
-                    Stmt stmt = new Stmt();
+                    Stmt stmt = new Stmt(treeNode);
                     res = stmt.analyze(whetherOutput);
                     if (res != AnalysisResult.SUCCESS) {
                         return AnalysisResult.FAIL;
@@ -239,7 +252,7 @@ public class Stmt extends SyntacticComponent {
                 HandleError.handleError(AnalysisErrorType.LACK_OF_RPARENT);
                 ScopeStack.getInstance().enterScope();
                 Stmt.isInCirculate = true;
-                Stmt stmt = new Stmt();
+                Stmt stmt = new Stmt(treeNode);
                 res = stmt.analyze(whetherOutput);
                 if (res != AnalysisResult.SUCCESS) {
                     return AnalysisResult.FAIL;
@@ -249,10 +262,11 @@ public class Stmt extends SyntacticComponent {
                 return AnalysisResult.SUCCESS;
             }
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+            Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
             ScopeStack.getInstance().enterScope();
 
-            Stmt stmt = new Stmt();
+            Stmt stmt = new Stmt(treeNode);
             Stmt.isInCirculate = true;
             res = stmt.analyze(whetherOutput);
             if (res != AnalysisResult.SUCCESS) {
@@ -270,6 +284,7 @@ public class Stmt extends SyntacticComponent {
             if (!nextWordCategoryCode.getValue().equals("BREAKTK")) {
                 return AnalysisResult.FAIL;
             }
+            Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
             if (!isInCirculate) {
                 HandleError.handleError(AnalysisErrorType.UNEXPECTED_BREAK_OR_CONTINUE);
@@ -283,6 +298,7 @@ public class Stmt extends SyntacticComponent {
             if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
                 return AnalysisResult.FAIL;
             }
+            Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("CONTINUETK")) {
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
@@ -292,6 +308,7 @@ public class Stmt extends SyntacticComponent {
             if (!nextWordCategoryCode.getValue().equals("CONTINUETK")) {
                 return AnalysisResult.FAIL;
             }
+            Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
             if (!isInCirculate) {
                 HandleError.handleError(AnalysisErrorType.UNEXPECTED_BREAK_OR_CONTINUE);
@@ -307,6 +324,7 @@ public class Stmt extends SyntacticComponent {
                 return AnalysisResult.SUCCESS;
             }
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+            Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("RETURNTK")) {
             boolean hasReturnValue = false;
@@ -318,13 +336,14 @@ public class Stmt extends SyntacticComponent {
             if (!nextWordCategoryCode.getValue().equals("RETURNTK")) {
                 return AnalysisResult.FAIL;
             }
+            Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("SEMICN")) {
-                Exp exp = new Exp();
+                Exp exp = new Exp(treeNode);
                 res = exp.analyze(whetherOutput);
                 hasReturnValue = true;
                 if (res != AnalysisResult.SUCCESS) {
@@ -348,6 +367,7 @@ public class Stmt extends SyntacticComponent {
                 return AnalysisResult.SUCCESS;
             }
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+            Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("PRINTFTK")) {
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
@@ -357,6 +377,7 @@ public class Stmt extends SyntacticComponent {
             if (!nextWordCategoryCode.getValue().equals("PRINTFTK")) {
                 return AnalysisResult.FAIL;
             }
+            Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
             if (res != AnalysisResult.SUCCESS) {
@@ -365,6 +386,7 @@ public class Stmt extends SyntacticComponent {
             if (!nextWordCategoryCode.getValue().equals("LPARENT")) {
                 return AnalysisResult.FAIL;
             }
+            Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
             if (res != AnalysisResult.SUCCESS) {
@@ -373,6 +395,7 @@ public class Stmt extends SyntacticComponent {
             if (!nextWordCategoryCode.getValue().equals("STRCON")) {
                 return AnalysisResult.FAIL;
             }
+            Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
             int numberOfFormatChar = getNumberOfFormatCharInFormatString(nextWordValue.getValue());
             int numberOfExp = 0;
@@ -386,8 +409,9 @@ public class Stmt extends SyntacticComponent {
                     break;
                 }
                 res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+                Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
-                Exp exp = new Exp();
+                Exp exp = new Exp(treeNode);
                 res = exp.analyze(whetherOutput);
                 if (res != AnalysisResult.SUCCESS) {
                     return AnalysisResult.FAIL;
@@ -409,6 +433,7 @@ public class Stmt extends SyntacticComponent {
                 return AnalysisResult.SUCCESS;
             }
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+            Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
             if (res != AnalysisResult.SUCCESS) {
@@ -419,11 +444,12 @@ public class Stmt extends SyntacticComponent {
                 return AnalysisResult.SUCCESS;
             }
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+            Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("LBRACE")) {
             ScopeStack.getInstance().enterScope();
 
-            Block block = new Block();
+            Block block = new Block(treeNode);
             res = block.analyze(whetherOutput);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;
@@ -434,7 +460,7 @@ public class Stmt extends SyntacticComponent {
         else if (nextWordCategoryCodeArray[0].getValue().equals("IDENFR")) {
             boolean hadAssignBeforeSemicn = lexicalAnalysis.haveAssignBeforeSemicn();
             if (hadAssignBeforeSemicn) {
-                LVal lVal = new LVal(LVal.ASSIGN);
+                LVal lVal = new LVal(LVal.ASSIGN, treeNode);
                 res = lVal.analyze(whetherOutput);
                 if (res != AnalysisResult.SUCCESS) {
                     return AnalysisResult.SUCCESS;
@@ -447,6 +473,7 @@ public class Stmt extends SyntacticComponent {
                 if (!nextWordCategoryCode.getValue().equals("ASSIGN")) {
                     return AnalysisResult.FAIL;
                 }
+                Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
                 res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
                 if (res != AnalysisResult.SUCCESS) {
@@ -454,6 +481,7 @@ public class Stmt extends SyntacticComponent {
                 }
                 if (nextWordCategoryCode.getValue().equals("GETINTTK")) {
                     res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+                    Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
                     res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
                     if (res != AnalysisResult.SUCCESS) {
@@ -462,6 +490,7 @@ public class Stmt extends SyntacticComponent {
                     if (!nextWordCategoryCode.getValue().equals("LPARENT")) {
                         return AnalysisResult.FAIL;
                     }
+                    Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
                     res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
                     if (res != AnalysisResult.SUCCESS) {
@@ -472,6 +501,7 @@ public class Stmt extends SyntacticComponent {
                         return AnalysisResult.SUCCESS;
                     }
                     res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+                    Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
                     res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
                     if (res != AnalysisResult.SUCCESS) {
@@ -482,9 +512,10 @@ public class Stmt extends SyntacticComponent {
                         return AnalysisResult.SUCCESS;
                     }
                     res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+                    Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
                 }
                 else {
-                    Exp exp = new Exp();
+                    Exp exp = new Exp(treeNode);
                     res = exp.analyze(whetherOutput);
                     if (res != AnalysisResult.SUCCESS) {
                         return AnalysisResult.FAIL;
@@ -499,10 +530,11 @@ public class Stmt extends SyntacticComponent {
                         return AnalysisResult.SUCCESS;
                     }
                     res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+                    Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
                 }
             }
             else {
-                Exp exp =  new Exp();
+                Exp exp = new Exp(treeNode);
                 res = exp.analyze(whetherOutput);
                 if (res != AnalysisResult.SUCCESS) {
                     return AnalysisResult.SUCCESS;
@@ -517,6 +549,7 @@ public class Stmt extends SyntacticComponent {
                     return AnalysisResult.SUCCESS;
                 }
                 res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+                Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
             }
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("PLUS")
@@ -525,7 +558,7 @@ public class Stmt extends SyntacticComponent {
             || nextWordCategoryCodeArray[0].getValue().equals("LPARENT")
             || nextWordCategoryCodeArray[0].getValue().equals("INTCON")
         ) {
-            Exp exp = new Exp();
+            Exp exp = new Exp(treeNode);
             res = exp.analyze(whetherOutput);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;
@@ -540,6 +573,7 @@ public class Stmt extends SyntacticComponent {
                 return AnalysisResult.SUCCESS;
             }
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+            Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
         }
         else {
             HandleError.handleError(AnalysisErrorType.LACK_OF_SEMICN);

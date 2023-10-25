@@ -6,11 +6,15 @@ import Output.OutputIntoFile;
 import Result.AnalysisResult;
 import Result.Error.AnalysisErrorType;
 import Result.Error.HandleError;
+import Syntactic.SyntacticTree.Tree;
+import Syntactic.SyntacticTree.TreeNode;
+import Syntactic.SyntacticTree.TreeNodeName;
 
 public class ConstDecl extends SyntacticComponent {
 
-   public ConstDecl() {
+   public ConstDecl(TreeNode parent) {
        super();
+       this.treeNode = new TreeNode(TreeNodeName.ConstDecl, "", parent);
    }
 
     @Override
@@ -26,14 +30,15 @@ public class ConstDecl extends SyntacticComponent {
         else if (!nextWordCategoryCode.getValue().equals("CONSTTK")) {
             return AnalysisResult.FAIL;
         }
+        Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
-        BType bType = new BType();
+        BType bType = new BType(treeNode);
         res = bType.analyze(whetherOutput);
         if (res != AnalysisResult.SUCCESS) {
             return AnalysisResult.FAIL;
         }
 
-        ConstDef constDef = new ConstDef();
+        ConstDef constDef = new ConstDef(treeNode);
         res = constDef.analyze(whetherOutput);
         if (res != AnalysisResult.SUCCESS) {
             LexicalAnalysis.getInstance().skipErrorPart();
@@ -49,8 +54,9 @@ public class ConstDecl extends SyntacticComponent {
                 break;
             }
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+            Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
-            ConstDef constDef1 = new ConstDef();
+            ConstDef constDef1 = new ConstDef(treeNode);
             res = constDef1.analyze(whetherOutput);
             if (res != AnalysisResult.SUCCESS) {
                 LexicalAnalysis.getInstance().skipErrorPart();
@@ -68,6 +74,7 @@ public class ConstDecl extends SyntacticComponent {
             return AnalysisResult.SUCCESS;
         }
         res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+        Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
         if (whetherOutput) {
             OutputIntoFile.appendToFile("<ConstDecl>\n", "output.txt");

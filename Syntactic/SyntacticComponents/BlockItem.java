@@ -2,6 +2,8 @@ package Syntactic.SyntacticComponents;
 
 import Other.ParamResult;
 import Result.AnalysisResult;
+import Syntactic.SyntacticTree.TreeNode;
+import Syntactic.SyntacticTree.TreeNodeName;
 
 public class BlockItem extends SyntacticComponent {
 
@@ -12,9 +14,10 @@ public class BlockItem extends SyntacticComponent {
     }
 
 
-    public BlockItem() {
+    public BlockItem(TreeNode parent) {
         super();
         isReturnWithValue = false;
+        this.treeNode = new TreeNode(TreeNodeName.BlockItem, "", parent);
     }
 
     @Override
@@ -28,14 +31,14 @@ public class BlockItem extends SyntacticComponent {
             return Result.AnalysisResult.FAIL;
         }
         if (nextWordCategoryCode.getValue().equals("CONSTTK") || nextWordCategoryCode.getValue().equals("INTTK")) {
-            Decl decl = new Decl();
+            Decl decl = new Decl(treeNode);
             res = decl.analyze(whetherOutput);
             if (res != Result.AnalysisResult.SUCCESS) {
                 return Result.AnalysisResult.FAIL;
             }
         }
         else {
-            Stmt stmt = new Stmt();
+            Stmt stmt = new Stmt(treeNode);
             res = stmt.analyze(whetherOutput);
             if (res != Result.AnalysisResult.SUCCESS) {
                 return Result.AnalysisResult.FAIL;

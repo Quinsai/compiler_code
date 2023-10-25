@@ -3,11 +3,15 @@ package Syntactic.SyntacticComponents;
 import Other.ParamResult;
 import Output.OutputIntoFile;
 import Result.AnalysisResult;
+import Syntactic.SyntacticTree.Tree;
+import Syntactic.SyntacticTree.TreeNode;
+import Syntactic.SyntacticTree.TreeNodeName;
 
 public class Block extends SyntacticComponent {
 
-    public Block() {
+    public Block(TreeNode parent) {
         super();
+        this.treeNode = new TreeNode(TreeNodeName.Block, "", parent);
     }
 
     @Override
@@ -23,6 +27,7 @@ public class Block extends SyntacticComponent {
         if (!nextWordCategoryCode.getValue().equals("LBRACE")) {
             return Result.AnalysisResult.FAIL;
         }
+        Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
         while (true) {
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
@@ -33,7 +38,7 @@ public class Block extends SyntacticComponent {
                 break;
             }
 
-            BlockItem blockItem = new BlockItem();
+            BlockItem blockItem = new BlockItem(treeNode);
             res = blockItem.analyze(whetherOutput);
             if (res != Result.AnalysisResult.SUCCESS) {
                 return Result.AnalysisResult.FAIL;
@@ -47,6 +52,7 @@ public class Block extends SyntacticComponent {
         if (!nextWordCategoryCode.getValue().equals("RBRACE")) {
             return Result.AnalysisResult.FAIL;
         }
+        Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
         if (whetherOutput) {
             OutputIntoFile.appendToFile("<Block>\n", "output.txt");

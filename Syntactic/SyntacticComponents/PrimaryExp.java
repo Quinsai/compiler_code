@@ -5,12 +5,16 @@ import Output.OutputIntoFile;
 import Result.AnalysisResult;
 import Result.Error.AnalysisErrorType;
 import Result.Error.HandleError;
+import Syntactic.SyntacticTree.Tree;
+import Syntactic.SyntacticTree.TreeNode;
+import Syntactic.SyntacticTree.TreeNodeName;
 
 public class PrimaryExp extends SyntacticComponent {
 
-    public PrimaryExp() {
+    public PrimaryExp(TreeNode parent) {
         super();
         this.valueType = ComponentValueType.INT;
+        this.treeNode = new TreeNode(TreeNodeName.PrimaryExp, "", parent);
     }
 
     @Override
@@ -25,8 +29,9 @@ public class PrimaryExp extends SyntacticComponent {
         }
         if (nextWordCategoryCode.getValue().equals("LPARENT")) {
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+            Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
-            Exp exp = new Exp();
+            Exp exp = new Exp(treeNode);
             res = exp.analyze(whetherOutput);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;
@@ -41,10 +46,11 @@ public class PrimaryExp extends SyntacticComponent {
                 return AnalysisResult.FAIL;
             }
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+            Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
         }
         else if (nextWordCategoryCode.getValue().equals("IDENFR")) {
-            LVal lVal = new LVal(LVal.REFERENCE);
+            LVal lVal = new LVal(LVal.REFERENCE, treeNode);
             res = lVal.analyze(whetherOutput);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;
@@ -54,7 +60,7 @@ public class PrimaryExp extends SyntacticComponent {
 
         }
         else if (nextWordCategoryCode.getValue().equals("INTCON")) {
-            Number number = new Number();
+            Number number = new Number(treeNode);
             res = number.analyze(whetherOutput);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;

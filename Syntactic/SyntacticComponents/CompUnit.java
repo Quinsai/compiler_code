@@ -3,11 +3,14 @@ package Syntactic.SyntacticComponents;
 import Other.ParamResult;
 import Output.OutputIntoFile;
 import Result.AnalysisResult;
+import Syntactic.SyntacticTree.Tree;
+import Syntactic.SyntacticTree.TreeNode;
 
 public class CompUnit extends SyntacticComponent {
 
-    public CompUnit() {
+    public CompUnit(TreeNode parent) {
         super();
+        this.treeNode = Tree.getInstance().getRoot();
     }
 
     private static final int DECL = 665;
@@ -65,7 +68,7 @@ public class CompUnit extends SyntacticComponent {
         while (true) {
             comp = whichComponent();
             if (comp == CompUnit.DECL) {
-                Decl decl = new Decl();
+                Decl decl = new Decl(treeNode);
                 res = decl.analyze(whetherOutput);
                 if (res == AnalysisResult.FAIL) {
                     return res;
@@ -79,7 +82,7 @@ public class CompUnit extends SyntacticComponent {
         while (true) {
             comp = whichComponent();
             if (comp == CompUnit.FUNC_DEF) {
-                FuncDef funcDef = new FuncDef();
+                FuncDef funcDef = new FuncDef(treeNode);
                 res = funcDef.analyze(whetherOutput);
                 if (res == AnalysisResult.FAIL) {
                     return res;
@@ -90,7 +93,7 @@ public class CompUnit extends SyntacticComponent {
             }
         }
 
-        MainFuncDef mainFuncDef = new MainFuncDef();
+        MainFuncDef mainFuncDef = new MainFuncDef(treeNode);
         res = mainFuncDef.analyze(whetherOutput);
         if (res == AnalysisResult.FAIL) {
             return res;

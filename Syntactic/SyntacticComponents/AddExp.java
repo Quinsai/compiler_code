@@ -3,12 +3,16 @@ package Syntactic.SyntacticComponents;
 import Other.ParamResult;
 import Output.OutputIntoFile;
 import Result.AnalysisResult;
+import Syntactic.SyntacticTree.Tree;
+import Syntactic.SyntacticTree.TreeNode;
+import Syntactic.SyntacticTree.TreeNodeName;
 
 public class AddExp extends SyntacticComponent {
 
-    public AddExp() {
+    public AddExp(TreeNode parent) {
         super();
         this.valueType = ComponentValueType.INT;
+        this.treeNode = new TreeNode(TreeNodeName.AddExp, "", parent);
     }
 
     @Override
@@ -17,7 +21,7 @@ public class AddExp extends SyntacticComponent {
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
-        MulExp mulExp = new MulExp();
+        MulExp mulExp = new MulExp(treeNode);
         res = mulExp.analyze(whetherOutput);
         if (res != Result.AnalysisResult.SUCCESS) {
             return Result.AnalysisResult.FAIL;
@@ -39,8 +43,9 @@ public class AddExp extends SyntacticComponent {
                 OutputIntoFile.appendToFile("<AddExp>\n", "output.txt");
             }
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+            Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
-            MulExp mulExp1 = new MulExp();
+            MulExp mulExp1 = new MulExp(treeNode);
             res = mulExp1.analyze(whetherOutput);
             if (res != Result.AnalysisResult.SUCCESS) {
                 return Result.AnalysisResult.FAIL;

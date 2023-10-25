@@ -6,11 +6,15 @@ import Result.AnalysisResult;
 import Result.Error.AnalysisErrorType;
 import Result.Error.HandleError;
 import SymbolTable.Scope.ScopeStack;
+import Syntactic.SyntacticTree.Tree;
+import Syntactic.SyntacticTree.TreeNode;
+import Syntactic.SyntacticTree.TreeNodeName;
 
 public class MainFuncDef extends SyntacticComponent {
 
-    public MainFuncDef() {
+    public MainFuncDef(TreeNode parent) {
         super();
+        this.treeNode = new TreeNode(TreeNodeName.MainFuncDef, "", parent);
     }
 
     @Override
@@ -26,7 +30,7 @@ public class MainFuncDef extends SyntacticComponent {
         if (!nextWordCategoryCode.getValue().equals("INTTK")) {
             return AnalysisResult.FAIL;
         }
-
+        Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
         res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
         if (res != AnalysisResult.SUCCESS) {
@@ -35,6 +39,7 @@ public class MainFuncDef extends SyntacticComponent {
         if (!nextWordCategoryCode.getValue().equals("MAINTK")) {
             return AnalysisResult.FAIL;
         }
+        Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
         ScopeStack.getInstance().enterScope();
 
@@ -45,6 +50,7 @@ public class MainFuncDef extends SyntacticComponent {
         if (!nextWordCategoryCode.getValue().equals("LPARENT")) {
             return AnalysisResult.FAIL;
         }
+        Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
         res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
         if (res != AnalysisResult.SUCCESS) {
@@ -55,10 +61,11 @@ public class MainFuncDef extends SyntacticComponent {
             return AnalysisResult.FAIL;
         }
         res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+        Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
         Stmt.functionReturnType = ComponentValueType.INT;
 
-        Block block = new Block();
+        Block block = new Block(treeNode);
         res = block.analyze(whetherOutput);
         if (res != AnalysisResult.SUCCESS) {
             return AnalysisResult.FAIL;

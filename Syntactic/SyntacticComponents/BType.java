@@ -2,12 +2,16 @@ package Syntactic.SyntacticComponents;
 
 import Other.ParamResult;
 import Result.AnalysisResult;
+import Syntactic.SyntacticTree.Tree;
+import Syntactic.SyntacticTree.TreeNode;
+import Syntactic.SyntacticTree.TreeNodeName;
 
 public class BType extends SyntacticComponent {
 
 
-    public BType() {
+    public BType(TreeNode parent) {
         super();
+        this.treeNode = new TreeNode(TreeNodeName.BType, "", parent);
     }
 
     @Override
@@ -24,6 +28,7 @@ public class BType extends SyntacticComponent {
         if (!nextWordCategoryCode.getValue().equals("INTTK")) {
             return Result.AnalysisResult.FAIL;
         }
+        Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
         return Result.AnalysisResult.SUCCESS;
     }

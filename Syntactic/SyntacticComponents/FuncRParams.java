@@ -4,6 +4,9 @@ import Other.ParamResult;
 import Output.OutputIntoFile;
 import Result.AnalysisResult;
 import SymbolTable.MasterTableItem;
+import Syntactic.SyntacticTree.Tree;
+import Syntactic.SyntacticTree.TreeNode;
+import Syntactic.SyntacticTree.TreeNodeName;
 
 import java.util.ArrayList;
 
@@ -14,9 +17,10 @@ public class FuncRParams extends SyntacticComponent {
      */
     private ArrayList<ComponentValueType> realParamsTypeList;
 
-    public FuncRParams() {
+    public FuncRParams(TreeNode parent) {
         super();
         this.realParamsTypeList = new ArrayList<>();
+        this.treeNode = new TreeNode(TreeNodeName.FuncRParams, "", parent);
     }
 
     @Override
@@ -25,7 +29,7 @@ public class FuncRParams extends SyntacticComponent {
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
-        Exp exp = new Exp();
+        Exp exp = new Exp(treeNode);
         res = exp.analyze(whetherOutput);
         if (res != AnalysisResult.SUCCESS) {
             return AnalysisResult.FAIL;
@@ -42,8 +46,9 @@ public class FuncRParams extends SyntacticComponent {
                 break;
             }
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+            Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
-            Exp exp1 = new Exp();
+            Exp exp1 = new Exp(treeNode);
             res = exp1.analyze(whetherOutput);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;

@@ -3,11 +3,15 @@ package Syntactic.SyntacticComponents;
 import Other.ParamResult;
 import Output.OutputIntoFile;
 import Result.AnalysisResult;
+import Syntactic.SyntacticTree.Tree;
+import Syntactic.SyntacticTree.TreeNode;
+import Syntactic.SyntacticTree.TreeNodeName;
 
 public class EqExp extends SyntacticComponent {
 
-    public EqExp() {
+    public EqExp(TreeNode parent) {
         super();
+        this.treeNode = new TreeNode(TreeNodeName.EqExp, "", parent);
     }
 
     @Override
@@ -16,7 +20,9 @@ public class EqExp extends SyntacticComponent {
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
-        RelExp relExp = new RelExp();
+        // TODO 把从这往后的所有文件的终结符添加到语法树中去
+
+        RelExp relExp = new RelExp(treeNode);
         res = relExp.analyze(whetherOutput);
         if (res != AnalysisResult.SUCCESS) {
             return AnalysisResult.FAIL;
@@ -36,8 +42,9 @@ public class EqExp extends SyntacticComponent {
                 OutputIntoFile.appendToFile("<EqExp>\n", "output.txt");
             }
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+            Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
-            RelExp relExp1 = new RelExp();
+            RelExp relExp1 = new RelExp(treeNode);
             res = relExp1.analyze(whetherOutput);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;

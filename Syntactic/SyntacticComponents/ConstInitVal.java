@@ -5,6 +5,9 @@ import Output.OutputIntoFile;
 import Result.AnalysisResult;
 import Result.Error.AnalysisErrorType;
 import Result.Error.HandleError;
+import Syntactic.SyntacticTree.Tree;
+import Syntactic.SyntacticTree.TreeNode;
+import Syntactic.SyntacticTree.TreeNodeName;
 
 import java.util.ArrayList;
 
@@ -12,9 +15,10 @@ public class ConstInitVal extends SyntacticComponent {
 
     private ComponentValueType valueType;
 
-    public ConstInitVal() {
+    public ConstInitVal(TreeNode parent) {
         super();
         this.valueType = ComponentValueType.INT;
+        this.treeNode = new TreeNode(TreeNodeName.ConstInitVal, "", parent);
     }
 
     @Override
@@ -32,6 +36,7 @@ public class ConstInitVal extends SyntacticComponent {
         if (nextWordCategoryCode.getValue().equals("LBRACE")) {
 
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+            Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
             if (res != AnalysisResult.SUCCESS) {
@@ -39,10 +44,11 @@ public class ConstInitVal extends SyntacticComponent {
             }
             if (nextWordCategoryCode.getValue().equals("RBRACE")) {
                 res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+                Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
                 this.valueType = ComponentValueType.ONE_DIMENSION_ARRAY;
             }
             else {
-                ConstInitVal constInitVal = new ConstInitVal();
+                ConstInitVal constInitVal = new ConstInitVal(treeNode);
                 res = constInitVal.analyze(whetherOutput);
                 if (res != AnalysisResult.SUCCESS) {
                     return AnalysisResult.FAIL;
@@ -70,8 +76,9 @@ public class ConstInitVal extends SyntacticComponent {
                         break;
                     }
                     res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+                    Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
-                    ConstInitVal constInitVal1 = new ConstInitVal();
+                    ConstInitVal constInitVal1 = new ConstInitVal(treeNode);
                     res = constInitVal1.analyze(whetherOutput);
                     if (res == AnalysisResult.FAIL) {
                         return AnalysisResult.FAIL;
@@ -87,10 +94,11 @@ public class ConstInitVal extends SyntacticComponent {
                     HandleError.handleError(AnalysisErrorType.LACK_OF_RBRACK);
                     return AnalysisResult.FAIL;
                 }
+                Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
             }
         }
         else {
-            ConstExp constExp = new ConstExp();
+            ConstExp constExp = new ConstExp(treeNode);
             res = constExp.analyze(whetherOutput);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;

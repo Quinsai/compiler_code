@@ -7,13 +7,17 @@ import Result.Error.AnalysisErrorType;
 import Result.Error.HandleError;
 import SymbolTable.MasterTableItem;
 import SymbolTable.SymbolConst;
+import Syntactic.SyntacticTree.Tree;
+import Syntactic.SyntacticTree.TreeNode;
+import Syntactic.SyntacticTree.TreeNodeName;
 
 import java.util.ArrayList;
 
 public class VarDef extends SyntacticComponent {
 
-    public VarDef() {
+    public VarDef(TreeNode parent) {
         super();
+        this.treeNode = new TreeNode(TreeNodeName.VarDef, "", parent);
     }
 
     @Override
@@ -33,6 +37,7 @@ public class VarDef extends SyntacticComponent {
         if (!nextWordCategoryCode.getValue().equals("IDENFR")) {
             return AnalysisResult.FAIL;
         }
+        Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
         name += nextWordValue.getValue();
 
@@ -45,6 +50,7 @@ public class VarDef extends SyntacticComponent {
                 break;
             }
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+            Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
             dimension ++;
 
@@ -53,7 +59,7 @@ public class VarDef extends SyntacticComponent {
                 return AnalysisResult.FAIL;
             }
 
-            ConstExp constExp = new ConstExp();
+            ConstExp constExp = new ConstExp(treeNode);
             res = constExp.analyze(whetherOutput);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;
@@ -67,12 +73,13 @@ public class VarDef extends SyntacticComponent {
                 res = masterTable.insertFailDeclareIdentifier(name);
                 if (res == AnalysisResult.SUCCESS) {
                     HandleError.handleError(AnalysisErrorType.LACK_OF_RBRACK);
-                    InitVal initVal = new InitVal();
+                    InitVal initVal = new InitVal(treeNode);
                     res = initVal.analyze(whetherOutput);
                 }
                 return AnalysisResult.FAIL;
             }
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+            Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
         }
 
         if (dimension == 0) {
@@ -94,8 +101,9 @@ public class VarDef extends SyntacticComponent {
         }
         if (nextWordCategoryCode.getValue().equals("ASSIGN")) {
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+            Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
-            InitVal initVal = new InitVal();
+            InitVal initVal = new InitVal(treeNode);
             res = initVal.analyze(whetherOutput);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;

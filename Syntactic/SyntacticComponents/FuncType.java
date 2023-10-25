@@ -4,13 +4,17 @@ import Other.ParamResult;
 import Output.OutputIntoFile;
 import Result.AnalysisResult;
 import SymbolTable.SymbolConst;
+import Syntactic.SyntacticTree.Tree;
+import Syntactic.SyntacticTree.TreeNode;
+import Syntactic.SyntacticTree.TreeNodeName;
 
 public class FuncType extends SyntacticComponent {
 
     private SymbolConst returnType;
 
-    public FuncType() {
+    public FuncType(TreeNode parent) {
         super();
+        this.treeNode = new TreeNode(TreeNodeName.FuncType, "", parent);
     }
 
     @Override
@@ -23,6 +27,7 @@ public class FuncType extends SyntacticComponent {
         if (res != AnalysisResult.SUCCESS) {
             return AnalysisResult.FAIL;
         }
+        Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
         if (nextWordCategoryCode.getValue().equals("VOIDTK")) {
             this.returnType = SymbolConst.VOID;

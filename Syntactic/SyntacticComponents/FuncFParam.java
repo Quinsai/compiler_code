@@ -7,11 +7,15 @@ import Result.Error.AnalysisErrorType;
 import Result.Error.HandleError;
 import SymbolTable.MasterTableItem;
 import SymbolTable.SymbolConst;
+import Syntactic.SyntacticTree.Tree;
+import Syntactic.SyntacticTree.TreeNode;
+import Syntactic.SyntacticTree.TreeNodeName;
 
 public class FuncFParam extends SyntacticComponent {
 
-    public FuncFParam() {
+    public FuncFParam(TreeNode parent) {
         super();
+        this.treeNode = new TreeNode(TreeNodeName.FuncFParam, "", parent);
     }
 
     @Override
@@ -22,7 +26,7 @@ public class FuncFParam extends SyntacticComponent {
         String name;
         ParamResult<MasterTableItem> item = new ParamResult<>(null);
 
-        BType bType = new BType();
+        BType bType = new BType(treeNode);
         res = bType.analyze(whetherOutput);
         if (res != AnalysisResult.SUCCESS) {
             return AnalysisResult.FAIL;
@@ -36,6 +40,7 @@ public class FuncFParam extends SyntacticComponent {
             return AnalysisResult.FAIL;
         }
         name = nextWordValue.getValue();
+        Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
         res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
         if (res != AnalysisResult.SUCCESS) {
@@ -44,6 +49,7 @@ public class FuncFParam extends SyntacticComponent {
         if (nextWordCategoryCode.getValue().equals("LBRACK")) {
             int dimension = 0;
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+            Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
             res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
             if (res != AnalysisResult.SUCCESS) {
@@ -54,6 +60,7 @@ public class FuncFParam extends SyntacticComponent {
                 return AnalysisResult.FAIL;
             }
             res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+            Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
             dimension ++;
 
             while (true) {
@@ -65,13 +72,15 @@ public class FuncFParam extends SyntacticComponent {
                     break;
                 }
                 res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+                Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
+
                 dimension ++;
                 if (dimension == 3) {
                     HandleError.handleError(AnalysisErrorType.ARRAY_DIMENSION_BEYOND_TWO);
                     return AnalysisResult.FAIL;
                 }
 
-                ConstExp constExp = new ConstExp();
+                ConstExp constExp = new ConstExp(treeNode);
                 res = constExp.analyze(whetherOutput);
                 if (res != AnalysisResult.SUCCESS) {
                     return AnalysisResult.FAIL;
@@ -86,6 +95,7 @@ public class FuncFParam extends SyntacticComponent {
                     return AnalysisResult.FAIL;
                 }
                 res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+                Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
             }
 
             res = masterTable.insertIntoTable(name, SymbolConst.VAR, SymbolConst.ARRAY, dimension, item);

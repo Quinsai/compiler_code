@@ -6,14 +6,18 @@ import Result.AnalysisResult;
 import Result.Error.AnalysisErrorType;
 import Result.Error.HandleError;
 import SymbolTable.SymbolConst;
+import Syntactic.SyntacticTree.Tree;
+import Syntactic.SyntacticTree.TreeNode;
+import Syntactic.SyntacticTree.TreeNodeName;
 
 import java.util.ArrayList;
 
 public class UnaryExp extends SyntacticComponent {
 
-    public UnaryExp() {
+    public UnaryExp(TreeNode parent) {
         super();
         this.valueType = ComponentValueType.INT;
+        this.treeNode = new TreeNode(TreeNodeName.UnaryExp, "", parent);
     }
 
     @Override
@@ -34,7 +38,7 @@ public class UnaryExp extends SyntacticComponent {
             return AnalysisResult.FAIL;
         }
         if (nextWordCategoryCodeArray[0].getValue().equals("LPARENT")) {
-            PrimaryExp primaryExp = new PrimaryExp();
+            PrimaryExp primaryExp = new PrimaryExp(treeNode);
             res = primaryExp.analyze(whetherOutput);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;
@@ -49,6 +53,7 @@ public class UnaryExp extends SyntacticComponent {
                 ArrayList<ComponentValueType> functionRealParams = new ArrayList<>();
 
                 res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+                Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
                 functionName = nextWordValue.getValue();
                 res = masterTable.checkReference(functionName);
@@ -57,6 +62,7 @@ public class UnaryExp extends SyntacticComponent {
                 }
 
                 res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+                Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
                 res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
                 if (res != AnalysisResult.SUCCESS) {
@@ -68,7 +74,7 @@ public class UnaryExp extends SyntacticComponent {
                     nextWordCategoryCode.getValue().equals("PLUS") ||
                     nextWordCategoryCode.getValue().equals("MINU")
                 ) {
-                    FuncRParams funcRParams = new FuncRParams();
+                    FuncRParams funcRParams = new FuncRParams(treeNode);
                     res = funcRParams.analyze(whetherOutput);
                     if (res != AnalysisResult.SUCCESS) {
                         return AnalysisResult.FAIL;
@@ -91,6 +97,7 @@ public class UnaryExp extends SyntacticComponent {
                     return AnalysisResult.FAIL;
                 }
                 res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+                Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
                 ParamResult<SymbolConst> returnType = new ParamResult<>(null);
                 res = masterTable.getFunctionReturnType(functionName, returnType);
@@ -106,7 +113,7 @@ public class UnaryExp extends SyntacticComponent {
                 }
             }
             else {
-                PrimaryExp primaryExp = new PrimaryExp();
+                PrimaryExp primaryExp = new PrimaryExp(treeNode);
                 res = primaryExp.analyze(whetherOutput);
                 if (res != AnalysisResult.SUCCESS) {
                     return AnalysisResult.FAIL;
@@ -119,13 +126,13 @@ public class UnaryExp extends SyntacticComponent {
             || nextWordCategoryCodeArray[0].getValue().equals("MINU")
             || nextWordCategoryCodeArray[0].getValue().equals("NOT")
         ) {
-            UnaryOp unaryOp = new UnaryOp();
+            UnaryOp unaryOp = new UnaryOp(treeNode);
             res = unaryOp.analyze(whetherOutput);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;
             }
 
-            UnaryExp unaryExp1 = new UnaryExp();
+            UnaryExp unaryExp1 = new UnaryExp(treeNode);
             res = unaryExp1.analyze(whetherOutput);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;
@@ -133,7 +140,7 @@ public class UnaryExp extends SyntacticComponent {
 
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("INTCON")) {
-            PrimaryExp primaryExp = new PrimaryExp();
+            PrimaryExp primaryExp = new PrimaryExp(treeNode);
             res = primaryExp.analyze(whetherOutput);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;

@@ -8,13 +8,17 @@ import Result.Error.HandleError;
 import SymbolTable.MasterTableItem;
 import SymbolTable.Scope.ScopeStack;
 import SymbolTable.SymbolConst;
+import Syntactic.SyntacticTree.Tree;
+import Syntactic.SyntacticTree.TreeNode;
+import Syntactic.SyntacticTree.TreeNodeName;
 
 import java.net.http.HttpRequest;
 
 public class FuncDef extends SyntacticComponent {
 
-    public FuncDef() {
+    public FuncDef(TreeNode parent) {
         super();
+        this.treeNode = new TreeNode(TreeNodeName.FuncDef, "", parent);
     }
 
     @Override
@@ -26,7 +30,7 @@ public class FuncDef extends SyntacticComponent {
         SymbolConst returnType;
         String name;
 
-        FuncType funcType = new FuncType();
+        FuncType funcType = new FuncType(treeNode);
         res = funcType.analyze(whetherOutput);
         if (res != AnalysisResult.SUCCESS) {
             return AnalysisResult.FAIL;
@@ -47,12 +51,13 @@ public class FuncDef extends SyntacticComponent {
         if (!nextWordCategoryCode.getValue().equals("IDENFR")) {
             return AnalysisResult.FAIL;
         }
+        Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
         name = nextWordValue.getValue();
         res = masterTable.insertIntoTable(name, SymbolConst.FUNCTION, SymbolConst.NO_MEANING, returnType, item);
         if (res == AnalysisResult.FAIL) {
             ScopeStack.getInstance().enterScope();
-            Block block = new Block();
+            Block block = new Block(treeNode);
             res = block.analyze(whetherOutput);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;
@@ -70,17 +75,18 @@ public class FuncDef extends SyntacticComponent {
         if (!nextWordCategoryCode.getValue().equals("LPARENT")) {
             return AnalysisResult.FAIL;
         }
+        Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
         res = lexicalAnalysis.peek(nextWordCategoryCode, nextWordValue);
         if (res != AnalysisResult.SUCCESS) {
             return AnalysisResult.FAIL;
         }
         if (nextWordCategoryCode.getValue().equals("INTTK")) {
-            FuncFParams funcFParams = new FuncFParams();
+            FuncFParams funcFParams = new FuncFParams(treeNode);
             res = funcFParams.analyze(whetherOutput);
             if (res != AnalysisResult.SUCCESS) {
                 ScopeStack.getInstance().enterScope();
-                Block block = new Block();
+                Block block = new Block(treeNode);
                 res = block.analyze(whetherOutput);
                 if (res != AnalysisResult.SUCCESS) {
                     return AnalysisResult.FAIL;
@@ -99,7 +105,7 @@ public class FuncDef extends SyntacticComponent {
         }
         if (!nextWordCategoryCode.getValue().equals("RPARENT")) {
             HandleError.handleError(AnalysisErrorType.LACK_OF_RPARENT);
-            Block block = new Block();
+            Block block = new Block(treeNode);
             res = block.analyze(whetherOutput);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;
@@ -109,8 +115,9 @@ public class FuncDef extends SyntacticComponent {
 //            return AnalysisResult.FAIL;
         }
         res = lexicalAnalysis.next(whetherOutput, nextWordCategoryCode, nextWordValue);
+        Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
-        Block block = new Block();
+        Block block = new Block(treeNode);
         res = block.analyze(whetherOutput);
         if (res != AnalysisResult.SUCCESS) {
             return AnalysisResult.FAIL;
