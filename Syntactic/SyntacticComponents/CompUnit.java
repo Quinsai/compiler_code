@@ -8,7 +8,7 @@ import Syntactic.SyntacticTree.TreeNode;
 
 public class CompUnit extends SyntacticComponent {
 
-    public CompUnit(TreeNode parent) {
+    public CompUnit() {
         super();
         this.treeNode = Tree.getInstance().getRoot();
     }
