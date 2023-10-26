@@ -20,8 +20,6 @@ public class EqExp extends SyntacticComponent {
         ParamResult<String> nextWordCategoryCode = new ParamResult<>("");
         ParamResult<String> nextWordValue = new ParamResult<>("");
 
-        // TODO 把从这往后的所有文件的终结符添加到语法树中去
-
         RelExp relExp = new RelExp(treeNode);
         res = relExp.analyze(whetherOutput);
         if (res != AnalysisResult.SUCCESS) {
