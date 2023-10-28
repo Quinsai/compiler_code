@@ -3,10 +3,9 @@ package Syntactic.SyntacticComponents;
 import Other.ParamResult;
 import Output.OutputIntoFile;
 import Result.AnalysisResult;
-import SymbolTable.MasterTableItem;
-import Syntactic.SyntacticTree.Tree;
-import Syntactic.SyntacticTree.TreeNode;
-import Syntactic.SyntacticTree.TreeNodeName;
+import SyntacticTree.Tree;
+import SyntacticTree.TreeNode;
+import SyntacticTree.TreeNodeName;
 
 import java.util.ArrayList;
 

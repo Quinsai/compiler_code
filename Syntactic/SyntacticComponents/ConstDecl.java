@@ -6,9 +6,9 @@ import Output.OutputIntoFile;
 import Result.AnalysisResult;
 import Result.Error.AnalysisErrorType;
 import Result.Error.HandleError;
-import Syntactic.SyntacticTree.Tree;
-import Syntactic.SyntacticTree.TreeNode;
-import Syntactic.SyntacticTree.TreeNodeName;
+import SyntacticTree.Tree;
+import SyntacticTree.TreeNode;
+import SyntacticTree.TreeNodeName;
 
 public class ConstDecl extends SyntacticComponent {
 

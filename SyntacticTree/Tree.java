@@ -1,4 +1,4 @@
-package Syntactic.SyntacticTree;
+package SyntacticTree;
 
 /**
  * 语法树主类

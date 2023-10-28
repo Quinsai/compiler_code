@@ -1,4 +1,4 @@
-package Syntactic.SyntacticTree;
+package SyntacticTree;
 
 import java.util.ArrayList;
 

@@ -2,8 +2,8 @@ package Syntactic.SyntacticComponents;
 
 import Output.OutputIntoFile;
 import Result.AnalysisResult;
-import Syntactic.SyntacticTree.TreeNode;
-import Syntactic.SyntacticTree.TreeNodeName;
+import SyntacticTree.TreeNode;
+import SyntacticTree.TreeNodeName;
 
 public class Cond extends SyntacticComponent {
 

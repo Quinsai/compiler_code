@@ -8,11 +8,9 @@ import Result.Error.HandleError;
 import SymbolTable.MasterTableItem;
 import SymbolTable.Scope.ScopeStack;
 import SymbolTable.SymbolConst;
-import Syntactic.SyntacticTree.Tree;
-import Syntactic.SyntacticTree.TreeNode;
-import Syntactic.SyntacticTree.TreeNodeName;
-
-import java.net.http.HttpRequest;
+import SyntacticTree.Tree;
+import SyntacticTree.TreeNode;
+import SyntacticTree.TreeNodeName;
 
 public class FuncDef extends SyntacticComponent {
 

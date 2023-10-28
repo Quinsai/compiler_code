@@ -4,9 +4,9 @@ import Other.ParamResult;
 import Output.OutputIntoFile;
 import Result.AnalysisResult;
 import SymbolTable.SymbolConst;
-import Syntactic.SyntacticTree.Tree;
-import Syntactic.SyntacticTree.TreeNode;
-import Syntactic.SyntacticTree.TreeNodeName;
+import SyntacticTree.Tree;
+import SyntacticTree.TreeNode;
+import SyntacticTree.TreeNodeName;
 
 public class FuncType extends SyntacticComponent {
 
