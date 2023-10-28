@@ -31,6 +31,9 @@ public class TreeNode {
         this.name = name;
         this.value = value;
         this.parent = parent;
-        parent.children.add(this);
+        this.children = new ArrayList<>();
+        if (parent != null) {
+            parent.children.add(this);
+        }
     }
 }
