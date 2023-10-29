@@ -17,6 +17,7 @@ public class Tree {
      */
     private Tree() {
         this.root = new TreeNode(TreeNodeName.CompUnit, "", null);
+        this.root.level = 0;
     }
 
     static {
@@ -36,5 +37,9 @@ public class Tree {
 
     public void addTerminalNodeIntoTree(TreeNode parent, String value) {
         TreeNode node = new TreeNode(TreeNodeName.Terminal, value, parent);
+    }
+
+    public void traverse(ITraverseOperate operate) {
+        this.root.traverse(operate);
     }
 }
