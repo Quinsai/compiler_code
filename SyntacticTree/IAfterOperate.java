@@ -1,5 +1,5 @@
 package SyntacticTree;
 
-public interface ITraverseOperate {
+public interface IAfterOperate {
     void function(TreeNode node);
 }

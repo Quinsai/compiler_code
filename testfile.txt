@@ -1,32 +1,57 @@
 
-const int laplaceCore[3][3 = {{0,-1,0}, {-1,4,-1}, {0,-1,0} };
 
-int laplaceCore = 13;
+const int ZERO = 0, ONE = 1;
+int var2 = 2, var3 = 3;
 
-int a(int aa{
-    a1=1;
-    if(aa<5)
+void fun()
+{
+    int i = 1;
     {
-        aa++;
-        a(aa);
+        int yuming = 1;
+        for (;yuming < 1000;)
+        {
+            /* code */
+            yuming = yuming * 2;
+        }
+        printf("\n%d",yuming);
     }
-    return 5;
+    return;
 }
 
-void func() {
-	return ;
-}
-
-int a = 123;
-
-int main() {
-    int a9=0
-    a1=laplaceCore[3][1];
-    a9=a2;
-    int a5;
-    int t = a(12);
-    if (t == a9) {
-        return ;
+int main()
+{
+    printf("21373457\n");
+    if (ZERO + var2 == var3 - ONE && ONE)
+    {
+        if (ZERO || !ZERO && ONE + 1 + var2 < 0)
+        {
+            printf("ERROR!\n");
+        }
+        else
+        {
+            printf("And success!\n");
+        }
     }
-    return func();
+
+    if (var3 != 3 || var2 - 22 == -20)
+    {
+
+        if (ONE % 2 + 3 - 4 * 2 + var3 + var2 <= 100 || ONE)
+        {
+            printf("Or pass!\n");
+        }
+    }
+
+
+    printf("Test1 Success!");
+    {
+    }
+    fun();
+    fun();
+    fun();
+    fun();
+    fun();
+    fun();
+
+    return 0;
 }

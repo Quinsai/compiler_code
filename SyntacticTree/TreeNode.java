@@ -1,9 +1,9 @@
 package SyntacticTree;
 
+import InterCode.QuadrupleVariable;
 import Output.OutputIntoFile;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * 语法树中的结点
@@ -19,6 +19,11 @@ public class TreeNode {
      * 树节点的值，当且仅当name == Terminal的时候有意义，也就是仅仅针对终结符讨论
      */
     private final String value;
+
+    /**
+     * 这个树节点对应的四元式变量
+     */
+    public QuadrupleVariable quadrupleVariable;
 
     /**
      * 子节点们
@@ -46,12 +51,14 @@ public class TreeNode {
         }
     }
 
-    public void traverse(ITraverseOperate operate) {
-        operate.function(this);
+    public void traverse(IBeforeOperate beforeOperate, IAfterOperate afterOperate) {
+        beforeOperate.function(this);
 
         for (TreeNode child : this.children) {
-            child.traverse(operate);
+            child.traverse(beforeOperate, afterOperate);
         }
+
+        afterOperate.function(this);
     }
 
     public void display() {
@@ -64,5 +71,17 @@ public class TreeNode {
         string += this.value;
         string += "\n";
         OutputIntoFile.appendToFile(string, "output.txt");
+    }
+
+    public TreeNodeName getName() {
+        return name;
+    }
+
+    public ArrayList<TreeNode> getChildren() {
+        return children;
+    }
+
+    public String getValue() {
+        return value;
     }
 }

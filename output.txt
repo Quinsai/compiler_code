@@ -1,0 +1,532 @@
+CompUnit 
+#Decl 
+##ConstDecl 
+###Terminal const
+###BType 
+####Terminal int
+###ConstDef 
+####Terminal ZERO
+####Terminal =
+####ConstInitVal 
+#####ConstExp 
+######AddExp 
+#######MulExp 
+########UnaryExp 
+#########PrimaryExp 
+##########Number 
+###########Terminal 0
+###Terminal ,
+###ConstDef 
+####Terminal ONE
+####Terminal =
+####ConstInitVal 
+#####ConstExp 
+######AddExp 
+#######MulExp 
+########UnaryExp 
+#########PrimaryExp 
+##########Number 
+###########Terminal 1
+###Terminal ;
+#Decl 
+##VarDecl 
+###BType 
+####Terminal int
+###VarDef 
+####Terminal var2
+####Terminal =
+####InitVal 
+#####Exp 
+######AddExp 
+#######MulExp 
+########UnaryExp 
+#########PrimaryExp 
+##########Number 
+###########Terminal 2
+###Terminal ,
+###VarDef 
+####Terminal var3
+####Terminal =
+####InitVal 
+#####Exp 
+######AddExp 
+#######MulExp 
+########UnaryExp 
+#########PrimaryExp 
+##########Number 
+###########Terminal 3
+###Terminal ;
+#FuncDef 
+##FuncType 
+###Terminal void
+##Terminal fun
+##Terminal (
+##Terminal )
+##Block 
+###Terminal {
+###BlockItem 
+####Decl 
+#####VarDecl 
+######BType 
+#######Terminal int
+######VarDef 
+#######Terminal i
+#######Terminal =
+#######InitVal 
+########Exp 
+#########AddExp 
+##########MulExp 
+###########UnaryExp 
+############PrimaryExp 
+#############Number 
+##############Terminal 1
+######Terminal ;
+###BlockItem 
+####Stmt 
+#####Block 
+######Terminal {
+######BlockItem 
+#######Decl 
+########VarDecl 
+#########BType 
+##########Terminal int
+#########VarDef 
+##########Terminal yuming
+##########Terminal =
+##########InitVal 
+###########Exp 
+############AddExp 
+#############MulExp 
+##############UnaryExp 
+###############PrimaryExp 
+################Number 
+#################Terminal 1
+#########Terminal ;
+######BlockItem 
+#######Stmt 
+########Terminal for
+########Terminal (
+########Terminal ;
+########Cond 
+#########LOrExp 
+##########LAndExp 
+###########EqExp 
+############RelExp 
+#############AddExp 
+##############MulExp 
+###############UnaryExp 
+################PrimaryExp 
+#################LVal 
+##################Terminal yuming
+#############Terminal <
+#############AddExp 
+##############MulExp 
+###############UnaryExp 
+################PrimaryExp 
+#################Number 
+##################Terminal 1000
+########Terminal ;
+########Terminal )
+########Stmt 
+#########Block 
+##########Terminal {
+##########BlockItem 
+###########Stmt 
+############LVal 
+#############Terminal yuming
+############Terminal =
+############Exp 
+#############AddExp 
+##############MulExp 
+###############UnaryExp 
+################PrimaryExp 
+#################LVal 
+##################Terminal yuming
+###############Terminal *
+###############UnaryExp 
+################PrimaryExp 
+#################Number 
+##################Terminal 2
+############Terminal ;
+##########Terminal }
+######BlockItem 
+#######Stmt 
+########Terminal printf
+########Terminal (
+########Terminal "\n%d"
+########Terminal ,
+########Exp 
+#########AddExp 
+##########MulExp 
+###########UnaryExp 
+############PrimaryExp 
+#############LVal 
+##############Terminal yuming
+########Terminal )
+########Terminal ;
+######Terminal }
+###BlockItem 
+####Stmt 
+#####Terminal return
+#####Terminal ;
+###Terminal }
+#MainFuncDef 
+##Terminal int
+##Terminal main
+##Terminal (
+##Terminal )
+##Block 
+###Terminal {
+###BlockItem 
+####Stmt 
+#####Terminal printf
+#####Terminal (
+#####Terminal "21373457\n"
+#####Terminal )
+#####Terminal ;
+###BlockItem 
+####Stmt 
+#####Terminal if
+#####Terminal (
+#####Cond 
+######LOrExp 
+#######LAndExp 
+########EqExp 
+#########RelExp 
+##########AddExp 
+###########MulExp 
+############UnaryExp 
+#############PrimaryExp 
+##############LVal 
+###############Terminal ZERO
+###########Terminal +
+###########MulExp 
+############UnaryExp 
+#############PrimaryExp 
+##############LVal 
+###############Terminal var2
+#########Terminal ==
+#########RelExp 
+##########AddExp 
+###########MulExp 
+############UnaryExp 
+#############PrimaryExp 
+##############LVal 
+###############Terminal var3
+###########Terminal -
+###########MulExp 
+############UnaryExp 
+#############PrimaryExp 
+##############LVal 
+###############Terminal ONE
+########Terminal &&
+########EqExp 
+#########RelExp 
+##########AddExp 
+###########MulExp 
+############UnaryExp 
+#############PrimaryExp 
+##############LVal 
+###############Terminal ONE
+#####Terminal )
+#####Stmt 
+######Block 
+#######Terminal {
+#######BlockItem 
+########Stmt 
+#########Terminal if
+#########Terminal (
+#########Cond 
+##########LOrExp 
+###########LAndExp 
+############EqExp 
+#############RelExp 
+##############AddExp 
+###############MulExp 
+################UnaryExp 
+#################PrimaryExp 
+##################LVal 
+###################Terminal ZERO
+###########Terminal ||
+###########LAndExp 
+############EqExp 
+#############RelExp 
+##############AddExp 
+###############MulExp 
+################UnaryExp 
+#################UnaryOp 
+##################Terminal !
+#################UnaryExp 
+##################PrimaryExp 
+###################LVal 
+####################Terminal ZERO
+############Terminal &&
+############EqExp 
+#############RelExp 
+##############AddExp 
+###############MulExp 
+################UnaryExp 
+#################PrimaryExp 
+##################LVal 
+###################Terminal ONE
+###############Terminal +
+###############MulExp 
+################UnaryExp 
+#################PrimaryExp 
+##################Number 
+###################Terminal 1
+###############Terminal +
+###############MulExp 
+################UnaryExp 
+#################PrimaryExp 
+##################LVal 
+###################Terminal var2
+##############Terminal <
+##############AddExp 
+###############MulExp 
+################UnaryExp 
+#################PrimaryExp 
+##################Number 
+###################Terminal 0
+#########Terminal )
+#########Stmt 
+##########Block 
+###########Terminal {
+###########BlockItem 
+############Stmt 
+#############Terminal printf
+#############Terminal (
+#############Terminal "ERROR!\n"
+#############Terminal )
+#############Terminal ;
+###########Terminal }
+#########Terminal else
+#########Stmt 
+##########Block 
+###########Terminal {
+###########BlockItem 
+############Stmt 
+#############Terminal printf
+#############Terminal (
+#############Terminal "And success!\n"
+#############Terminal )
+#############Terminal ;
+###########Terminal }
+#######Terminal }
+###BlockItem 
+####Stmt 
+#####Terminal if
+#####Terminal (
+#####Cond 
+######LOrExp 
+#######LAndExp 
+########EqExp 
+#########RelExp 
+##########AddExp 
+###########MulExp 
+############UnaryExp 
+#############PrimaryExp 
+##############LVal 
+###############Terminal var3
+#########Terminal !=
+#########RelExp 
+##########AddExp 
+###########MulExp 
+############UnaryExp 
+#############PrimaryExp 
+##############Number 
+###############Terminal 3
+#######Terminal ||
+#######LAndExp 
+########EqExp 
+#########RelExp 
+##########AddExp 
+###########MulExp 
+############UnaryExp 
+#############PrimaryExp 
+##############LVal 
+###############Terminal var2
+###########Terminal -
+###########MulExp 
+############UnaryExp 
+#############PrimaryExp 
+##############Number 
+###############Terminal 22
+#########Terminal ==
+#########RelExp 
+##########AddExp 
+###########MulExp 
+############UnaryExp 
+#############UnaryOp 
+##############Terminal -
+#############UnaryExp 
+##############PrimaryExp 
+###############Number 
+################Terminal 20
+#####Terminal )
+#####Stmt 
+######Block 
+#######Terminal {
+#######BlockItem 
+########Stmt 
+#########Terminal if
+#########Terminal (
+#########Cond 
+##########LOrExp 
+###########LAndExp 
+############EqExp 
+#############RelExp 
+##############AddExp 
+###############MulExp 
+################UnaryExp 
+#################PrimaryExp 
+##################LVal 
+###################Terminal ONE
+################Terminal %
+################UnaryExp 
+#################PrimaryExp 
+##################Number 
+###################Terminal 2
+###############Terminal +
+###############MulExp 
+################UnaryExp 
+#################PrimaryExp 
+##################Number 
+###################Terminal 3
+###############Terminal -
+###############MulExp 
+################UnaryExp 
+#################PrimaryExp 
+##################Number 
+###################Terminal 4
+################Terminal *
+################UnaryExp 
+#################PrimaryExp 
+##################Number 
+###################Terminal 2
+###############Terminal +
+###############MulExp 
+################UnaryExp 
+#################PrimaryExp 
+##################LVal 
+###################Terminal var3
+###############Terminal +
+###############MulExp 
+################UnaryExp 
+#################PrimaryExp 
+##################LVal 
+###################Terminal var2
+##############Terminal <=
+##############AddExp 
+###############MulExp 
+################UnaryExp 
+#################PrimaryExp 
+##################Number 
+###################Terminal 100
+###########Terminal ||
+###########LAndExp 
+############EqExp 
+#############RelExp 
+##############AddExp 
+###############MulExp 
+################UnaryExp 
+#################PrimaryExp 
+##################LVal 
+###################Terminal ONE
+#########Terminal )
+#########Stmt 
+##########Block 
+###########Terminal {
+###########BlockItem 
+############Stmt 
+#############Terminal printf
+#############Terminal (
+#############Terminal "Or pass!\n"
+#############Terminal )
+#############Terminal ;
+###########Terminal }
+#######Terminal }
+###BlockItem 
+####Stmt 
+#####Terminal printf
+#####Terminal (
+#####Terminal "Test1 Success!"
+#####Terminal )
+#####Terminal ;
+###BlockItem 
+####Stmt 
+#####Block 
+######Terminal {
+######Terminal }
+###BlockItem 
+####Stmt 
+#####Exp 
+######AddExp 
+#######MulExp 
+########UnaryExp 
+#########Terminal fun
+#########Terminal (
+#########Terminal )
+#####Terminal ;
+###BlockItem 
+####Stmt 
+#####Exp 
+######AddExp 
+#######MulExp 
+########UnaryExp 
+#########Terminal fun
+#########Terminal (
+#########Terminal )
+#####Terminal ;
+###BlockItem 
+####Stmt 
+#####Exp 
+######AddExp 
+#######MulExp 
+########UnaryExp 
+#########Terminal fun
+#########Terminal (
+#########Terminal )
+#####Terminal ;
+###BlockItem 
+####Stmt 
+#####Exp 
+######AddExp 
+#######MulExp 
+########UnaryExp 
+#########Terminal fun
+#########Terminal (
+#########Terminal )
+#####Terminal ;
+###BlockItem 
+####Stmt 
+#####Exp 
+######AddExp 
+#######MulExp 
+########UnaryExp 
+#########Terminal fun
+#########Terminal (
+#########Terminal )
+#####Terminal ;
+###BlockItem 
+####Stmt 
+#####Exp 
+######AddExp 
+#######MulExp 
+########UnaryExp 
+#########Terminal fun
+#########Terminal (
+#########Terminal )
+#####Terminal ;
+###BlockItem 
+####Stmt 
+#####Terminal return
+#####Exp 
+######AddExp 
+#######MulExp 
+########UnaryExp 
+#########PrimaryExp 
+##########Number 
+###########Terminal 0
+#####Terminal ;
+###Terminal }

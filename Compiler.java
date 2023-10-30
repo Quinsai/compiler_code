@@ -1,4 +1,5 @@
 import Input.InputSourceCode;
+import InterCode.GenerateInterCode;
 import Lexical.LexicalAnalysis;
 import Output.OutputIntoFile;
 import Syntactic.SyntacticAnalysis;
@@ -18,5 +19,7 @@ public class Compiler {
 
 //        语法分析作业使用
         SyntacticAnalysis.getInstance().run(false);
+
+        GenerateInterCode.getInstance().run();
     }
 }
