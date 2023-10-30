@@ -28,7 +28,7 @@ public class TreeNode {
     /**
      * 子节点们
      */
-    private final ArrayList<TreeNode> children;
+    public final ArrayList<TreeNode> children;
 
     /**
      * 父结点
@@ -51,14 +51,13 @@ public class TreeNode {
         }
     }
 
-    public void traverse(IBeforeOperate beforeOperate, IAfterOperate afterOperate) {
-        beforeOperate.function(this);
-
-        for (TreeNode child : this.children) {
-            child.traverse(beforeOperate, afterOperate);
+    public void traverse(ITraverseOperate operate) {
+        if (this.name == TreeNodeName.ConstDef) {
+            operate.declare(this, 2);
         }
-
-        afterOperate.function(this);
+        else if (this.name == TreeNodeName.VarDef) {
+            operate.declare(this, 1);
+        }
     }
 
     public void display() {

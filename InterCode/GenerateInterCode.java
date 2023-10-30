@@ -1,6 +1,6 @@
 package InterCode;
 
-import SyntacticTree.IAfterOperate;
+import SyntacticTree.ITraverseOperate;
 import SyntacticTree.Tree;
 import SyntacticTree.TreeNode;
 import SyntacticTree.TreeNodeName;
@@ -82,26 +82,44 @@ public class GenerateInterCode {
 
     }
 
-    private void handleBefore(TreeNode node) {
-        if (node.getName() == TreeNodeName.FuncDef) {
+    class TraverseOperate implements ITraverseOperate {
+
+        @Override
+        public void declare(TreeNode node, int varOrConst) {
+            if (varOrConst == 1) {
+                varOrConst = VAR;
+            }
+            else if (varOrConst == 2) {
+                varOrConst = CONST;
+            }
+
+            for (TreeNode node1: node.children) {
+                node1.traverse(this);
+            }
+
+            InterCodeOfDeclare(node, varOrConst);
+        }
+
+        @Override
+        public void funcDefine(TreeNode node) {
+
+            int length = node.children.size();
+
+            for (int i = 0; i < 2; i++) {
+                node.children.get(i).traverse(this);
+            }
+
 
         }
-    }
 
-    private void handleAfter(TreeNode node) {
-        if (node.getName() == TreeNodeName.VarDef) {
-            InterCodeOfDeclare(node, VAR);
-        }
-        else if (node.getName() == TreeNodeName.ConstDef) {
-            InterCodeOfDeclare(node, CONST);
-        }
-        else if (node.getName() == TreeNodeName.FuncDef) {
-
+        @Override
+        public void funcType(TreeNode node) {
+            node
         }
     }
 
     public void run() {
-        Tree.getInstance().traverse(this::handleBefore, this::handleAfter);
+        Tree.getInstance().traverse(new TraverseOperate());
     }
 
 

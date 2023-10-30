@@ -39,7 +39,7 @@ public class Tree {
         TreeNode node = new TreeNode(TreeNodeName.Terminal, value, parent);
     }
 
-    public void traverse(IBeforeOperate beforeOperate, IAfterOperate afterOperate) {
-        this.root.traverse(beforeOperate, afterOperate);
+    public void traverse(ITraverseOperate operate) {
+        this.root.traverse(operate);
     }
 }
