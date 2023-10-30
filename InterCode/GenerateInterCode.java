@@ -37,45 +37,6 @@ public class GenerateInterCode {
     }
 
     /**
-     * 声明语句的中间代码生成
-     */
-    private void InterCodeOfDeclare(TreeNode node, int varOrConst) {
-        ArrayList<TreeNode> children = node.getChildren();
-        int length = children.size();
-        QuadrupleVariable variable;
-
-        if (length == 1 || children.get(1).getValue().equals("=")) {
-            variable = new QuadrupleVariable(children.get(0).getValue());
-            children.get(0).quadrupleVariable = variable;
-            if (varOrConst == VAR) {
-                addIntoInterCodes(Operation.VAR_INT_DECLARE, null, null, children.get(0).quadrupleVariable);
-            }
-            else if (varOrConst == CONST) {
-                addIntoInterCodes(Operation.VAR_INT_DECLARE, null, null, children.get(0).quadrupleVariable);
-            }
-        }
-        else {
-            variable = new QuadrupleVariable(children.get(0).getValue());
-            QuadrupleVariable arraySizeOne = children.get(2).quadrupleVariable;
-            Operation operation = Operation.VAR_ARRAY_DECLARE;
-            if (varOrConst == CONST) {
-                operation = Operation.CONST_ARRAY_DECLARE;
-            }
-            if (children.get(4).getValue().equals("[")) {
-                QuadrupleVariable arraySizeTwo = children.get(5).quadrupleVariable;
-                addIntoInterCodes(operation, arraySizeOne, arraySizeTwo, variable);
-            }
-            else {
-                addIntoInterCodes(operation, arraySizeOne, null, variable);
-            }
-        }
-
-        if (children.get(length - 2).getValue().equals("=")) {
-            addIntoInterCodes(Operation.INIT, variable, children.get(length - 1).quadrupleVariable, null);
-        }
-    }
-
-    /**
      * 函数定义语句的中间代码生成
      */
     private void InterCodeOfFuncDefine() {
@@ -85,36 +46,74 @@ public class GenerateInterCode {
     class TraverseOperate implements ITraverseOperate {
 
         @Override
-        public void declare(TreeNode node, int varOrConst) {
-            if (varOrConst == 1) {
-                varOrConst = VAR;
-            }
-            else if (varOrConst == 2) {
-                varOrConst = CONST;
-            }
+        public void translateDeclare(TreeNode node, QuadrupleConst varOrConst) {
 
             for (TreeNode node1: node.children) {
                 node1.traverse(this);
             }
 
-            InterCodeOfDeclare(node, varOrConst);
+            ArrayList<TreeNode> children = node.getChildren();
+            int length = children.size();
+            QuadrupleVariable variable;
+
+            if (length == 1 || children.get(1).getValue().equals("=")) {
+                variable = new QuadrupleVariable(children.get(0).getValue());
+                children.get(0).quadrupleVariable = variable;
+                if (varOrConst == QuadrupleConst.VAR) {
+                    addIntoInterCodes(Operation.VAR_INT_DECLARE, null, null, children.get(0).quadrupleVariable);
+                }
+                else if (varOrConst == QuadrupleConst.CONST) {
+                    addIntoInterCodes(Operation.VAR_INT_DECLARE, null, null, children.get(0).quadrupleVariable);
+                }
+            }
+            else {
+                variable = new QuadrupleVariable(children.get(0).getValue());
+                QuadrupleVariable arraySizeOne = children.get(2).quadrupleVariable;
+                Operation operation = Operation.VAR_ARRAY_DECLARE;
+                if (varOrConst == QuadrupleConst.CONST) {
+                    operation = Operation.CONST_ARRAY_DECLARE;
+                }
+                if (children.get(4).getValue().equals("[")) {
+                    QuadrupleVariable arraySizeTwo = children.get(5).quadrupleVariable;
+                    addIntoInterCodes(operation, arraySizeOne, arraySizeTwo, variable);
+                }
+                else {
+                    addIntoInterCodes(operation, arraySizeOne, null, variable);
+                }
+            }
+
+            if (children.get(length - 2).getValue().equals("=")) {
+                addIntoInterCodes(Operation.INIT, variable, children.get(length - 1).quadrupleVariable, null);
+            }
         }
 
         @Override
-        public void funcDefine(TreeNode node) {
+        public void translateFuncDefine(TreeNode node) {
 
+            int i = 0;
             int length = node.children.size();
 
-            for (int i = 0; i < 2; i++) {
+            for (; i < 2; i++) {
                 node.children.get(i).traverse(this);
             }
 
+            QuadrupleVariable name = new QuadrupleVariable(node.children.get(1).getValue());
+            QuadrupleVariable returnType = new QuadrupleVariable()
+            addIntoInterCodes(Operation.FUNC_BEGIN, name, returnType, null);
 
+            for (; i < length; i++) {
+                node.children.get(i).traverse(this);
+            }
+
+            addIntoInterCodes(Operation.FUNC_END, null, null, null);
         }
 
         @Override
-        public void funcType(TreeNode node) {
-            node
+        public void translateFuncType(TreeNode node) {
+
+            node.children.get(0).traverse(this);
+
+            node.setValue(node.children.get(0).getValue());
         }
     }
 

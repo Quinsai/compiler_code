@@ -11,8 +11,6 @@ public class QuadrupleVariable {
 
     public int dimension;
 
-    
-
     private ArrayList<QuadrupleVariable> valueOfOneDimensionArray;
 
     private ArrayList<ArrayList<QuadrupleVariable>> valueOfTwoDimensionArray;

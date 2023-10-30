@@ -1,5 +1,6 @@
 package SyntacticTree;
 
+import InterCode.QuadrupleConst;
 import InterCode.QuadrupleVariable;
 import Output.OutputIntoFile;
 
@@ -18,7 +19,7 @@ public class TreeNode {
     /**
      * 树节点的值，当且仅当name == Terminal的时候有意义，也就是仅仅针对终结符讨论
      */
-    private final String value;
+    private String value;
 
     /**
      * 这个树节点对应的四元式变量
@@ -53,10 +54,13 @@ public class TreeNode {
 
     public void traverse(ITraverseOperate operate) {
         if (this.name == TreeNodeName.ConstDef) {
-            operate.declare(this, 2);
+            operate.translateDeclare(this, QuadrupleConst.CONST);
         }
         else if (this.name == TreeNodeName.VarDef) {
-            operate.declare(this, 1);
+            operate.translateDeclare(this, QuadrupleConst.VAR);
+        }
+        else if (this.name == TreeNodeName.FuncType) {
+            operate.translateFuncType(this);
         }
     }
 
@@ -82,5 +86,9 @@ public class TreeNode {
 
     public String getValue() {
         return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 }
