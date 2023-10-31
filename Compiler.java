@@ -2,6 +2,7 @@ import Input.InputSourceCode;
 import Lexical.LexicalAnalysis;
 import Output.OutputIntoFile;
 import Syntactic.SyntacticAnalysis;
+import SyntacticTree.Tree;
 
 /**
  * 编译器主类
@@ -18,5 +19,8 @@ public class Compiler {
 
 //        语法分析作业使用
         SyntacticAnalysis.getInstance().run(false);
+
+        Tree.getInstance().simplifyTree();
+        Tree.getInstance().traverse();
     }
 }

@@ -24,7 +24,7 @@ public class Tree {
     }
 
     /**
-     * 获取语法分析器唯一单例
+     * 获取语法树唯一单例
      */
     public static Tree getInstance() {
         return Tree.tree;
@@ -36,5 +36,16 @@ public class Tree {
 
     public void addTerminalNodeIntoTree(TreeNode parent, String value) {
         TreeNode node = new TreeNode(TreeNodeName.Terminal, value, parent);
+    }
+
+    /**
+     * 简化语法树，删除合并单传结点
+     */
+    public void simplifyTree() {
+        this.root.simplifyNode();
+    }
+
+    public void traverse() {
+        this.root.traverse();
     }
 }
