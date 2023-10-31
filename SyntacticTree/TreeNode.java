@@ -1,5 +1,6 @@
 package SyntacticTree;
 
+import InterCode.QuaternionIdentify;
 import Output.OutputIntoFile;
 
 import java.util.ArrayList;
@@ -28,6 +29,11 @@ public class TreeNode {
      * 父结点
      */
     public TreeNode parent;
+
+    /**
+     * 这个结点对应的四元式中的标识符
+     */
+    public QuaternionIdentify quaternionIdentify;
 
     public TreeNode(TreeNodeName name, String value, TreeNode parent) {
         this.name = name;
@@ -62,11 +68,14 @@ public class TreeNode {
         }
     }
 
-    public void traverse() {
-        OutputIntoFile.appendToFile(this.name.toString() + " " + this.value + "\n", "output.txt");
-
-        for (TreeNode node: this.children) {
-            node.traverse();
+    public void traverse(ITraverseOperate operate) {
+        switch (this.name) {
+            case ConstDef -> operate.translateDeclare(this, 2);
+            case VarDef -> operate.translateDeclare(this, 1);
+            case FuncDef -> operate.translateFuncDefine(this);
+            case FuncFParam -> operate.translateFuncFParam(this);
+            case Block -> operate.translateBlock(this);
+            case Stmt -> operate.translateStmt(this);
         }
     }
 }

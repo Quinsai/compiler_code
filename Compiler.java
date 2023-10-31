@@ -21,6 +21,5 @@ public class Compiler {
         SyntacticAnalysis.getInstance().run(false);
 
         Tree.getInstance().simplifyTree();
-        Tree.getInstance().traverse();
     }
 }

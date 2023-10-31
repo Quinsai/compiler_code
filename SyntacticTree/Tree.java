@@ -45,7 +45,7 @@ public class Tree {
         this.root.simplifyNode();
     }
 
-    public void traverse() {
-        this.root.traverse();
+    public void traverse(ITraverseOperate operate) {
+        this.root.traverse(operate);
     }
 }
