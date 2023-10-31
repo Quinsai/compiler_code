@@ -27,18 +27,18 @@ public class MasterTable {
     /**
      * 唯一单例
      */
-    private static MasterTable instance;
+    private static MasterTable masterTable;
 
-    private MasterTable() {
+    public MasterTable() {
         this.table = new LinkedList<>();
     }
 
     static {
-        MasterTable.instance = new MasterTable();
+        MasterTable.masterTable = new MasterTable();
     }
 
-    public static MasterTable getInstance() {
-        return instance;
+    public static MasterTable getMasterTable() {
+        return masterTable;
     }
 
     /**

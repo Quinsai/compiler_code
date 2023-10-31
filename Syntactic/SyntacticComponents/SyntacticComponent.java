@@ -31,7 +31,7 @@ public class SyntacticComponent {
 
     public SyntacticComponent() {
         this.lexicalAnalysis = LexicalAnalysis.getInstance();
-        this.masterTable = MasterTable.getInstance();
+        this.masterTable = MasterTable.getMasterTable();
         this.valueType = ComponentValueType.NO_MEANING;
     }
 

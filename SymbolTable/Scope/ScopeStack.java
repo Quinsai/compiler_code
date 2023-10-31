@@ -2,7 +2,6 @@ package SymbolTable.Scope;
 
 import SymbolTable.MasterTable;
 
-import java.util.ArrayList;
 import java.util.Stack;
 
 /**
@@ -52,7 +51,16 @@ public class ScopeStack {
      */
     public void quitScope() {
         int former = this.stack.pop();
-        MasterTable.getInstance().cleanTableWhenQuitScope(former);
+        /**
+         * 我是傻逼
+         * tnnd
+         * 这个栈式符号表把我害惨了
+         * tnnd
+         * 这样一来运行到最后符号表都tm被清空了
+         * 你tm还开发个毛线啊
+         * 纯纯傻逼
+         */
+        MasterTable.getMasterTable().cleanTableWhenQuitScope(former);
     }
 
     public int getCurrentScope() {
