@@ -5,4 +5,4 @@ BUAA 编译原理课程 课程实验代码仓库
 3.2_symbol_table 符号表构建，原因是3.1_refactor分支中走了一些弯路
 4_cuowu 错误处理实验
 4.1_syntactic_tree 语法树构建
-5_daima_shengcheng 代码生成实验
+5.1_quaternion_intercode 代码生成实验
