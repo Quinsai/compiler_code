@@ -1,4 +1,4 @@
-package Syntactic.SyntacticTree;
+package SyntacticTree;
 
 /**
  * 树节点对应的符号的名字

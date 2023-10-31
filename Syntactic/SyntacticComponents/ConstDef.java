@@ -7,12 +7,9 @@ import Result.Error.AnalysisErrorType;
 import Result.Error.HandleError;
 import SymbolTable.MasterTableItem;
 import SymbolTable.SymbolConst;
-import Syntactic.SyntacticTree.Tree;
-import Syntactic.SyntacticTree.TreeNode;
-import Syntactic.SyntacticTree.TreeNodeName;
-
-import java.util.AbstractList;
-import java.util.ArrayList;
+import SyntacticTree.Tree;
+import SyntacticTree.TreeNode;
+import SyntacticTree.TreeNodeName;
 
 public class ConstDef extends SyntacticComponent {
 

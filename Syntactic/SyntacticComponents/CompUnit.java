@@ -3,8 +3,7 @@ package Syntactic.SyntacticComponents;
 import Other.ParamResult;
 import Output.OutputIntoFile;
 import Result.AnalysisResult;
-import Syntactic.SyntacticTree.Tree;
-import Syntactic.SyntacticTree.TreeNode;
+import SyntacticTree.Tree;
 
 public class CompUnit extends SyntacticComponent {
 

@@ -2,9 +2,9 @@ package Syntactic.SyntacticComponents;
 
 import Other.ParamResult;
 import Result.AnalysisResult;
-import Syntactic.SyntacticTree.Tree;
-import Syntactic.SyntacticTree.TreeNode;
-import Syntactic.SyntacticTree.TreeNodeName;
+import SyntacticTree.Tree;
+import SyntacticTree.TreeNode;
+import SyntacticTree.TreeNodeName;
 
 public class BType extends SyntacticComponent {
 

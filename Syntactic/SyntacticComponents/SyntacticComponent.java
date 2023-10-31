@@ -3,7 +3,7 @@ package Syntactic.SyntacticComponents;
 import Lexical.LexicalAnalysis;
 import Result.AnalysisResult;
 import SymbolTable.MasterTable;
-import Syntactic.SyntacticTree.TreeNode;
+import SyntacticTree.TreeNode;
 
 /**
  * 各个语法成分的父类
