@@ -2,6 +2,10 @@ package SyntacticTree;
 
 import InterCode.QuadrupleConst;
 
+/**
+ * translateXXX 是把对应的语法成分翻译成四元式
+ * traverseXXX 仅仅是遍历过程中传递值
+ */
 public interface ITraverseOperate {
 
     /**
@@ -16,7 +20,13 @@ public interface ITraverseOperate {
     void translateFuncDefine(TreeNode node);
 
     /**
+     * 函数形式参数
+     */
+    void translateFuncFParam(TreeNode node);
+
+
+    /**
      * 函数类型
      */
-    void translateFuncType(TreeNode node);
+    void traverseFuncType(TreeNode node);
 }

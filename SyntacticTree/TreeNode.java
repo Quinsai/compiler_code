@@ -53,14 +53,11 @@ public class TreeNode {
     }
 
     public void traverse(ITraverseOperate operate) {
-        if (this.name == TreeNodeName.ConstDef) {
-            operate.translateDeclare(this, QuadrupleConst.CONST);
-        }
-        else if (this.name == TreeNodeName.VarDef) {
-            operate.translateDeclare(this, QuadrupleConst.VAR);
-        }
-        else if (this.name == TreeNodeName.FuncType) {
-            operate.translateFuncType(this);
+        switch (this.name) {
+            case ConstDef ->  operate.translateDeclare(this, QuadrupleConst.CONST);
+            case VarDef -> operate.translateDeclare(this, QuadrupleConst.VAR);
+            case FuncType -> operate.traverseFuncType(this);
+            case FuncDef -> operate.translateFuncDefine(this);
         }
     }
 

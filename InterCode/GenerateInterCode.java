@@ -98,7 +98,9 @@ public class GenerateInterCode {
             }
 
             QuadrupleVariable name = new QuadrupleVariable(node.children.get(1).getValue());
-            QuadrupleVariable returnType = new QuadrupleVariable()
+            QuadrupleVariable returnType = new QuadrupleVariable(node.children.get(0).getValue());
+            node.children.get(1).quadrupleVariable = name;
+            node.children.get(0).quadrupleVariable = returnType;
             addIntoInterCodes(Operation.FUNC_BEGIN, name, returnType, null);
 
             for (; i < length; i++) {
@@ -109,7 +111,16 @@ public class GenerateInterCode {
         }
 
         @Override
-        public void translateFuncType(TreeNode node) {
+        public void translateFuncFParam(TreeNode node) {
+
+            int i = 0;
+            int length = node.children.size();
+
+
+        }
+
+        @Override
+        public void traverseFuncType(TreeNode node) {
 
             node.children.get(0).traverse(this);
 
