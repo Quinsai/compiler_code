@@ -16,17 +16,17 @@ public class MasterTableItem {
     /**
      * 符号名
      */
-    private final String name;
+    private String name;
 
     /**
      * 种类
      */
-    private final SymbolConst category;
+    private SymbolConst category;
 
     /**
      * 类型
      */
-    private final SymbolConst type;
+    private SymbolConst type;
 
     /**
      * 是否已经被赋值
@@ -46,8 +46,16 @@ public class MasterTableItem {
     /**
      * 作用域ID
      */
-    private final int scope;
+    private int scope;
 
+    /**
+     * 去往子作用域对应的子表的链接
+     */
+    private MasterTable subTableLink;
+
+    /**
+     * 新定义一个有符号意义的条目
+     */
     public MasterTableItem(String name, SymbolConst category, SymbolConst type, int scope) {
         this.name = name;
         this.category = category;
@@ -56,6 +64,14 @@ public class MasterTableItem {
         this.arrayLink = null;
         this.functionLink = null;
         this.scope = scope;
+        this.subTableLink = null;
+    }
+
+    /**
+     * 新定义一个仅仅表示指向子表的链接的条目
+     */
+    public MasterTableItem(MasterTable subTableLink) {
+        this.subTableLink = subTableLink;
     }
 
     public void setArrayLink(ArrayDetail arrayLink) {
@@ -71,7 +87,7 @@ public class MasterTableItem {
      * @param name 符号名
      */
     boolean match(String name) {
-        return this.name.equals(name);
+        return this.subTableLink == null && this.name.equals(name);
     }
 
     public int getScope() {

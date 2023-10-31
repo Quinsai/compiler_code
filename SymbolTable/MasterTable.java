@@ -330,18 +330,25 @@ public class MasterTable {
     }
 
     /**
-     * 在退出某一作用域的时候，清除其对应的表
+     * 在退出某一作用域的时候，将其对应的条目挪动到子表中
      */
-    public void cleanTableWhenQuitScope(int scope) {
+    public void moveItemWhenQuitScope(int scope) {
+
+        MasterTable subTable = new MasterTable();
+        MasterTableItem linkItem = new MasterTableItem(subTable);
+
         while (!this.table.isEmpty()) {
             MasterTableItem item = this.table.getLast();
             if (item.getScope() == scope) {
+                subTable.table.addFirst(item);
                 this.table.removeLast();
             }
             else {
                 break;
             }
         }
+
+        this.table.addLast(linkItem);
     }
 
     public AnalysisResult insertFailDeclareIdentifier(String name) {

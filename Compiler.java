@@ -18,8 +18,8 @@ public class Compiler {
 //        LexicalAnalysis.getInstance().run(true);
 
 //        语法分析作业使用
-        SyntacticAnalysis.getInstance().run(false);
+        SyntacticAnalysis.getInstance().run(true);
 
-        Tree.getInstance().simplifyTree();
+//        Tree.getInstance().simplifyTree();
     }
 }
