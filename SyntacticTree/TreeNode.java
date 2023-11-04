@@ -33,7 +33,7 @@ public class TreeNode {
     /**
      * 这个结点对应的四元式中的标识符
      */
-    public QuaternionIdentify quaternionIdentify;
+    private QuaternionIdentify quaternionIdentify;
 
     public TreeNode(TreeNodeName name, String value, TreeNode parent) {
         this.name = name;
@@ -68,6 +68,14 @@ public class TreeNode {
         }
     }
 
+    public QuaternionIdentify getQuaternionIdentify() {
+        return quaternionIdentify;
+    }
+
+    public void setQuaternionIdentify(QuaternionIdentify quaternionIdentify) {
+        this.quaternionIdentify = quaternionIdentify;
+    }
+
     public void traverse(ITraverseOperate operate) {
         switch (this.name) {
             case ConstDef -> operate.translateDeclare(this, 2);
@@ -76,6 +84,9 @@ public class TreeNode {
             case FuncFParam -> operate.translateFuncFParam(this);
             case Block -> operate.translateBlock(this);
             case Stmt -> operate.translateStmt(this);
+            case LVal -> operate.translateLVal(this);
+            case ForStmt -> operate.translateForStmt(this);
+            case Exp -> operate.translateExp(this);
         }
     }
 }

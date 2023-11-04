@@ -1,5 +1,7 @@
 package SymbolTable;
 
+import InterCode.QuaternionIdentify;
+import Other.ParamResult;
 import Result.Error.AnalysisErrorType;
 import Result.Error.HandleError;
 import SymbolTable.Array.ArrayDetail;
@@ -52,6 +54,11 @@ public class MasterTableItem {
      * 去往子作用域对应的子表的链接
      */
     private MasterTable subTableLink;
+
+    /**
+     * 对应的四元式中的变量
+     */
+    private QuaternionIdentify quaternionIdentify;
 
     /**
      * 新定义一个有符号意义的条目
@@ -166,5 +173,31 @@ public class MasterTableItem {
         else {
             return ComponentValueType.NO_MEANING;
         }
+    }
+
+    public QuaternionIdentify getQuaternionIdentify() {
+        return quaternionIdentify;
+    }
+
+    public void setQuaternionIdentify(QuaternionIdentify quaternionIdentify) {
+        this.quaternionIdentify = quaternionIdentify;
+    }
+
+    public MasterTable getSubTableLink() {
+        return subTableLink;
+    }
+
+    public void setSubTableLink(MasterTable subTableLink) {
+        this.subTableLink = subTableLink;
+    }
+
+    public void getArraySize(ParamResult<QuaternionIdentify> size1, ParamResult<QuaternionIdentify> size2) {
+        size1.setValue(this.arrayLink.getSize1());
+        size2.setValue(this.arrayLink.getSize2());
+    }
+
+    public void setArraySize(QuaternionIdentify size1, QuaternionIdentify size2) {
+        this.arrayLink.setSize1(size1);
+        this.arrayLink.setSize2(size2);
     }
 }

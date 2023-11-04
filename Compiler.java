@@ -20,6 +20,6 @@ public class Compiler {
 //        语法分析作业使用
         SyntacticAnalysis.getInstance().run(true);
 
-//        Tree.getInstance().simplifyTree();
+        Tree.getInstance().simplifyTree();
     }
 }

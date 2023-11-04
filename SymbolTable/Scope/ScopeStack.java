@@ -60,7 +60,7 @@ public class ScopeStack {
          * 你tm还开发个毛线啊
          * 纯纯傻逼
          */
-        MasterTable.getMasterTable().moveItemWhenQuitScope(former);
+        MasterTable.getMasterTable().moveItemIntoSubTable(former);
     }
 
     public int getCurrentScope() {

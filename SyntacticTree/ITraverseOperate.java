@@ -36,4 +36,8 @@ public interface ITraverseOperate {
      * 翻译左值表达式LVal
      */
     void translateLVal(TreeNode node);
+
+    void translateForStmt(TreeNode node);
+
+    void translateExp(TreeNode node);
 }

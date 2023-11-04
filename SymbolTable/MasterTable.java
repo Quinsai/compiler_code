@@ -42,12 +42,46 @@ public class MasterTable {
     }
 
     /**
+     * 这个方法会从后往前的查找item，而不考虑这个item是在子表或是在主表
+     */
+    public SymbolTableResult getItemByNameInAllTable(String name, ParamResult<MasterTableItem> result) {
+        Iterator<MasterTableItem> masterTableItemIterator = this.table.descendingIterator();
+        MasterTableItem item = null;
+        SymbolTableResult res;
+        boolean hasMatched = false;
+
+        while (masterTableItemIterator.hasNext()) {
+            item = masterTableItemIterator.next();
+            MasterTable subTable = item.getSubTableLink();
+            if (subTable != null) {
+                res = subTable.getItemByNameInAllTable(name, result);
+                if (res == SymbolTableResult.EXIST) {
+                    return res;
+                }
+            }
+            else if (item.match(name)) {
+                hasMatched = true;
+                break;
+            }
+        }
+        if (hasMatched) {
+            res = SymbolTableResult.EXIST;
+        }
+        else {
+            res = SymbolTableResult.NOT_EXIST;
+        }
+        result.setValue(item);
+        return res;
+    }
+
+    /**
      * 从后往前地查找某一item
+     * 注意，这个方法只查找能在目前被看见的
      * @param name   被查找的name
      * @param result 查找到的结果，若不存在则为null
      * @return 查找返回值
      */
-    private SymbolTableResult getItemByName(String name, ParamResult<MasterTableItem> result) {
+    public SymbolTableResult getItemByNameInCurrentTable(String name, ParamResult<MasterTableItem> result) {
         Iterator<MasterTableItem> masterTableItemIterator = this.table.descendingIterator();
         MasterTableItem item = null;
         SymbolTableResult res;
@@ -77,7 +111,7 @@ public class MasterTable {
         int currentScope = ScopeStack.getInstance().getCurrentScope();
         SymbolTableResult res;
         ParamResult<MasterTableItem> former = new ParamResult<>(null);
-        res = getItemByName(name, former);
+        res = getItemByNameInCurrentTable(name, former);
         if (res == SymbolTableResult.EXIST && former.getValue().getScope() == currentScope) {
             HandleError.handleError(AnalysisErrorType.NAME_REPEAT);
             return true;
@@ -162,7 +196,7 @@ public class MasterTable {
      */
     public AnalysisResult checkAssign(String name) {
         ParamResult<MasterTableItem> item = new ParamResult<>(null);
-        if (getItemByName(name, item) == SymbolTableResult.NOT_EXIST) {
+        if (getItemByNameInCurrentTable(name, item) == SymbolTableResult.NOT_EXIST) {
             HandleError.handleError(AnalysisErrorType.IDENTIFIER_NOT_DEFINE);
             return AnalysisResult.FAIL;
         }
@@ -178,7 +212,7 @@ public class MasterTable {
      */
     public AnalysisResult checkReference(String name) {
         ParamResult<MasterTableItem> item = new ParamResult<>(null);
-        if (getItemByName(name, item) == SymbolTableResult.NOT_EXIST) {
+        if (getItemByNameInCurrentTable(name, item) == SymbolTableResult.NOT_EXIST) {
             HandleError.handleError(AnalysisErrorType.IDENTIFIER_NOT_DEFINE);
             return AnalysisResult.FAIL;
         }
@@ -197,7 +231,7 @@ public class MasterTable {
     public AnalysisResult setFunctionParams(String name) {
 
         ParamResult<MasterTableItem> functionItem = new ParamResult<>(null);
-        SymbolTableResult res = getItemByName(name, functionItem);
+        SymbolTableResult res = getItemByNameInCurrentTable(name, functionItem);
 
         if (res == SymbolTableResult.NOT_EXIST) {
             HandleError.handleError(AnalysisErrorType.IDENTIFIER_NOT_DEFINE);
@@ -226,7 +260,7 @@ public class MasterTable {
         SymbolTableResult res;
         ParamResult<MasterTableItem> item = new ParamResult<>(null);
 
-        res = getItemByName(name, item);
+        res = getItemByNameInCurrentTable(name, item);
         if (res == SymbolTableResult.NOT_EXIST) {
             HandleError.handleError(AnalysisErrorType.IDENTIFIER_NOT_DEFINE);
             return AnalysisResult.FAIL;
@@ -297,7 +331,7 @@ public class MasterTable {
         ParamResult<MasterTableItem> item = new ParamResult<>(null);
         SymbolTableResult res;
 
-        res = getItemByName(name, item);
+        res = getItemByNameInCurrentTable(name, item);
         if (res == SymbolTableResult.NOT_EXIST) {
             HandleError.handleError(AnalysisErrorType.IDENTIFIER_NOT_DEFINE);
             return AnalysisResult.FAIL;
@@ -318,7 +352,7 @@ public class MasterTable {
         ParamResult<MasterTableItem> returnItem = new ParamResult<>(null);
         SymbolTableResult res;
 
-        res = getItemByName(name, returnItem);
+        res = getItemByNameInCurrentTable(name, returnItem);
         if (res == SymbolTableResult.NOT_EXIST) {
             HandleError.handleError(AnalysisErrorType.IDENTIFIER_NOT_DEFINE);
             return AnalysisResult.FAIL;
@@ -332,7 +366,7 @@ public class MasterTable {
     /**
      * 在退出某一作用域的时候，将其对应的条目挪动到子表中
      */
-    public void moveItemWhenQuitScope(int scope) {
+    public void moveItemIntoSubTable(int scope) {
 
         MasterTable subTable = new MasterTable();
         MasterTableItem linkItem = new MasterTableItem(subTable);
