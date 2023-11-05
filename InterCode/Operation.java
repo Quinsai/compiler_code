@@ -148,6 +148,9 @@ public enum Operation {
      */
     PRINT_INT,
 
-    INIT, // 初始化赋值
+    /**
+     * 仅仅用于数组的初始化赋值
+     */
+    ARRAY_INIT,
     GETINT, // 获取输入的int值
 }

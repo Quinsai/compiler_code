@@ -63,6 +63,7 @@ public class Quaternion {
         res = MasterTable.getMasterTable().getItemByNameInAllTable(name, identify);
         if (res == SymbolTableResult.EXIST) {
             identify.getValue().setQuaternionIdentify(quaternionIdentify);
+            quaternionIdentify.setSymbolTableItem(identify.getValue());
         }
     }
 
@@ -93,6 +94,41 @@ public class Quaternion {
             }
         }
 
+        private void translateArrayInit(TreeNode node) {
+            int i;
+            int length = node.children.size();
+
+            if (length == 0) {
+                String value = node.value;
+                QuaternionIdentify identify;
+                // 如果是个标识符（这个标识符一定是已经出现过了的）
+                if (!value.matches("^-?\\d+$")) {
+                    identify = getIdentifyOfSymbolName(value);
+                }
+                // 如果不是标识符，那就应该仅仅是一个数字罢了
+                else {
+                    identify = new QuaternionIdentify(value);
+                }
+                setIdentifyToTreeNode(node, identify);
+                return;
+            }
+
+            if (!node.children.get(0).value.equals("{")) {
+                translateAllExp(node);
+                return;
+            }
+
+            i = 1;
+            QuaternionIdentify identify = new QuaternionIdentify("");
+            while (i < length) {
+                translateArrayInit(node.children.get(i));
+                QuaternionIdentify temp = node.children.get(i).getQuaternionIdentify();
+                identify.arrayValue.add(temp);
+                i += 2;
+            }
+            setIdentifyToTreeNode(node, identify);
+        }
+
         @Override
         public void translateDeclare(TreeNode node, int varOrConst) {
 
@@ -102,6 +138,7 @@ public class Quaternion {
             int length = children.size();
             QuaternionIdentify identify;
             String name;
+            int dimension;
 
             // 合并删除单传节点后就不再有子节点，说明一定是int a;这样的情况
             if (length == 0) {
@@ -120,6 +157,7 @@ public class Quaternion {
 
             // const int a = 1;
             if (children.get(1).value.equals("=")) {
+                dimension = 0;
                 if (varOrConst == 1) {
                     addIntoInterCodes(Operation.VAR_INT_DECLARE, null, null, children.get(0).getQuaternionIdentify());
                 }
@@ -136,12 +174,14 @@ public class Quaternion {
                 }
                 // 二维数组
                 if (children.get(4).value.equals("[")) {
+                    dimension = 2;
                     QuaternionIdentify arraySizeTwo = children.get(5).getQuaternionIdentify();
                     identify.getSymbolTableItem().setArraySize(arraySizeOne, arraySizeTwo);
                     addIntoInterCodes(operation, arraySizeOne, arraySizeTwo, identify);
                 }
                 // 一维数组
                 else {
+                    dimension = 1;
                     identify.getSymbolTableItem().setArraySize(arraySizeOne, null);
                     addIntoInterCodes(operation, arraySizeOne, null, identify);
                 }
@@ -149,7 +189,18 @@ public class Quaternion {
 
             // 初始化赋值
             if (children.get(length - 2).value.equals("=")) {
-                addIntoInterCodes(Operation.INIT, identify, children.get(length - 1).getQuaternionIdentify(), null);
+                // 给int初始化一个int值
+                if (dimension == 0) {
+                    translateAllExp(node.children.get(length - 1));
+                    QuaternionIdentify intInitialValue = node.children.get(length - 1).getQuaternionIdentify();
+                    addIntoInterCodes(Operation.SET_VALUE, identify, intInitialValue, null);
+                }
+                // 给数组初始化一个数组
+                else {
+                    translateArrayInit(node.children.get(length - 1));
+                    QuaternionIdentify arrayInitialValue = node.children.get(length - 1).getQuaternionIdentify();
+                    addIntoInterCodes(Operation.ARRAY_INIT, identify, arrayInitialValue, null);
+                }
             }
         }
 
@@ -466,14 +517,14 @@ public class Quaternion {
 
             // a[1]
             if (length == 4) {
-                QuaternionIdentify name = node.children.get(0).getQuaternionIdentify();
+                QuaternionIdentify name = getIdentifyOfSymbolName(node.children.get(0).value);
                 QuaternionIdentify offset1 = node.children.get(2).getQuaternionIdentify();
                 identify = new QuaternionIdentify("");
                 addIntoInterCodes(Operation.ADDRESS, name, offset1, identify);
                 setIdentifyToTreeNode(node, identify);
             }
             else if (length == 7) {
-                QuaternionIdentify name = node.children.get(0).getQuaternionIdentify();
+                QuaternionIdentify name = getIdentifyOfSymbolName(node.children.get(0).value);
                 QuaternionIdentify offset1 = node.children.get(2).getQuaternionIdentify();
                 QuaternionIdentify offset2 = node.children.get(5).getQuaternionIdentify();
                 identify = new QuaternionIdentify("");
@@ -806,10 +857,19 @@ public class Quaternion {
             int length = node.children.size();
 
             if (length >= 1 && node.children.get(0).value.equals("const")) {
-                translateDeclare(node, 2);
+                int i = 2;
+                while (i < length) {
+                    translateDeclare(node.children.get(i), 2);
+                    i += 2;
+                }
+
             }
             else if (length >= 1 && node.children.get(0).value.equals("int")) {
-                translateDeclare(node, 1);
+                int i = 1;
+                while (i < length) {
+                    translateDeclare(node.children.get(i), 1);
+                    i += 2;
+                }
             }
             else {
                 translateStmt(node);
@@ -823,6 +883,35 @@ public class Quaternion {
         Tree.getInstance().traverse(new TraverseOperate());
     }
 
+    private String displaySingle(QuaternionIdentify identify) {
+
+        String output = "";
+
+        if (identify == null) {
+            output += "null";
+        }
+        else {
+            if (identify.getValue().isEmpty()) {
+                if (!identify.arrayValue.isEmpty()) {
+                    output += "[";
+                    for (QuaternionIdentify child :
+                        identify.arrayValue) {
+                        output += displaySingle(child);
+                        output += ",";
+                    }
+                    output += ']';
+                }
+                else {
+                    output += identify.id;
+                }
+            }
+            else {
+                output += identify.getValue();
+            }
+        }
+
+        return output;
+    }
 
     public void display() {
         for (SingleQuaternion single :
@@ -832,45 +921,15 @@ public class Quaternion {
 
             output += " ";
 
-            if (single.param1 == null) {
-                output += "null";
-            }
-            else {
-                if (single.param1.getValue().isEmpty()) {
-                    output += single.param1.id;
-                }
-                else {
-                    output += single.param1.getValue();
-                }
-            }
+            output += displaySingle(single.param1);
 
             output += " ";
 
-            if (single.param2 == null) {
-                output += "null";
-            }
-            else {
-                if (single.param2.getValue().isEmpty()) {
-                    output += single.param2.id;
-                }
-                else {
-                    output += single.param2.getValue();
-                }
-            }
+            output += displaySingle(single.param2);
 
             output += " ";
 
-            if (single.result == null) {
-                output += "null";
-            }
-            else {
-                if (single.result.getValue().isEmpty()) {
-                    output += single.result.id;
-                }
-                else {
-                    output += single.result.getValue();
-                }
-            }
+            output += displaySingle(single.result);
 
             output += "\n";
 

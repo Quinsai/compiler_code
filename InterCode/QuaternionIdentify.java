@@ -2,6 +2,8 @@ package InterCode;
 
 import SymbolTable.MasterTableItem;
 
+import java.util.ArrayList;
+
 public class QuaternionIdentify {
 
     /**
@@ -21,6 +23,12 @@ public class QuaternionIdentify {
 
     private boolean hasAllocatedRegister;
 
+    /**
+     * 一串数组的值
+     * 当且仅当操作数是INIT的时候有效
+     */
+    public ArrayList<QuaternionIdentify> arrayValue;
+
     public String id;
 
     static int count;
@@ -33,6 +41,7 @@ public class QuaternionIdentify {
         this.value = value;
         this.hasAllocatedRegister = false;
         this.register = -1;
+        this.arrayValue = new ArrayList<>();
         count ++;
         id = "V" + count;
     }

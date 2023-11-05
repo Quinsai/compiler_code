@@ -1,7 +1,15 @@
 BLOCK_BEGIN null null null
-PRINT_INT 12 null null
-PRINT_STRING , hello,  null null
-PRINT_INT 42 null null
-PRINT_STRING , world null null
+VAR_ARRAY_DECLARE 2 null a
+ARRAY_INIT a [1,2,] null
+VAR_ARRAY_DECLARE 2 2 b
+ARRAY_INIT b [[1,2,],[3,4,],] null
+VAR_INT_DECLARE null null c
+MULT 2 1 V22
+PLUS V22 1 V23
+ADDRESS b V23 V21
+SET_VALUE c V21 null
+PRINT_STRING a.1 =  null null
+ADDRESS a 1 V28
+PRINT_INT V28 null null
 RETURN 0 null null
 BLOCK_END null null null
