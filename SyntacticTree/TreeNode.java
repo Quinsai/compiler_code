@@ -87,6 +87,7 @@ public class TreeNode {
             case ForStmt -> operate.translateForStmt(this);
             case Exp, AddExp, MulExp, UnaryExp, PrimaryExp, Cond, ConstExp, LOrExp, LAndExp, EqExp, RelExp
                 -> operate.translateAllExp(this);
+            case MainFuncDef -> operate.translateMainFunc(this);
         }
     }
 }

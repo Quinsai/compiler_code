@@ -785,6 +785,15 @@ public class Quaternion {
             }
         }
 
+        @Override
+        public void translateMainFunc(TreeNode node) {
+            addIntoInterCodes(Operation.MAIN_FUNC_BEGIN, null, null, null);
+
+            node.children.get(4).traverse(this);
+
+            addIntoInterCodes(Operation.MAIN_FUNC_END, null, null, null);
+        }
+
     }
 
     public void generateInterCode() {

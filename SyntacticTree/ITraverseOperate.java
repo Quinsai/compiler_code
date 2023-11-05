@@ -40,4 +40,6 @@ public interface ITraverseOperate {
     void translateForStmt(TreeNode node);
 
     void translateAllExp(TreeNode node);
+
+    void translateMainFunc(TreeNode node);
 }
