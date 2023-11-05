@@ -1,2 +1,5 @@
 BLOCK_BEGIN null null null
+PRINT_STRING "hello, world" null null
+PRINT_INT null null null
+RETURN 0 null null
 BLOCK_END null null null

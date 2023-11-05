@@ -285,11 +285,11 @@ public class Quaternion {
             }
             int numberOfSubString = subStrings.length;
             for (int j = 0; j < numberOfSubString; j++) {
-                addIntoInterCodes(Operation.PRINT_STRING, new QuaternionIdentify(subStrings[i]), null, null);
-                if (!node.children.get(i).value.equals(";")) {
-                    node.children.get(i).traverse(this);
-                    addIntoInterCodes(Operation.PRINT_INT, node.children.get(i).getQuaternionIdentify(), null, null);
-                    i += 2;
+                addIntoInterCodes(Operation.PRINT_STRING, new QuaternionIdentify(subStrings[j]), null, null);
+                if (!node.children.get(j).value.equals(";")) {
+                    node.children.get(j).traverse(this);
+                    addIntoInterCodes(Operation.PRINT_INT, node.children.get(j).getQuaternionIdentify(), null, null);
+                    j += 2;
                 }
             }
         }
@@ -793,6 +793,21 @@ public class Quaternion {
             node.children.get(4).traverse(this);
 
             addIntoInterCodes(Operation.MAIN_FUNC_END, null, null, null);
+        }
+
+        @Override
+        public void translateBlockItem(TreeNode node) {
+            int length = node.children.size();
+
+            if (length >= 1 && node.children.get(0).value.equals("const")) {
+                translateDeclare(node, 2);
+            }
+            else if (length >= 1 && node.children.get(0).value.equals("int")) {
+                translateDeclare(node, 1);
+            }
+            else {
+                translateStmt(node);
+            }
         }
 
     }

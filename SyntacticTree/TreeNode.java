@@ -88,6 +88,7 @@ public class TreeNode {
             case Exp, AddExp, MulExp, UnaryExp, PrimaryExp, Cond, ConstExp, LOrExp, LAndExp, EqExp, RelExp
                 -> operate.translateAllExp(this);
             case MainFuncDef -> operate.translateMainFunc(this);
+            case BlockItem -> operate.translateBlockItem(this);
             default -> {
                 for (TreeNode childNode :
                     this.children) {
