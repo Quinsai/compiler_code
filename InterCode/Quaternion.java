@@ -269,7 +269,9 @@ public class Quaternion {
              */
             int delta = 1;
 
-            String format = node.children.get(2).value;
+            String temp = node.children.get(2).value;
+            int tempLength = temp.length();
+            String format = temp.substring(1, tempLength - 1);
             String[] subStrings = format.split("%d");
 
             i = 4;
@@ -284,12 +286,16 @@ public class Quaternion {
                 i += 2;
             }
             int numberOfSubString = subStrings.length;
-            for (int j = 0; j < numberOfSubString; j++) {
+            int j = 0;
+            if (subStrings[0].isEmpty()) {
+                j ++;
+            }
+            for (; j < numberOfSubString; j++) {
                 addIntoInterCodes(Operation.PRINT_STRING, new QuaternionIdentify(subStrings[j]), null, null);
-                if (!node.children.get(j).value.equals(";")) {
-                    node.children.get(j).traverse(this);
-                    addIntoInterCodes(Operation.PRINT_INT, node.children.get(j).getQuaternionIdentify(), null, null);
-                    j += 2;
+                if (!node.children.get(i).value.equals(";")) {
+                    node.children.get(i).traverse(this);
+                    addIntoInterCodes(Operation.PRINT_INT, node.children.get(i).getQuaternionIdentify(), null, null);
+                    i += 2;
                 }
             }
         }

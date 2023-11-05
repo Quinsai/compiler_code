@@ -5,7 +5,23 @@ RPARENT )
 LBRACE {
 PRINTFTK printf
 LPARENT (
-STRCON "hello, world"
+STRCON "%d, hello, %d, world"
+COMMA ,
+INTCON 12
+<Number>
+<PrimaryExp>
+<UnaryExp>
+<MulExp>
+<AddExp>
+<Exp>
+COMMA ,
+INTCON 42
+<Number>
+<PrimaryExp>
+<UnaryExp>
+<MulExp>
+<AddExp>
+<Exp>
 RPARENT )
 SEMICN ;
 <Stmt>
