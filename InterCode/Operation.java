@@ -35,20 +35,35 @@ public enum Operation {
     FUNC_END,
 
     /**
-     * PARA_INT, name, null, null
+     * FORMAL_PARA_INT, name, null, null
      */
-    PARA_INT,
+    FORMAL_PARA_INT,
 
     /**
-     * PARA_ARRAY, name, secondSize, null
+     * FORMAL_PARA_ARRAY, name, secondSize, null
      */
-    PARA_ARRAY,
+    FORMAL_PARA_ARRAY,
 
     /**
      * RETURN, null, null, null
      * RETURN, 12, null, null
      */
     RETURN,
+
+    /**
+     * FUNC_CALL_BEGIN, func, null, null
+     */
+    FUNC_CALL_BEGIN,
+
+    /**
+     * REAL_PARA_INT, a, null, null
+     */
+    REAL_PARA,
+
+    /**
+     * FUNC_CELL_END, null, null, null
+     */
+    FUNC_CALL_END,
 
     /**
      * BLOCK_BEGIN, null, null, null
@@ -84,6 +99,16 @@ public enum Operation {
     MULT,
     DIV,
     MOD,
+    OPPO,
+    OR,
+    AND,
+    GREAT,
+    GREAT_EQUAL,
+    LITTLE,
+    LITTLE_EQUAL,
+    EQUAL,
+    NOT_EQUAL,
+    NOT,
     ASSIGN,
 
     /**

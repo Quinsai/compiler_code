@@ -39,5 +39,5 @@ public interface ITraverseOperate {
 
     void translateForStmt(TreeNode node);
 
-    void translateExp(TreeNode node);
+    void translateAllExp(TreeNode node);
 }

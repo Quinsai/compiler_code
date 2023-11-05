@@ -1,7 +1,6 @@
 package SyntacticTree;
 
 import InterCode.QuaternionIdentify;
-import Output.OutputIntoFile;
 
 import java.util.ArrayList;
 
@@ -86,7 +85,8 @@ public class TreeNode {
             case Stmt -> operate.translateStmt(this);
             case LVal -> operate.translateLVal(this);
             case ForStmt -> operate.translateForStmt(this);
-            case Exp -> operate.translateExp(this);
+            case Exp, AddExp, MulExp, UnaryExp, PrimaryExp, Cond, ConstExp, LOrExp, LAndExp, EqExp, RelExp
+                -> operate.translateAllExp(this);
         }
     }
 }

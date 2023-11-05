@@ -41,11 +41,11 @@ public class Quaternion {
     /**
      * 获取这个name对应的符号表条目对应的四元式的变量
      */
-    private QuaternionIdentify getIdentifyOfName(String name) {
+    private QuaternionIdentify getIdentifyOfSymbolName(String name) {
         SymbolTableResult res;
         ParamResult<MasterTableItem> identify = new ParamResult<>(null);
 
-        res = MasterTable.getMasterTable().getItemByNameInCurrentTable(name, identify);
+        res = MasterTable.getMasterTable().getItemByNameInAllTable(name, identify);
         if (res == SymbolTableResult.EXIST) {
             return identify.getValue().getQuaternionIdentify();
         }
@@ -191,13 +191,13 @@ public class Quaternion {
 
                 paramName = new QuaternionIdentify(node.children.get(1).value);
 
-                addIntoInterCodes(Operation.PARA_INT, paramName, null, null);
+                addIntoInterCodes(Operation.FORMAL_PARA_INT, paramName, null, null);
             }
             else if (length == 4) {
 
                 paramName = new QuaternionIdentify(node.children.get(1).value);
 
-                addIntoInterCodes(Operation.PARA_ARRAY, paramName, null, null);
+                addIntoInterCodes(Operation.FORMAL_PARA_ARRAY, paramName, null, null);
             }
             else {
 
@@ -205,7 +205,7 @@ public class Quaternion {
 
                 QuaternionIdentify secondSize = node.children.get(5).getQuaternionIdentify();
 
-                addIntoInterCodes(Operation.PARA_ARRAY, paramName, secondSize, null);
+                addIntoInterCodes(Operation.FORMAL_PARA_ARRAY, paramName, secondSize, null);
             }
 
             setIdentifyToTreeNode(node.children.get(1), paramName);
@@ -452,7 +452,7 @@ public class Quaternion {
             // a
             if (length == 0) {
                 nameString = node.value;
-                identify = getIdentifyOfName(nameString);
+                identify = getIdentifyOfSymbolName(nameString);
                 setIdentifyToTreeNode(node, identify);
                 return;
             }
@@ -503,9 +503,286 @@ public class Quaternion {
             addIntoInterCodes(Operation.SET_VALUE, left, right, null);
         }
 
-        @Override
-        public void translateExp(TreeNode node) {
+        private void translateAddExp(TreeNode node) {
+            int length = node.children.size();
+            int i = 0;
+            QuaternionIdentify res;
 
+            node.children.get(0).traverse(this);
+            res = node.children.get(0).getQuaternionIdentify();
+            i ++;
+
+            for(; i < length; i += 2) {
+                node.children.get(i+1).traverse(this);
+                QuaternionIdentify temp = node.children.get(i+1).getQuaternionIdentify();
+                switch (node.children.get(i).value) {
+                    case "+" -> addIntoInterCodes(Operation.PLUS, res, temp, res);
+                    case "-" -> addIntoInterCodes(Operation.MINU, res, temp, res);
+                }
+            }
+
+            setIdentifyToTreeNode(node, res);
+        }
+
+        private void translateMulExp(TreeNode node) {
+            int length = node.children.size();
+            int i = 0;
+            QuaternionIdentify res;
+
+            node.children.get(0).traverse(this);
+            res = node.children.get(0).getQuaternionIdentify();
+            i ++;
+
+            for(; i < length; i += 2) {
+                node.children.get(i+1).traverse(this);
+                QuaternionIdentify temp = node.children.get(i+1).getQuaternionIdentify();
+                switch (node.children.get(i).value) {
+                    case "*" -> addIntoInterCodes(Operation.MULT, res, temp, res);
+                    case "/" -> addIntoInterCodes(Operation.DIV, res, temp, res);
+                    case "%" -> addIntoInterCodes(Operation.MOD, res, temp, res);
+                }
+            }
+
+            setIdentifyToTreeNode(node, res);
+        }
+
+        private void translateUnaryOp(TreeNode node) {
+
+            traverseAllChildren(node);
+
+            node.children.get(1).traverse(this);
+            QuaternionIdentify identify = node.children.get(1).getQuaternionIdentify();
+            QuaternionIdentify res = new QuaternionIdentify("");
+
+
+            if (node.children.get(0).value.equals("-")) {
+                addIntoInterCodes(Operation.OPPO, identify, null, res);
+            }
+            else if (node.children.get(0).value.equals("!")) {
+                addIntoInterCodes(Operation.NOT, identify, null, res);
+            }
+            else {
+                res = identify;
+            }
+
+            setIdentifyToTreeNode(node, res);
+        }
+
+        private void translateFunctionRealPara(TreeNode node) {
+
+            int length = node.children.size();
+            QuaternionIdentify identify;
+
+            if (length == 0) {
+                String value = node.value;
+                // 如果是个标识符（这个标识符一定是已经出现过了的）
+                if (!value.matches("^-?\\d+$")) {
+                    identify = getIdentifyOfSymbolName(value);
+                }
+                // 如果不是标识符，那就应该仅仅是一个数字罢了
+                else {
+                    identify = new QuaternionIdentify(value);
+                }
+                setIdentifyToTreeNode(node, identify);
+                addIntoInterCodes(Operation.REAL_PARA, identify, null, null);
+                return;
+            }
+
+            translateAllExp(node.children.get(0));
+            identify = node.children.get(0).getQuaternionIdentify();
+            addIntoInterCodes(Operation.REAL_PARA, identify, null, null);
+
+            for (int i = 1; i <length; i += 2) {
+                translateAllExp(node.children.get(i+1));
+                identify = node.children.get(i+1).getQuaternionIdentify();
+                addIntoInterCodes(Operation.REAL_PARA, identify, null, null);
+            }
+        }
+
+        private void translateFunctionCall(TreeNode node) {
+
+            int length = node.children.size();
+            QuaternionIdentify funcName = getIdentifyOfSymbolName(node.children.get(0).value);
+            QuaternionIdentify res = new QuaternionIdentify("");
+
+            addIntoInterCodes(Operation.FUNC_CALL_BEGIN, funcName, null, res);
+
+            if (length == 4) {
+                translateFunctionRealPara(node.children.get(2));
+            }
+
+            addIntoInterCodes(Operation.FUNC_CALL_END, null, null, null);
+            setIdentifyToTreeNode(node, res);
+        }
+
+        private void translateRelExp(TreeNode node) {
+            int length = node.children.size();
+            int i = 0;
+            QuaternionIdentify res;
+
+            node.children.get(0).traverse(this);
+            res = node.children.get(0).getQuaternionIdentify();
+            i ++;
+
+            for(; i < length; i += 2) {
+                node.children.get(i+1).traverse(this);
+                QuaternionIdentify temp = node.children.get(i+1).getQuaternionIdentify();
+                switch (node.children.get(i).value) {
+                    case "<" -> addIntoInterCodes(Operation.LITTLE, res, temp, res);
+                    case "<=" -> addIntoInterCodes(Operation.LITTLE_EQUAL, res, temp, res);
+                    case ">" -> addIntoInterCodes(Operation.GREAT, res, temp, res);
+                    case ">=" -> addIntoInterCodes(Operation.GREAT_EQUAL, res, temp, res);
+                }
+            }
+
+            setIdentifyToTreeNode(node, res);
+        }
+
+        private void translateEqExp(TreeNode node) {
+            int length = node.children.size();
+            int i = 0;
+            QuaternionIdentify res;
+
+            node.children.get(0).traverse(this);
+            res = node.children.get(0).getQuaternionIdentify();
+            i ++;
+
+            for(; i < length; i += 2) {
+                node.children.get(i+1).traverse(this);
+                QuaternionIdentify temp = node.children.get(i+1).getQuaternionIdentify();
+                switch (node.children.get(i).value) {
+                    case "==" -> addIntoInterCodes(Operation.EQUAL, res, temp, res);
+                    case "!=" -> addIntoInterCodes(Operation.NOT_EQUAL, res, temp, res);
+                }
+            }
+
+            setIdentifyToTreeNode(node, res);
+        }
+
+        private void translateLAndExp(TreeNode node) {
+            int length = node.children.size();
+            int i = 0;
+            QuaternionIdentify res;
+
+            node.children.get(0).traverse(this);
+            res = node.children.get(0).getQuaternionIdentify();
+            i ++;
+
+            for(; i < length; i += 2) {
+                node.children.get(i+1).traverse(this);
+                QuaternionIdentify temp = node.children.get(i+1).getQuaternionIdentify();
+                addIntoInterCodes(Operation.AND, res, temp, res);
+            }
+
+            setIdentifyToTreeNode(node, res);
+        }
+
+        private void translateLOrExp(TreeNode node) {
+            int length = node.children.size();
+            int i = 0;
+            QuaternionIdentify res;
+
+            node.children.get(0).traverse(this);
+            res = node.children.get(0).getQuaternionIdentify();
+            i ++;
+
+            for(; i < length; i += 2) {
+                node.children.get(i+1).traverse(this);
+                QuaternionIdentify temp = node.children.get(i+1).getQuaternionIdentify();
+                addIntoInterCodes(Operation.OR, res, temp, res);
+            }
+
+            setIdentifyToTreeNode(node, res);
+        }
+
+        @Override
+        public void translateAllExp(TreeNode node) {
+            int length = node.children.size();
+            int i;
+
+            if (length == 0) {
+                String value = node.value;
+                QuaternionIdentify identify;
+                // 如果是个标识符（这个标识符一定是已经出现过了的）
+                if (!value.matches("^-?\\d+$")) {
+                    identify = getIdentifyOfSymbolName(value);
+                }
+                // 如果不是标识符，那就应该仅仅是一个数字罢了
+                else {
+                    identify = new QuaternionIdentify(value);
+                }
+                setIdentifyToTreeNode(node, identify);
+                return;
+            }
+
+            // AddExp → MulExp { ('+' | '−') MulExp }
+            if (length >= 3 && (
+                node.children.get(1).value.equals("+") ||
+                node.children.get(1).value.equals("-")
+            )) {
+                translateAddExp(node);
+            }
+            // MulExp → UnaryExp { ('*' | '/' | '%') UnaryExp }
+            else if (length >= 3 && (
+                node.children.get(1).value.equals("*") ||
+                node.children.get(1).value.equals("/") ||
+                node.children.get(1).value.equals("%")
+            )) {
+                translateMulExp(node);
+            }
+            // UnaryExp → UnaryOp UnaryExp
+            else if (length == 2 && (
+                node.children.get(0).value.equals("+") ||
+                node.children.get(0).value.equals("-") ||
+                node.children.get(0).value.equals("!")
+            )) {
+                translateUnaryOp(node);
+            }
+            // UnaryExp → Ident '(' [FuncRParams] ')'
+            else if (length >= 3 && (
+                node.children.get(1).value.equals("(") &&
+                node.children.get(length-1).value.equals(")")
+            )) {
+                translateFunctionCall(node);
+            }
+            // PrimaryExp → '(' Exp ')'
+            else if (node.children.get(0).value.equals("(")) {
+                node.children.get(1).traverse(this);
+                QuaternionIdentify identify = node.children.get(1).getQuaternionIdentify();
+                setIdentifyToTreeNode(node, identify);
+            }
+            // LVal → Ident '[' Exp ']'
+            else if (node.children.get(1).value.equals("[")) {
+                translateLVal(node);
+            }
+            // RelExp → AddExp { ('<' | '>' | '<=' | '>=') AddExp }
+            else if (length >= 3 && (
+                node.children.get(1).value.equals("<") ||
+                node.children.get(1).value.equals(">") ||
+                node.children.get(1).value.equals(">=") ||
+                node.children.get(1).value.equals("<=")
+            )) {
+                translateRelExp(node);
+            }
+            // EqExp → RelExp { ('==' | '!=') RelExp }
+            else if (length >= 3 && (
+                node.children.get(1).value.equals("==") ||
+                node.children.get(1).value.equals("!=")
+            )) {
+                translateEqExp(node);
+            }
+            // LAndExp → EqExp { '&&' EqExp }
+            else if (length >= 3 && (
+                node.children.get(1).value.equals("&&")
+            )) {
+                translateLAndExp(node);
+            }
+            // LOrExp → LAndExp { '||' LAndExp }
+            else if (length >= 3 && (
+                node.children.get(1).value.equals("||")
+            )) {
+                translateLOrExp(node);
+            }
         }
 
     }
