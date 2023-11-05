@@ -1,6 +1,7 @@
 package InterCode;
 
 import Other.ParamResult;
+import Output.OutputIntoFile;
 import SymbolTable.MasterTable;
 import SymbolTable.MasterTableItem;
 import SymbolTable.SymbolTableResult;
@@ -801,4 +802,58 @@ public class Quaternion {
         Tree.getInstance().traverse(new TraverseOperate());
     }
 
+
+    public void display() {
+        for (SingleQuaternion single :
+            this.quaternions) {
+            String output = "";
+            output += single.operation.name();
+
+            output += " ";
+
+            if (single.param1 == null) {
+                output += "null";
+            }
+            else {
+                if (single.param1.getValue().isEmpty()) {
+                    output += single.param1.id;
+                }
+                else {
+                    output += single.param1.getValue();
+                }
+            }
+
+            output += " ";
+
+            if (single.param2 == null) {
+                output += "null";
+            }
+            else {
+                if (single.param2.getValue().isEmpty()) {
+                    output += single.param2.id;
+                }
+                else {
+                    output += single.param2.getValue();
+                }
+            }
+
+            output += " ";
+
+            if (single.result == null) {
+                output += "null";
+            }
+            else {
+                if (single.result.getValue().isEmpty()) {
+                    output += single.result.id;
+                }
+                else {
+                    output += single.result.getValue();
+                }
+            }
+
+            output += "\n";
+
+            OutputIntoFile.appendToFile(output, "intercode.txt");
+        }
+    }
 }

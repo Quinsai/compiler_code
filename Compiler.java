@@ -1,4 +1,5 @@
 import Input.InputSourceCode;
+import InterCode.Quaternion;
 import Lexical.LexicalAnalysis;
 import Output.OutputIntoFile;
 import Syntactic.SyntacticAnalysis;
@@ -12,6 +13,7 @@ public class Compiler {
     public static void main(String[] args) {
         OutputIntoFile.cleanFile("output.txt");
         OutputIntoFile.cleanFile("error.txt");
+        OutputIntoFile.cleanFile("intercode.txt");
         InputSourceCode.readSourceCode();
 
 //        词法分析作业使用
@@ -21,5 +23,8 @@ public class Compiler {
         SyntacticAnalysis.getInstance().run(true);
 
         Tree.getInstance().simplifyTree();
+
+        Quaternion.getInstance().generateInterCode();
+        Quaternion.getInstance().display();
     }
 }

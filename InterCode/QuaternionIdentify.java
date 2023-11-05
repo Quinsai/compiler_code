@@ -21,10 +21,20 @@ public class QuaternionIdentify {
 
     private boolean hasAllocatedRegister;
 
+    public String id;
+
+    static int count;
+
+    static {
+        count = 0;
+    }
+
     public QuaternionIdentify(String value) {
         this.value = value;
         this.hasAllocatedRegister = false;
         this.register = -1;
+        count ++;
+        id = "V" + count;
     }
 
     public String getValue() {
