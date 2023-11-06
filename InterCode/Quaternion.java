@@ -465,7 +465,7 @@ public class Quaternion {
                 translateGetint(node);
             }
             // LVal '=' Exp ';'
-            else if (length == 4) {
+            else if (length == 4 && node.children.get(1).value.equals("=")) {
 
                 traverseAllChildren(node);
 

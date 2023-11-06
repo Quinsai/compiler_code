@@ -4,7 +4,7 @@ int main() {
 	c = 0;
 	int d = (2 + c) * a[1];
 	if (d % 2) {
-		// int e = 12;
+		int e = 12;
 		return 1;
 	}
 	printf("a.1 = %d", a[1]);
