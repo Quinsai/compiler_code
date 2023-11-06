@@ -9,9 +9,13 @@ ADDRESS a 1 V12
 GET_VALUE V12 null V13
 MULT V9 V13 V8
 SET_VALUE d V8 null
+MOD d 2 V14
+BRANCH_IF_FALSE V14 V16 null
+RETURN 1 null null
+LABEL V16 null null
 PRINT_STRING a.1 =  null null
-ADDRESS a 1 V16
-GET_VALUE V16 null V17
-PRINT_INT V17 null null
+ADDRESS a 1 V20
+GET_VALUE V20 null V21
+PRINT_INT V21 null null
 RETURN 0 null null
 BLOCK_END null null null

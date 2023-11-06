@@ -442,7 +442,8 @@ public class Quaternion {
                 addIntoInterCodes(Operation.BRANCH_IF_FALSE, condition, endLabel, null);
 
                 for (i = 4; i < 5; i++) {
-                    node.children.get(i).traverse(this);
+                    // node.children.get(i).traverse(this);
+                    translateStmt(node.children.get(i));
                 }
             }
 
@@ -491,6 +492,12 @@ public class Quaternion {
             // 'for' '(' [ForStmt] ';' [Cond] ';' [ForStmt] ')' Stmt
             else if (node.children.get(0).value.equals("for")) {
                 translateFor(node);
+            }
+            // Block
+            else if (node.children.get(0).value.equals("{")) {
+                for (int j = 1; j < length - 1; j++) {
+                    translateBlockItem(node.children.get(j));
+                }
             }
         }
 
