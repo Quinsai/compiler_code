@@ -338,7 +338,7 @@ public class Quaternion {
             }
             int numberOfSubString = subStrings.length;
             int j = 0;
-            if (subStrings[0].isEmpty()) {
+            if (subStrings.length == 0 || subStrings[0].isEmpty()) {
                 j ++;
             }
             for (; j < numberOfSubString; j++) {
@@ -392,7 +392,7 @@ public class Quaternion {
                 i++;
             }
 
-            node.children.get(length - 2).traverse(this);
+            node.children.get(length - 1).traverse(this);
 
             if (!node.children.get(i).value.equals(")")) {
                 node.children.get(i).traverse(this);
