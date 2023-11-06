@@ -40,7 +40,6 @@ public class Quaternion {
      */
     LinkedList<SingleQuaternion> quaternions;
 
-    // TODO
     /*
     这里存在一个问题，就是我在link符号表条目和四元式变量的时候，
     我可以直接使用这个树节点所在的作用域来判断重名
