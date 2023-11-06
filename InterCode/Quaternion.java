@@ -132,7 +132,7 @@ public class Quaternion {
         @Override
         public void translateDeclare(TreeNode node, int varOrConst) {
 
-            traverseAllChildren(node);
+            // traverseAllChildren(node);
 
             ArrayList<TreeNode> children = node.children;
             int length = children.size();
@@ -519,8 +519,10 @@ public class Quaternion {
             if (length == 4) {
                 QuaternionIdentify name = getIdentifyOfSymbolName(node.children.get(0).value);
                 QuaternionIdentify offset1 = node.children.get(2).getQuaternionIdentify();
+                QuaternionIdentify address = new QuaternionIdentify("");
                 identify = new QuaternionIdentify("");
-                addIntoInterCodes(Operation.ADDRESS, name, offset1, identify);
+                addIntoInterCodes(Operation.ADDRESS, name, offset1, address);
+                addIntoInterCodes(Operation.GET_VALUE, address, null, identify);
                 setIdentifyToTreeNode(node, identify);
             }
             else if (length == 7) {
@@ -566,11 +568,18 @@ public class Quaternion {
             int i = 0;
             QuaternionIdentify res;
 
-            node.children.get(0).traverse(this);
-            res = node.children.get(0).getQuaternionIdentify();
-            i ++;
+            res = new QuaternionIdentify("");
 
-            for(; i < length; i += 2) {
+            node.children.get(0).traverse(this);
+            node.children.get(2).traverse(this);
+            QuaternionIdentify init1 = node.children.get(0).getQuaternionIdentify();
+            QuaternionIdentify init2 = node.children.get(2).getQuaternionIdentify();
+            switch (node.children.get(1).value) {
+                case "+" -> addIntoInterCodes(Operation.PLUS, init1, init2, res);
+                case "-" -> addIntoInterCodes(Operation.MINU, init1, init2, res);
+            }
+
+            for(i = 3; i < length; i += 2) {
                 node.children.get(i+1).traverse(this);
                 QuaternionIdentify temp = node.children.get(i+1).getQuaternionIdentify();
                 switch (node.children.get(i).value) {
