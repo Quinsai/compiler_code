@@ -2,6 +2,8 @@ package SymbolTable.Scope;
 
 import SymbolTable.MasterTable;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Stack;
 
 /**
@@ -24,10 +26,16 @@ public class ScopeStack {
      */
     private int scopeCounter;
 
+    /**
+     * 可以被看见的作用域的映射
+     */
+    private HashMap<Integer, ArrayList<Integer>> visibleScopes;
+
     private ScopeStack() {
         this.stack = new Stack<>();
         this.scopeCounter = 0;
         this.stack.push(this.scopeCounter);
+        this.visibleScopes = new HashMap<>();
     }
 
     static {
@@ -44,6 +52,12 @@ public class ScopeStack {
     public void enterScope() {
         this.scopeCounter ++;
         this.stack.push(scopeCounter);
+        ArrayList<Integer> visible = new ArrayList<>(stack);
+        this.visibleScopes.put(scopeCounter, visible);
+    }
+
+    public ArrayList<Integer> getAllVisible(int scope) {
+        return this.visibleScopes.get(scope);
     }
 
     /**

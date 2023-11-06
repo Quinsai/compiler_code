@@ -4,6 +4,7 @@ import Other.ParamResult;
 import Output.OutputIntoFile;
 import SymbolTable.MasterTable;
 import SymbolTable.MasterTableItem;
+import SymbolTable.Scope.ScopeStack;
 import SymbolTable.SymbolTableResult;
 import SyntacticTree.ITraverseOperate;
 import SyntacticTree.Tree;
@@ -39,6 +40,16 @@ public class Quaternion {
      */
     LinkedList<SingleQuaternion> quaternions;
 
+    // TODO
+    /*
+    这里存在一个问题，就是我在link符号表条目和四元式变量的时候，
+    我可以直接使用这个树节点所在的作用域来判断重名
+    但是在由符号名获取对印的四元式变量的时候不行
+    因为这个符号极有可能是在更外层定义的
+    一个可行的解决方法是：
+    记录下每一个作用域的 **能访问的外层**
+    然后一次遍历这些个外层......
+     */
     /**
      * 获取这个name对应的符号表条目对应的四元式的变量
      */
@@ -46,10 +57,16 @@ public class Quaternion {
         SymbolTableResult res;
         ParamResult<MasterTableItem> identify = new ParamResult<>(null);
 
-        res = MasterTable.getMasterTable().getItemByNameInAllTable(name, scope, identify);
-        if (res == SymbolTableResult.EXIST) {
-            return identify.getValue().getQuaternionIdentify();
+        ArrayList<Integer> allVisibleScope = ScopeStack.getInstance().getAllVisible(scope);
+        for (Integer outer :
+            allVisibleScope) {
+            int visible = outer;
+            res = MasterTable.getMasterTable().getItemByNameInAllTable(name, visible, identify);
+            if (res == SymbolTableResult.EXIST) {
+                return identify.getValue().getQuaternionIdentify();
+            }
         }
+
         return null;
     }
 
@@ -167,6 +184,7 @@ public class Quaternion {
             }
             // 数组
             else {
+                translateAllExp(children.get(2));
                 QuaternionIdentify arraySizeOne = children.get(2).getQuaternionIdentify();
                 Operation operation = Operation.VAR_ARRAY_DECLARE;
                 if (varOrConst == 2) {
@@ -175,6 +193,7 @@ public class Quaternion {
                 // 二维数组
                 if (children.get(4).value.equals("[")) {
                     dimension = 2;
+                    translateAllExp(children.get(5));
                     QuaternionIdentify arraySizeTwo = children.get(5).getQuaternionIdentify();
                     identify.getSymbolTableItem().setArraySize(arraySizeOne, arraySizeTwo);
                     addIntoInterCodes(operation, arraySizeOne, arraySizeTwo, identify);
@@ -546,6 +565,7 @@ public class Quaternion {
                 identify = new QuaternionIdentify("");
                 QuaternionIdentify temp = new QuaternionIdentify("");
                 QuaternionIdentify temp1 = new QuaternionIdentify("");
+                QuaternionIdentify address = new QuaternionIdentify("");
 
                 ParamResult<QuaternionIdentify> size1;
                 ParamResult<QuaternionIdentify> size2;
@@ -563,7 +583,8 @@ public class Quaternion {
                  */
                 addIntoInterCodes(Operation.MULT, size1.getValue(), offset1, temp);
                 addIntoInterCodes(Operation.PLUS, temp, offset2, temp1);
-                addIntoInterCodes(Operation.ADDRESS, name, temp1, identify);
+                addIntoInterCodes(Operation.ADDRESS, name, temp1, address);
+                addIntoInterCodes(Operation.GET_VALUE, address, null, identify);
                 setIdentifyToTreeNode(node, identify);
             }
         }
