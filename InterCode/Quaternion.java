@@ -596,11 +596,19 @@ public class Quaternion {
             int i = 0;
             QuaternionIdentify res;
 
-            node.children.get(0).traverse(this);
-            res = node.children.get(0).getQuaternionIdentify();
-            i ++;
+            res = new QuaternionIdentify("");
 
-            for(; i < length; i += 2) {
+            node.children.get(0).traverse(this);
+            node.children.get(2).traverse(this);
+            QuaternionIdentify init1 = node.children.get(0).getQuaternionIdentify();
+            QuaternionIdentify init2 = node.children.get(2).getQuaternionIdentify();
+            switch (node.children.get(1).value) {
+                case "*" -> addIntoInterCodes(Operation.MULT, init1, init2, res);
+                case "/" -> addIntoInterCodes(Operation.DIV, init1, init2, res);
+                case "%" -> addIntoInterCodes(Operation.MOD, init1, init2, res);
+            }
+
+            for(i = 3; i < length; i += 2) {
                 node.children.get(i+1).traverse(this);
                 QuaternionIdentify temp = node.children.get(i+1).getQuaternionIdentify();
                 switch (node.children.get(i).value) {
@@ -687,11 +695,20 @@ public class Quaternion {
             int i = 0;
             QuaternionIdentify res;
 
-            node.children.get(0).traverse(this);
-            res = node.children.get(0).getQuaternionIdentify();
-            i ++;
+            res = new QuaternionIdentify("");
 
-            for(; i < length; i += 2) {
+            node.children.get(0).traverse(this);
+            node.children.get(2).traverse(this);
+            QuaternionIdentify init1 = node.children.get(0).getQuaternionIdentify();
+            QuaternionIdentify init2 = node.children.get(2).getQuaternionIdentify();
+            switch (node.children.get(1).value) {
+                case "<" -> addIntoInterCodes(Operation.LITTLE, init1, init2, res);
+                case "<=" -> addIntoInterCodes(Operation.LITTLE_EQUAL, init1, init2, res);
+                case ">" -> addIntoInterCodes(Operation.GREAT, init1, init2, res);
+                case ">=" -> addIntoInterCodes(Operation.GREAT_EQUAL, init1, init2, res);
+            }
+
+            for(i = 3; i < length; i += 2) {
                 node.children.get(i+1).traverse(this);
                 QuaternionIdentify temp = node.children.get(i+1).getQuaternionIdentify();
                 switch (node.children.get(i).value) {
@@ -710,11 +727,18 @@ public class Quaternion {
             int i = 0;
             QuaternionIdentify res;
 
-            node.children.get(0).traverse(this);
-            res = node.children.get(0).getQuaternionIdentify();
-            i ++;
+            res = new QuaternionIdentify("");
 
-            for(; i < length; i += 2) {
+            node.children.get(0).traverse(this);
+            node.children.get(2).traverse(this);
+            QuaternionIdentify init1 = node.children.get(0).getQuaternionIdentify();
+            QuaternionIdentify init2 = node.children.get(2).getQuaternionIdentify();
+            switch (node.children.get(1).value) {
+                case "==" -> addIntoInterCodes(Operation.EQUAL, init1, init2, res);
+                case "!=" -> addIntoInterCodes(Operation.NOT_EQUAL, init1, init2, res);
+            }
+
+            for(i = 3; i < length; i += 2) {
                 node.children.get(i+1).traverse(this);
                 QuaternionIdentify temp = node.children.get(i+1).getQuaternionIdentify();
                 switch (node.children.get(i).value) {
@@ -731,11 +755,15 @@ public class Quaternion {
             int i = 0;
             QuaternionIdentify res;
 
-            node.children.get(0).traverse(this);
-            res = node.children.get(0).getQuaternionIdentify();
-            i ++;
+            res = new QuaternionIdentify("");
 
-            for(; i < length; i += 2) {
+            node.children.get(0).traverse(this);
+            node.children.get(2).traverse(this);
+            QuaternionIdentify init1 = node.children.get(0).getQuaternionIdentify();
+            QuaternionIdentify init2 = node.children.get(2).getQuaternionIdentify();
+            addIntoInterCodes(Operation.AND, init1, init2, res);
+
+            for(i = 3; i < length; i += 2) {
                 node.children.get(i+1).traverse(this);
                 QuaternionIdentify temp = node.children.get(i+1).getQuaternionIdentify();
                 addIntoInterCodes(Operation.AND, res, temp, res);
@@ -749,11 +777,15 @@ public class Quaternion {
             int i = 0;
             QuaternionIdentify res;
 
-            node.children.get(0).traverse(this);
-            res = node.children.get(0).getQuaternionIdentify();
-            i ++;
+            res = new QuaternionIdentify("");
 
-            for(; i < length; i += 2) {
+            node.children.get(0).traverse(this);
+            node.children.get(2).traverse(this);
+            QuaternionIdentify init1 = node.children.get(0).getQuaternionIdentify();
+            QuaternionIdentify init2 = node.children.get(2).getQuaternionIdentify();
+            addIntoInterCodes(Operation.OR, init1, init2, res);
+
+            for(i = 3; i < length; i += 2) {
                 node.children.get(i+1).traverse(this);
                 QuaternionIdentify temp = node.children.get(i+1).getQuaternionIdentify();
                 addIntoInterCodes(Operation.OR, res, temp, res);
