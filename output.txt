@@ -98,6 +98,11 @@ RBRACK ]
 <VarDef>
 SEMICN ;
 <VarDecl>
+INTTK int
+IDENFR e
+<VarDef>
+SEMICN ;
+<VarDecl>
 IFTK if
 LPARENT (
 IDENFR d
@@ -119,8 +124,8 @@ INTCON 2
 <Cond>
 RPARENT )
 LBRACE {
-INTTK int
 IDENFR e
+<LVal>
 ASSIGN =
 INTCON 12
 <Number>
@@ -129,10 +134,8 @@ INTCON 12
 <MulExp>
 <AddExp>
 <Exp>
-<InitVal>
-<VarDef>
 SEMICN ;
-<VarDecl>
+<Stmt>
 RETURNTK return
 INTCON 1
 <Number>
@@ -145,6 +148,54 @@ SEMICN ;
 <Stmt>
 RBRACE }
 <Block>
+<Stmt>
+ELSETK else
+IFTK if
+LPARENT (
+IDENFR d
+<LVal>
+<PrimaryExp>
+<UnaryExp>
+<MulExp>
+MOD %
+INTCON 3
+<Number>
+<PrimaryExp>
+<UnaryExp>
+<MulExp>
+<AddExp>
+<RelExp>
+<EqExp>
+<LAndExp>
+<LOrExp>
+<Cond>
+RPARENT )
+LBRACE {
+IDENFR e
+<LVal>
+ASSIGN =
+INTCON 1
+<Number>
+<PrimaryExp>
+<UnaryExp>
+<MulExp>
+<AddExp>
+<Exp>
+SEMICN ;
+<Stmt>
+RETURNTK return
+INTCON 2
+<Number>
+<PrimaryExp>
+<UnaryExp>
+<MulExp>
+<AddExp>
+<Exp>
+SEMICN ;
+<Stmt>
+RBRACE }
+<Block>
+<Stmt>
 <Stmt>
 <Stmt>
 PRINTFTK printf
