@@ -20,11 +20,11 @@ public class Stmt extends SyntacticComponent {
     /**
      * 是否在循环中
      */
-    public static boolean isInCirculate;
+    public static int numberOfCirculate;
 
     static {
         functionReturnType = ComponentValueType.NO_MEANING;
-        isInCirculate = false;
+        numberOfCirculate = 0;
     }
 
     public Stmt(TreeNode parent) {
@@ -172,13 +172,13 @@ public class Stmt extends SyntacticComponent {
                 res = forStmt.analyze(whetherOutput);
                 if (res != AnalysisResult.SUCCESS) {
                     ScopeStack.getInstance().enterScope();
-                    Stmt.isInCirculate = true;
+                    Stmt.numberOfCirculate++;
                     Stmt stmt = new Stmt(treeNode);
                     res = stmt.analyze(whetherOutput);
                     if (res != AnalysisResult.SUCCESS) {
                         return AnalysisResult.FAIL;
                     }
-                    Stmt.isInCirculate = false;
+                    Stmt.numberOfCirculate--;
                     ScopeStack.getInstance().quitScope();
                     return AnalysisResult.SUCCESS;
                 }
@@ -202,13 +202,13 @@ public class Stmt extends SyntacticComponent {
                 res = cond.analyze(whetherOutput);
                 if (res != AnalysisResult.SUCCESS) {
                     ScopeStack.getInstance().enterScope();
-                    Stmt.isInCirculate = true;
+                    Stmt.numberOfCirculate++;
                     Stmt stmt = new Stmt(treeNode);
                     res = stmt.analyze(whetherOutput);
                     if (res != AnalysisResult.SUCCESS) {
                         return AnalysisResult.FAIL;
                     }
-                    Stmt.isInCirculate = false;
+                    Stmt.numberOfCirculate--;
                     ScopeStack.getInstance().quitScope();
                     return AnalysisResult.SUCCESS;
                 }
@@ -232,13 +232,13 @@ public class Stmt extends SyntacticComponent {
                 res = forStmt.analyze(whetherOutput);
                 if (res != AnalysisResult.SUCCESS) {
                     ScopeStack.getInstance().enterScope();
-                    Stmt.isInCirculate = true;
+                    Stmt.numberOfCirculate++;
                     Stmt stmt = new Stmt(treeNode);
                     res = stmt.analyze(whetherOutput);
                     if (res != AnalysisResult.SUCCESS) {
                         return AnalysisResult.FAIL;
                     }
-                    Stmt.isInCirculate = false;
+                    Stmt.numberOfCirculate--;
                     ScopeStack.getInstance().quitScope();
                     return AnalysisResult.SUCCESS;
                 }
@@ -251,13 +251,13 @@ public class Stmt extends SyntacticComponent {
             if (!nextWordCategoryCode.getValue().equals("RPARENT")) {
                 HandleError.handleError(AnalysisErrorType.LACK_OF_RPARENT);
                 ScopeStack.getInstance().enterScope();
-                Stmt.isInCirculate = true;
+                Stmt.numberOfCirculate++;
                 Stmt stmt = new Stmt(treeNode);
                 res = stmt.analyze(whetherOutput);
                 if (res != AnalysisResult.SUCCESS) {
                     return AnalysisResult.FAIL;
                 }
-                Stmt.isInCirculate = false;
+                Stmt.numberOfCirculate--;
                 ScopeStack.getInstance().quitScope();
                 return AnalysisResult.SUCCESS;
             }
@@ -267,13 +267,13 @@ public class Stmt extends SyntacticComponent {
             ScopeStack.getInstance().enterScope();
 
             Stmt stmt = new Stmt(treeNode);
-            Stmt.isInCirculate = true;
+            Stmt.numberOfCirculate++;
             res = stmt.analyze(whetherOutput);
             if (res != AnalysisResult.SUCCESS) {
                 return AnalysisResult.FAIL;
             }
 
-            Stmt.isInCirculate = false;
+            Stmt.numberOfCirculate--;
             ScopeStack.getInstance().quitScope();
         }
         else if (nextWordCategoryCodeArray[0].getValue().equals("BREAKTK")) {
@@ -286,7 +286,7 @@ public class Stmt extends SyntacticComponent {
             }
             Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
-            if (!isInCirculate) {
+            if (numberOfCirculate == 0) {
                 HandleError.handleError(AnalysisErrorType.UNEXPECTED_BREAK_OR_CONTINUE);
                 return AnalysisResult.SUCCESS;
             }
@@ -310,7 +310,7 @@ public class Stmt extends SyntacticComponent {
             }
             Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
-            if (!isInCirculate) {
+            if (numberOfCirculate == 0) {
                 HandleError.handleError(AnalysisErrorType.UNEXPECTED_BREAK_OR_CONTINUE);
                 return AnalysisResult.SUCCESS;
             }
