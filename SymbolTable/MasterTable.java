@@ -44,7 +44,7 @@ public class MasterTable {
     /**
      * 这个方法会从后往前的查找item，而不考虑这个item是在子表或是在主表
      */
-    public SymbolTableResult getItemByNameInAllTable(String name, ParamResult<MasterTableItem> result) {
+    public SymbolTableResult getItemByNameInAllTable(String name, int scope, ParamResult<MasterTableItem> result) {
         Iterator<MasterTableItem> masterTableItemIterator = this.table.descendingIterator();
         MasterTableItem item = null;
         SymbolTableResult res;
@@ -54,12 +54,12 @@ public class MasterTable {
             item = masterTableItemIterator.next();
             MasterTable subTable = item.getSubTableLink();
             if (subTable != null) {
-                res = subTable.getItemByNameInAllTable(name, result);
+                res = subTable.getItemByNameInAllTable(name, scope, result);
                 if (res == SymbolTableResult.EXIST) {
                     return res;
                 }
             }
-            else if (item.match(name)) {
+            else if (item.matchNameAndScope(name, scope)) {
                 hasMatched = true;
                 break;
             }
@@ -88,7 +88,7 @@ public class MasterTable {
         boolean hasMatched = false;
         while (masterTableItemIterator.hasNext()) {
             item = masterTableItemIterator.next();
-            if (item.match(name)) {
+            if (item.matchName(name)) {
                 hasMatched = true;
                 break;
             }

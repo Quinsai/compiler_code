@@ -1,6 +1,7 @@
 package SyntacticTree;
 
 import InterCode.QuaternionIdentify;
+import SymbolTable.Scope.ScopeStack;
 
 import java.util.ArrayList;
 
@@ -34,11 +35,18 @@ public class TreeNode {
      */
     private QuaternionIdentify quaternionIdentify;
 
+    /**
+     * 这个树节点所处的作用域层次
+     * 如果跨越多个，则以最外层为准
+     */
+    private int scope;
+
     public TreeNode(TreeNodeName name, String value, TreeNode parent) {
         this.name = name;
         this.value = value;
         this.parent = parent;
         this.children = new ArrayList<>();
+        this.scope = ScopeStack.getInstance().getCurrentScope();
         if (parent != null) {
             parent.children.add(this);
         }
@@ -96,5 +104,9 @@ public class TreeNode {
                 }
             }
         }
+    }
+
+    public int getScope() {
+        return scope;
     }
 }

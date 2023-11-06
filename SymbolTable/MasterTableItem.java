@@ -90,11 +90,20 @@ public class MasterTableItem {
     }
 
     /**
-     * 是否匹配
+     * 符号名是否匹配
      * @param name 符号名
      */
-    boolean match(String name) {
+    boolean matchName(String name) {
         return this.subTableLink == null && this.name.equals(name);
+    }
+
+    /**
+     * 符号名和作用域是否都匹配
+     * @param name 符号名
+     * @param scope 作用域
+     */
+    boolean matchNameAndScope(String name, int scope) {
+        return matchName(name) && this.scope == scope;
     }
 
     public int getScope() {

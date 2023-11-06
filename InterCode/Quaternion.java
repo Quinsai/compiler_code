@@ -42,11 +42,11 @@ public class Quaternion {
     /**
      * 获取这个name对应的符号表条目对应的四元式的变量
      */
-    private QuaternionIdentify getIdentifyOfSymbolName(String name) {
+    private QuaternionIdentify getIdentifyOfSymbolName(String name, int scope) {
         SymbolTableResult res;
         ParamResult<MasterTableItem> identify = new ParamResult<>(null);
 
-        res = MasterTable.getMasterTable().getItemByNameInAllTable(name, identify);
+        res = MasterTable.getMasterTable().getItemByNameInAllTable(name, scope, identify);
         if (res == SymbolTableResult.EXIST) {
             return identify.getValue().getQuaternionIdentify();
         }
@@ -56,11 +56,11 @@ public class Quaternion {
     /**
      * 设置这个name对应的符号表条目对应的四元式的变量
      */
-    private void setIdentifyToSymbolTableItem(String name, QuaternionIdentify quaternionIdentify) {
+    private void linkIdentifyWithSymbolTableItem(String name, QuaternionIdentify quaternionIdentify, int scope) {
         SymbolTableResult res;
         ParamResult<MasterTableItem> identify = new ParamResult<>(null);
 
-        res = MasterTable.getMasterTable().getItemByNameInAllTable(name, identify);
+        res = MasterTable.getMasterTable().getItemByNameInAllTable(name, scope, identify);
         if (res == SymbolTableResult.EXIST) {
             identify.getValue().setQuaternionIdentify(quaternionIdentify);
             quaternionIdentify.setSymbolTableItem(identify.getValue());
@@ -103,7 +103,7 @@ public class Quaternion {
                 QuaternionIdentify identify;
                 // 如果是个标识符（这个标识符一定是已经出现过了的）
                 if (!value.matches("^-?\\d+$")) {
-                    identify = getIdentifyOfSymbolName(value);
+                    identify = getIdentifyOfSymbolName(value, node.getScope());
                 }
                 // 如果不是标识符，那就应该仅仅是一个数字罢了
                 else {
@@ -145,7 +145,7 @@ public class Quaternion {
                 name = node.value;
                 identify = new QuaternionIdentify(name);
                 setIdentifyToTreeNode(node, identify);
-                setIdentifyToSymbolTableItem(name, identify);
+                linkIdentifyWithSymbolTableItem(name, identify, node.getScope());
                 addIntoInterCodes(Operation.VAR_INT_DECLARE, null, null, identify);
                 return;
             }
@@ -153,7 +153,7 @@ public class Quaternion {
             name = children.get(0).value;
             identify = new QuaternionIdentify(name);
             setIdentifyToTreeNode(children.get(0), identify);
-            setIdentifyToSymbolTableItem(name, identify);
+            linkIdentifyWithSymbolTableItem(name, identify, node.getScope());
 
             // const int a = 1;
             if (children.get(1).value.equals("=")) {
@@ -217,7 +217,7 @@ public class Quaternion {
             String name = node.children.get(1).value;
             QuaternionIdentify func = new QuaternionIdentify(name);
             setIdentifyToTreeNode(node.children.get(1), func);
-            setIdentifyToSymbolTableItem(name, func);
+            linkIdentifyWithSymbolTableItem(name, func, node.getScope());
             QuaternionIdentify returnType = new QuaternionIdentify(node.children.get(0).value);
             setIdentifyToTreeNode(node.children.get(1), func);
             setIdentifyToTreeNode(node.children.get(0), returnType);
@@ -524,14 +524,14 @@ public class Quaternion {
             // a
             if (length == 0) {
                 nameString = node.value;
-                identify = getIdentifyOfSymbolName(nameString);
+                identify = getIdentifyOfSymbolName(nameString, node.getScope());
                 setIdentifyToTreeNode(node, identify);
                 return;
             }
 
             // a[1]
             if (length == 4) {
-                QuaternionIdentify name = getIdentifyOfSymbolName(node.children.get(0).value);
+                QuaternionIdentify name = getIdentifyOfSymbolName(node.children.get(0).value, node.children.get(0).getScope());
                 QuaternionIdentify offset1 = node.children.get(2).getQuaternionIdentify();
                 QuaternionIdentify address = new QuaternionIdentify("");
                 identify = new QuaternionIdentify("");
@@ -540,7 +540,7 @@ public class Quaternion {
                 setIdentifyToTreeNode(node, identify);
             }
             else if (length == 7) {
-                QuaternionIdentify name = getIdentifyOfSymbolName(node.children.get(0).value);
+                QuaternionIdentify name = getIdentifyOfSymbolName(node.children.get(0).value, node.children.get(0).getScope());
                 QuaternionIdentify offset1 = node.children.get(2).getQuaternionIdentify();
                 QuaternionIdentify offset2 = node.children.get(5).getQuaternionIdentify();
                 identify = new QuaternionIdentify("");
@@ -666,7 +666,7 @@ public class Quaternion {
                 String value = node.value;
                 // 如果是个标识符（这个标识符一定是已经出现过了的）
                 if (!value.matches("^-?\\d+$")) {
-                    identify = getIdentifyOfSymbolName(value);
+                    identify = getIdentifyOfSymbolName(value, node.getScope());
                 }
                 // 如果不是标识符，那就应该仅仅是一个数字罢了
                 else {
@@ -691,7 +691,7 @@ public class Quaternion {
         private void translateFunctionCall(TreeNode node) {
 
             int length = node.children.size();
-            QuaternionIdentify funcName = getIdentifyOfSymbolName(node.children.get(0).value);
+            QuaternionIdentify funcName = getIdentifyOfSymbolName(node.children.get(0).value, node.getScope());
             QuaternionIdentify res = new QuaternionIdentify("");
 
             addIntoInterCodes(Operation.FUNC_CALL_BEGIN, funcName, null, res);
@@ -818,7 +818,7 @@ public class Quaternion {
                 QuaternionIdentify identify;
                 // 如果是个标识符（这个标识符一定是已经出现过了的）
                 if (!value.matches("^-?\\d+$")) {
-                    identify = getIdentifyOfSymbolName(value);
+                    identify = getIdentifyOfSymbolName(value, node.getScope());
                 }
                 // 如果不是标识符，那就应该仅仅是一个数字罢了
                 else {
