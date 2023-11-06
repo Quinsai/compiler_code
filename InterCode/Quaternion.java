@@ -894,10 +894,13 @@ public class Quaternion {
             if (identify.getValue().isEmpty()) {
                 if (!identify.arrayValue.isEmpty()) {
                     output += "[";
-                    for (QuaternionIdentify child :
-                        identify.arrayValue) {
+                    int length = identify.arrayValue.size();
+                    for (int i = 0; i < length; i++) {
+                        QuaternionIdentify child = identify.arrayValue.get(i);
                         output += displaySingle(child);
-                        output += ",";
+                        if (i != length - 1) {
+                            output += ",";
+                        }
                     }
                     output += ']';
                 }
