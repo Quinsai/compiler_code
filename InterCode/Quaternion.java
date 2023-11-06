@@ -296,13 +296,19 @@ public class Quaternion {
         }
 
         private void translateBreak(TreeNode node) {
-            QuaternionIdentify endLabel = endLabelStack.pop();
+            QuaternionIdentify endLabel = endLabelStack.peek();
             addIntoInterCodes(Operation.SKIP, endLabel, null, null);
             /*
             这一整个循环结束了
             不仅是结束标签要出栈，开始标签也要出栈
              */
-            beginLabelStack.pop();
+            /*
+            你出栈出个鬼鬼啊
+            你在这里出栈，其他的break和continue用什么啊
+            中间代码又不是实际的控制流
+             */
+            // beginLabelStack.pop();
+            // endLabelStack.pop();
         }
 
         private void translateContinue(TreeNode node) {
@@ -402,11 +408,12 @@ public class Quaternion {
 
             addIntoInterCodes(Operation.LABEL, endLabel, null, null);
 
-            /*
-             *
-             */
-            beginLabelStack.pop();
-            endLabelStack.pop();
+            if (!beginLabelStack.isEmpty()) {
+                beginLabelStack.pop();
+            }
+            if (!endLabelStack.isEmpty()) {
+                endLabelStack.pop();
+            }
         }
 
         private void translateIf(TreeNode node) {
