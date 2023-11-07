@@ -97,6 +97,7 @@ public class TreeNode {
                 -> operate.translateAllExp(this);
             case MainFuncDef -> operate.translateMainFunc(this);
             case BlockItem -> operate.translateBlockItem(this);
+            case CompUnit -> operate.translateCompUnit(this);
             default -> {
                 for (TreeNode childNode :
                     this.children) {
