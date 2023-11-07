@@ -1,6 +1,13 @@
 const int a = 2;
 const int b[3][2] = {{1,2}, {3, 4}, {5, 6}};
 
+int func() {
+	int b[1][2] = {{1, 2}};
+	int c = b[1][1];
+	printf("this is a func");
+	return 0;
+}
+
 int main() {
 
 	int t = a + 1;

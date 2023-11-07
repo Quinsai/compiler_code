@@ -985,6 +985,9 @@ public class Quaternion {
             }
             else {
                 output += identify.getValue();
+                if (identify.getValue().matches("^-?\\d+$") == false) {
+                    output += "_" + identify.id;
+                }
             }
         }
 
