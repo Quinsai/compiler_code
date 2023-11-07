@@ -107,6 +107,14 @@ INTTK int
 <FuncType>
 IDENFR func
 LPARENT (
+INTTK int
+IDENFR t
+<FuncFParam>
+COMMA ,
+INTTK int
+IDENFR p
+<FuncFParam>
+<FuncFParams>
 RPARENT )
 LBRACE {
 INTTK int
@@ -190,6 +198,48 @@ SEMICN ;
 <VarDecl>
 PRINTFTK printf
 LPARENT (
+STRCON "--------------------------------------------"
+RPARENT )
+SEMICN ;
+<Stmt>
+PRINTFTK printf
+LPARENT (
+STRCON "%d-%d-%d"
+COMMA ,
+IDENFR t
+<LVal>
+<PrimaryExp>
+<UnaryExp>
+<MulExp>
+<AddExp>
+<Exp>
+COMMA ,
+IDENFR p
+<LVal>
+<PrimaryExp>
+<UnaryExp>
+<MulExp>
+<AddExp>
+<Exp>
+COMMA ,
+IDENFR c
+<LVal>
+<PrimaryExp>
+<UnaryExp>
+<MulExp>
+<AddExp>
+<Exp>
+RPARENT )
+SEMICN ;
+<Stmt>
+PRINTFTK printf
+LPARENT (
+STRCON "--------------------------------------------"
+RPARENT )
+SEMICN ;
+<Stmt>
+PRINTFTK printf
+LPARENT (
 STRCON "this is a func"
 RPARENT )
 SEMICN ;
@@ -266,135 +316,35 @@ RBRACK ]
 SEMICN ;
 <VarDecl>
 INTTK int
-IDENFR i
+IDENFR r
 ASSIGN =
-INTCON 0
-<Number>
-<PrimaryExp>
-<UnaryExp>
-<MulExp>
-<AddExp>
-<Exp>
-<InitVal>
-<VarDef>
-SEMICN ;
-<VarDecl>
-FORTK for
+IDENFR func
 LPARENT (
-IDENFR i
-<LVal>
-ASSIGN =
-INTCON 0
-<Number>
-<PrimaryExp>
-<UnaryExp>
-<MulExp>
-<AddExp>
-<Exp>
-<ForStmt>
-SEMICN ;
-IDENFR i
-<LVal>
-<PrimaryExp>
-<UnaryExp>
-<MulExp>
-<AddExp>
-<RelExp>
-LSS <
 INTCON 12
 <Number>
 <PrimaryExp>
 <UnaryExp>
 <MulExp>
 <AddExp>
-<RelExp>
-<EqExp>
-<LAndExp>
-<LOrExp>
-<Cond>
-SEMICN ;
-IDENFR i
-<LVal>
-ASSIGN =
-IDENFR i
-<LVal>
-<PrimaryExp>
-<UnaryExp>
-<MulExp>
-<AddExp>
-PLUS +
-INTCON 1
-<Number>
-<PrimaryExp>
-<UnaryExp>
-<MulExp>
-<AddExp>
 <Exp>
-<ForStmt>
-RPARENT )
-LBRACE {
-INTTK int
-IDENFR a
-LBRACK [
-INTCON 2
-<Number>
-<PrimaryExp>
-<UnaryExp>
-<MulExp>
-<AddExp>
-<ConstExp>
-RBRACK ]
-ASSIGN =
-LBRACE {
-INTCON 1
-<Number>
-<PrimaryExp>
-<UnaryExp>
-<MulExp>
-<AddExp>
-<Exp>
-<InitVal>
 COMMA ,
-INTCON 2
+INTCON 1
 <Number>
 <PrimaryExp>
 <UnaryExp>
 <MulExp>
 <AddExp>
 <Exp>
-<InitVal>
-RBRACE }
+<FuncRParams>
+RPARENT )
+<UnaryExp>
+<MulExp>
+<AddExp>
+<Exp>
 <InitVal>
 <VarDef>
 SEMICN ;
 <VarDecl>
-PRINTFTK printf
-LPARENT (
-STRCON "inner a.1 = %d\n"
-COMMA ,
-IDENFR a
-LBRACK [
-INTCON 1
-<Number>
-<PrimaryExp>
-<UnaryExp>
-<MulExp>
-<AddExp>
-<Exp>
-RBRACK ]
-<LVal>
-<PrimaryExp>
-<UnaryExp>
-<MulExp>
-<AddExp>
-<Exp>
-RPARENT )
-SEMICN ;
-<Stmt>
-RBRACE }
-<Block>
-<Stmt>
-<Stmt>
 PRINTFTK printf
 LPARENT (
 STRCON "a.1 = %d\n"

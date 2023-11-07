@@ -62,6 +62,15 @@ public class Quaternion {
             int visible = outer;
             res = MasterTable.getMasterTable().getItemByNameInAllTable(name, visible, identify);
             if (res == SymbolTableResult.EXIST) {
+                // TODO
+                /*
+                我tm知道了
+                我确实能够完美地找到对应的符号表中的条目
+                那我为什么找不到其对应的四元式变量呢
+                因为我是傻逼
+                我tm没给函数形参分配四元式变量
+                wocsb
+                 */
                 return identify.getValue().getQuaternionIdentify();
             }
         }
@@ -279,6 +288,7 @@ public class Quaternion {
             }
 
             setIdentifyToTreeNode(node.children.get(1), paramName);
+            linkIdentifyWithSymbolTableItem(node.children.get(1).value, paramName, node.getScope());
         }
 
         @Override
@@ -356,7 +366,7 @@ public class Quaternion {
             }
 
             if (delta == 2) {
-                node.children.get(i).traverse(this);
+                translateAllExp(node.children.get(i));
                 addIntoInterCodes(Operation.PRINT_INT, node.children.get(i).getQuaternionIdentify(), null, null);
                 i += 2;
             }
@@ -368,7 +378,7 @@ public class Quaternion {
             for (; j < numberOfSubString; j++) {
                 addIntoInterCodes(Operation.PRINT_STRING, new QuaternionIdentify(subStrings[j]), null, null);
                 if (!node.children.get(i).value.equals(";")) {
-                    node.children.get(i).traverse(this);
+                    translateAllExp(node.children.get(i));
                     addIntoInterCodes(Operation.PRINT_INT, node.children.get(i).getQuaternionIdentify(), null, null);
                     i += 2;
                 }
