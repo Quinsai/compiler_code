@@ -968,6 +968,19 @@ public class Quaternion {
             }
         }
 
+        @Override
+        public void translateCompUnit(TreeNode node) {
+            int length = node.children.size();
+            if (length >= 2 && node.children.get(1).value.equals("main")) {
+                translateMainFunc(node);
+                return;
+            }
+            for (TreeNode childNode :
+                node.children) {
+                childNode.traverse(this);
+            }
+        }
+
     }
 
     public void generateInterCode() {

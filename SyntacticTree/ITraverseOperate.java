@@ -44,4 +44,6 @@ public interface ITraverseOperate {
     void translateMainFunc(TreeNode node);
 
     void translateBlockItem(TreeNode node);
+
+    void translateCompUnit(TreeNode node);
 }
