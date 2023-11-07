@@ -62,7 +62,6 @@ public class Quaternion {
             int visible = outer;
             res = MasterTable.getMasterTable().getItemByNameInAllTable(name, visible, identify);
             if (res == SymbolTableResult.EXIST) {
-                // TODO
                 /*
                 我tm知道了
                 我确实能够完美地找到对应的符号表中的条目
