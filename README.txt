@@ -6,3 +6,4 @@ BUAA 编译原理课程 课程实验代码仓库
 4_cuowu 错误处理实验
 4.1_syntactic_tree 语法树构建
 5.1_quaternion_intercode 代码生成实验之四元式
+5.2_mips 代码生成实验之MIPS
