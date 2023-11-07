@@ -109,6 +109,17 @@ IDENFR func
 LPARENT (
 INTTK int
 IDENFR t
+LBRACK [
+RBRACK ]
+LBRACK [
+INTCON 2
+<Number>
+<PrimaryExp>
+<UnaryExp>
+<MulExp>
+<AddExp>
+<ConstExp>
+RBRACK ]
 <FuncFParam>
 COMMA ,
 INTTK int
@@ -207,6 +218,24 @@ LPARENT (
 STRCON "%d-%d-%d"
 COMMA ,
 IDENFR t
+LBRACK [
+INTCON 1
+<Number>
+<PrimaryExp>
+<UnaryExp>
+<MulExp>
+<AddExp>
+<Exp>
+RBRACK ]
+LBRACK [
+INTCON 1
+<Number>
+<PrimaryExp>
+<UnaryExp>
+<MulExp>
+<AddExp>
+<Exp>
+RBRACK ]
 <LVal>
 <PrimaryExp>
 <UnaryExp>
@@ -262,6 +291,31 @@ MAINTK main
 LPARENT (
 RPARENT )
 LBRACE {
+PRINTFTK printf
+LPARENT (
+STRCON "++++++++++++++++++++++++++++++++"
+RPARENT )
+SEMICN ;
+<Stmt>
+INTTK int
+IDENFR er
+<VarDef>
+SEMICN ;
+<VarDecl>
+IDENFR er
+<LVal>
+ASSIGN =
+GETINTTK getint
+LPARENT (
+RPARENT )
+SEMICN ;
+<Stmt>
+PRINTFTK printf
+LPARENT (
+STRCON "++++++++++++++++++++++++++++++++"
+RPARENT )
+SEMICN ;
+<Stmt>
 INTTK int
 IDENFR t
 ASSIGN =
@@ -285,26 +339,26 @@ SEMICN ;
 <VarDecl>
 INTTK int
 IDENFR f
+LBRACK [
+INTCON 3
+<Number>
+<PrimaryExp>
+<UnaryExp>
+<MulExp>
+<AddExp>
+<ConstExp>
+RBRACK ]
+LBRACK [
+INTCON 2
+<Number>
+<PrimaryExp>
+<UnaryExp>
+<MulExp>
+<AddExp>
+<ConstExp>
+RBRACK ]
 ASSIGN =
 IDENFR b
-LBRACK [
-INTCON 1
-<Number>
-<PrimaryExp>
-<UnaryExp>
-<MulExp>
-<AddExp>
-<Exp>
-RBRACK ]
-LBRACK [
-INTCON 1
-<Number>
-<PrimaryExp>
-<UnaryExp>
-<MulExp>
-<AddExp>
-<Exp>
-RBRACK ]
 <LVal>
 <PrimaryExp>
 <UnaryExp>
@@ -320,16 +374,16 @@ IDENFR r
 ASSIGN =
 IDENFR func
 LPARENT (
-INTCON 12
-<Number>
+IDENFR f
+<LVal>
 <PrimaryExp>
 <UnaryExp>
 <MulExp>
 <AddExp>
 <Exp>
 COMMA ,
-INTCON 1
-<Number>
+IDENFR t
+<LVal>
 <PrimaryExp>
 <UnaryExp>
 <MulExp>

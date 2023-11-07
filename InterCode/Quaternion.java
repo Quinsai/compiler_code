@@ -317,8 +317,8 @@ public class Quaternion {
         }
 
         private void translateGetint(TreeNode node) {
-            // TODO
-            QuaternionIdentify temp = new QuaternionIdentify("");
+            translateAllExp(node.children.get(0));
+            QuaternionIdentify temp = node.children.get(0).getQuaternionIdentify();
             addIntoInterCodes(Operation.GETINT, temp, null, null);
         }
 
