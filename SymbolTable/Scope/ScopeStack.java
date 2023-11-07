@@ -3,6 +3,7 @@ package SymbolTable.Scope;
 import SymbolTable.MasterTable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Stack;
 
@@ -53,6 +54,7 @@ public class ScopeStack {
         this.scopeCounter ++;
         this.stack.push(scopeCounter);
         ArrayList<Integer> visible = new ArrayList<>(stack);
+        Collections.reverse(visible);
         this.visibleScopes.put(scopeCounter, visible);
     }
 
