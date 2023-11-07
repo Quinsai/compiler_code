@@ -46,4 +46,11 @@ public class OutputIntoFile {
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * 在文件后面继续输出，区别是开头先缩进一个制表符
+     */
+    public static void appendToFileWithTabAhead(String string, String filePath) {
+        appendToFile("\t" + string, filePath);
+    }
 }

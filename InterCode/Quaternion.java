@@ -39,7 +39,11 @@ public class Quaternion {
     /**
      * 一条一条的四元式的集合
      */
-    LinkedList<SingleQuaternion> quaternions;
+    private LinkedList<SingleQuaternion> quaternions;
+
+    public LinkedList<SingleQuaternion> getQuaternions() {
+        return quaternions;
+    }
 
     /*
     这里存在一个问题，就是我在link符号表条目和四元式变量的时候，
@@ -1028,19 +1032,19 @@ public class Quaternion {
         for (SingleQuaternion single :
             this.quaternions) {
             String output = "";
-            output += single.operation.name();
+            output += single.getOperation().name();
 
             output += " ";
 
-            output += displaySingle(single.param1);
+            output += displaySingle(single.getParam1());
 
             output += " ";
 
-            output += displaySingle(single.param2);
+            output += displaySingle(single.getParam2());
 
             output += " ";
 
-            output += displaySingle(single.result);
+            output += displaySingle(single.getResult());
 
             output += "\n";
 
