@@ -5,6 +5,7 @@ import Output.OutputIntoFile;
 import SymbolTable.MasterTable;
 import SymbolTable.MasterTableItem;
 import SymbolTable.Scope.ScopeStack;
+import SymbolTable.SymbolConst;
 import SymbolTable.SymbolTableResult;
 import SyntacticTree.ITraverseOperate;
 import SyntacticTree.Tree;
@@ -533,6 +534,9 @@ public class Quaternion {
                     translateBlockItem(node.children.get(j));
                 }
             }
+            else {
+                translateAllExp(node.children.get(0));
+            }
         }
 
         @Override
@@ -722,6 +726,10 @@ public class Quaternion {
             int length = node.children.size();
             QuaternionIdentify funcName = getIdentifyOfSymbolName(node.children.get(0).value, node.getScope());
             QuaternionIdentify res = new QuaternionIdentify("");
+
+            if (funcName.getSymbolTableItem().getFunctionReturnType() == SymbolConst.VOID) {
+                res = null;
+            }
 
             addIntoInterCodes(Operation.FUNC_CALL_BEGIN, funcName, null, res);
 

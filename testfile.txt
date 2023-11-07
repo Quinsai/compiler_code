@@ -11,17 +11,28 @@ int func(int t[][2], int p) {
 	return 0;
 }
 
+void try() {
+	if (a == 2) {
+		return;
+	}
+	printf("rerere");
+	return;
+}
+
 int main() {
 
 	printf("++++++++++++++++++++++++++++++++");
 	int er;
 	er = getint();
+	try();
 	printf("++++++++++++++++++++++++++++++++");
 
 	int t = a + 1;
 	int f[3][2] = b;
 
 	int r = func(f, t);
+
+	func(f, t);
 
 	/*
 	int i = 0;
