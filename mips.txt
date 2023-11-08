@@ -1,0 +1,9 @@
+.data
+	a: .word 0
+	b: .word 1
+	c: .word 2
+	d: .word 0, 0, 
+	e: .word 6, 5, 4, 3, 2, 1, 
+	f: .word 6, 5, 4, 
+	g: .word 0, 0, 0, 0, 
+
