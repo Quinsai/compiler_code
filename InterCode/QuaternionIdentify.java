@@ -17,11 +17,20 @@ public class QuaternionIdentify {
     private MasterTableItem symbolTableItem;
 
     /**
-     * 寄存器号
+     * 使用的寄存器号
      */
-    private int register;
+    private String register;
 
-    private boolean hasAllocatedRegister;
+    /**
+     * 在栈中的地址
+     * 正常情况下应该是负数
+     */
+    private int address;
+
+    /**
+     * 是否使用了寄存器，如果没使用那就一定在栈中
+     */
+    public boolean isUseRegister;
 
     /**
      * 一串数组的值
@@ -29,21 +38,39 @@ public class QuaternionIdentify {
      */
     public ArrayList<QuaternionIdentify> arrayValue;
 
+    private QuaternionIdentifyType type;
+
     public String id;
 
+    /**
+     * 这个count仅仅用于ID相关
+     */
     static int count;
+
+    /**
+     * 当前这个“函数”里面的栈的下标
+     */
+    public static int stackIndex;
 
     static {
         count = 0;
+        stackIndex = 0;
     }
 
     public QuaternionIdentify(String value) {
         this.value = value;
-        this.hasAllocatedRegister = false;
-        this.register = -1;
+        this.isUseRegister = false;
+        this.register = "";
+        this.address = 0;
         this.arrayValue = new ArrayList<>();
         count ++;
         id = "V" + count;
+        if (this.value.matches("^-?\\d+$")) {
+            this.type = QuaternionIdentifyType.NUMBER;
+        }
+        else {
+            this.type = QuaternionIdentifyType.LOCAL;
+        }
     }
 
     public String getValue() {
@@ -56,5 +83,26 @@ public class QuaternionIdentify {
 
     public void setSymbolTableItem(MasterTableItem symbolTableItem) {
         this.symbolTableItem = symbolTableItem;
+    }
+
+    public String getRegister() {
+        return register;
+    }
+
+    public int getAddress() {
+        return address;
+    }
+
+    public void pushIntoStack() {
+        this.address = stackIndex * 4;
+        stackIndex --;
+    }
+
+    public QuaternionIdentifyType getType() {
+        return type;
+    }
+
+    public void setType(QuaternionIdentifyType type) {
+        this.type = type;
     }
 }

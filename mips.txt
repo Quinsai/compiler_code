@@ -1,10 +1,16 @@
 .data
 	a: .word 0
-	b: .word 1
-	c: .word 2
-	d: .word 0, 0, 
-	e: .word 6, 5, 4, 3, 2, 1, 
-	f: .word 6, 5, 4, 
-	g: .word 0, 0, 0, 0, 
+	b: .word 0
+	c: .word 0
 
 .text
+	li $t3, 1
+	add $t0, $t3, 1
+	sw $t0, 0($sp)
+	lw $t2, 0($sp)
+	sw $t2, b
+	li $t3, 9
+	add $t0, $t3, 2
+	sw $t0, -4($sp)
+	lw $t2, -4($sp)
+	sw $t2, c

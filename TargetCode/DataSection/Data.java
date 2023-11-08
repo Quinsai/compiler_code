@@ -1,9 +1,8 @@
 package TargetCode.DataSection;
 
-import InterCode.Operation;
-import InterCode.Quaternion;
-import InterCode.QuaternionIdentify;
-import InterCode.SingleQuaternion;
+import InterCode.*;
+import TargetCode.Target;
+import TargetCode.TextSection.GenerateText;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -58,14 +57,42 @@ public class Data {
         mips.append("\t");
 
         String name = quaternion.getResult().getValue();
+        quaternion.getResult().setType(QuaternionIdentifyType.GLOBAL);
         mips.append(name).append(": ");
+        GenerateText generateText = new GenerateText();
 
         mips.append(".word ");
-        if (index + 1 < length && quaternions.get(index + 1).getOperation() == Operation.SET_VALUE) {
-            SingleQuaternion assignQuaternion = this.quaternions.get(index + 1);
-            mips.append(assignQuaternion.getParam2().getValue());
-            index ++;
+        // 接下来的是赋值，而不是下一个变量/常量的定义
+        if (index + 1 < length &&
+            quaternions.get(index + 1).getOperation() != Operation.VAR_INT_DECLARE &&
+            quaternions.get(index + 1).getOperation() != Operation.CONST_INT_DECLARE
+        ) {
+            // 直接使用数字写明，最简单的赋值方式
+            if (quaternions.get(index + 1).getOperation() == Operation.SET_VALUE &&
+                quaternions.get(index + 1).getParam2().getValue().matches("^-?\\d+$")
+            ) {
+                index ++;
+                SingleQuaternion assignQuaternion = this.quaternions.get(index);
+                mips.append(assignQuaternion.getParam2().getValue());
+            }
+            // 需要进过.text中的一些运算才能赋上值
+            else {
+
+                // 在赋上值之前，先给它一个0填充一下
+                mips.append("0");
+
+                index ++;
+                while (index < length) {
+                    SingleQuaternion setQuaternion = quaternions.get(index);
+                    Target.getInstance().getText().addGlobalDataIntoTextCode(generateText.generateText(setQuaternion));
+                    if (setQuaternion.getOperation() == Operation.SET_VALUE) {
+                        break;
+                    }
+                    index ++;
+                }
+            }
         }
+        // 没有显式地赋值，则默认值为0
         else {
             mips.append("0");
         }
@@ -78,6 +105,7 @@ public class Data {
         mips.append("\t");
 
         String name = quaternion.getResult().getValue();
+        quaternion.getResult().setType(QuaternionIdentifyType.GLOBAL);
         mips.append(name).append(": ");
 
         int dimension = 1;

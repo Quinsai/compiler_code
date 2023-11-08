@@ -28,6 +28,7 @@ public class Text {
         StringBuilder textCodeBuilder = new StringBuilder(textCode);
         for (SingleFunc func :
             funcs) {
+            func.generateFuncCode(new GenerateText());
             textCodeBuilder.append(func.getFuncCode());
         }
         this.textCode = textCodeBuilder.toString();

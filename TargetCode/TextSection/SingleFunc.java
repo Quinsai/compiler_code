@@ -33,7 +33,19 @@ public class SingleFunc {
         return funcCode;
     }
 
-    public void generateFuncCode() {
+    public void generateFuncCode(IGenerateText generateText) {
 
+        int length = this.quaternions.size();
+        StringBuilder mips = new StringBuilder();
+
+        String funcName = quaternions.get(0).getParam1().getValue();
+        mips.append(funcName).append("_begin:\n");
+
+        for (int i = 1; i < length - 1; i++) {
+            mips.append(generateText.generateText(this.quaternions.get(i)));
+        }
+
+        mips.append("\tjr $ra\n");
+        this.funcCode = mips.toString();
     }
 }
