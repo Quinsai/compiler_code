@@ -203,7 +203,7 @@ public class Quaternion {
                     operation = Operation.CONST_ARRAY_DECLARE;
                 }
                 // 二维数组
-                if (children.get(4).value.equals("[")) {
+                if (length > 4 && children.get(4).value.equals("[")) {
                     dimension = 2;
                     translateAllExp(children.get(5));
                     QuaternionIdentify arraySizeTwo = children.get(5).getQuaternionIdentify();

@@ -4,6 +4,7 @@ import Lexical.LexicalAnalysis;
 import Output.OutputIntoFile;
 import Syntactic.SyntacticAnalysis;
 import SyntacticTree.Tree;
+import TargetCode.Target;
 
 /**
  * 编译器主类
@@ -14,6 +15,7 @@ public class Compiler {
         OutputIntoFile.cleanFile("output.txt");
         OutputIntoFile.cleanFile("error.txt");
         OutputIntoFile.cleanFile("intercode.txt");
+        OutputIntoFile.cleanFile("mips.txt");
         InputSourceCode.readSourceCode();
 
         // 词法分析作业使用
@@ -29,5 +31,8 @@ public class Compiler {
         // 重定向输出到intercode.txt中，仅仅为了检验一下四元式生成的正确性而已
         // 最后的时候要记得注释掉这行
         Quaternion.getInstance().display();
+
+        Target.getInstance().generateTargetCode();
+        Target.getInstance().outputTargetCode();
     }
 }
