@@ -44,6 +44,14 @@ public class Data {
         return dataCode;
     }
 
+    /**
+     * 在生成.text段的时候，有时会需要把打印输出的字符串的部分添加到.data段里面
+     * 那时候要使用这个函数
+     */
+    public void addIntoDataCode(String code) {
+        this.dataCode += code;
+    }
+
     // TODO 明天记得把这两个函数写了，今天累P了(2023/11/07)
     private void generateInt(StringBuilder mips, SingleQuaternion quaternion) {
 

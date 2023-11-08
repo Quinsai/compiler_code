@@ -21,11 +21,17 @@ public class Target {
 
     private String targetCode;
 
+    private Data data;
+
+    private Text text;
+
     private LinkedList<SingleQuaternion> interCode;
 
     private Target() {
         this.interCode = Quaternion.getInstance().getQuaternions();
         this.targetCode = "";
+        this.data = new Data();
+        this.text = new Text();
     }
 
     static {
@@ -40,8 +46,6 @@ public class Target {
 
         int index = 0;
         int length = this.interCode.size();
-        Data data = new Data();
-        Text text = new Text();
         SingleFunc singleFunc = new SingleFunc();
         StringBuilder mips = new StringBuilder();
 
@@ -60,19 +64,19 @@ public class Target {
 
         mips.append("\n");
 
-//        while (index < length) {
-//            SingleQuaternion singleQuaternion = this.interCode.get(index);
-//            Operation operation = singleQuaternion.getOperation();
-//            singleFunc.addIntoQuaternions(singleQuaternion);
-//            if (operation == Operation.MAIN_FUNC_END || operation == Operation.FUNC_END) {
-//                text.addIntoFuncs(singleFunc);
-//                singleFunc = new SingleFunc();
-//            }
-//
-//            index ++;
-//        }
-//        text.generateTextCode();
-//        mips.append(text.getTextCode());
+        while (index < length) {
+            SingleQuaternion singleQuaternion = this.interCode.get(index);
+            Operation operation = singleQuaternion.getOperation();
+            singleFunc.addIntoQuaternions(singleQuaternion);
+            if (operation == Operation.MAIN_FUNC_END || operation == Operation.FUNC_END) {
+                text.addIntoFuncs(singleFunc);
+                singleFunc = new SingleFunc();
+            }
+
+            index ++;
+        }
+        text.generateTextCode();
+        mips.append(text.getTextCode());
 
         this.targetCode = mips.toString();
     }
@@ -81,5 +85,11 @@ public class Target {
         OutputIntoFile.appendToFile(this.targetCode, "mips.txt");
     }
 
+    public Data getData() {
+        return data;
+    }
 
+    public Text getText() {
+        return text;
+    }
 }
