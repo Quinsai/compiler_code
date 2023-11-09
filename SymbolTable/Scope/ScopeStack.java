@@ -37,6 +37,9 @@ public class ScopeStack {
         this.scopeCounter = 0;
         this.stack.push(this.scopeCounter);
         this.visibleScopes = new HashMap<>();
+        ArrayList<Integer> visible = new ArrayList<>();
+        visible.add(0);
+        this.visibleScopes.put(0, visible);
     }
 
     static {
