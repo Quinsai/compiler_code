@@ -88,7 +88,7 @@ public class TreeNode {
             case ConstDef -> operate.translateDeclare(this, 2);
             case VarDef -> operate.translateDeclare(this, 1);
             case FuncDef -> operate.translateFuncDefine(this);
-            case FuncFParam -> operate.translateFuncFParam(this);
+            case FuncFParams -> operate.translateFuncFParams(this);
             case Block -> operate.translateBlock(this);
             case Stmt -> operate.translateStmt(this);
             case LVal -> operate.translateLVal(this);

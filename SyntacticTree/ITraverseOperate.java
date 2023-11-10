@@ -18,11 +18,6 @@ public interface ITraverseOperate {
     void translateFuncDefine(TreeNode node);
 
     /**
-     * 函数形式参数
-     */
-    void translateFuncFParam(TreeNode node);
-
-    /**
      * 代码块
      */
     void translateBlock(TreeNode node);
@@ -46,4 +41,6 @@ public interface ITraverseOperate {
     void translateBlockItem(TreeNode node);
 
     void translateCompUnit(TreeNode node);
+
+    void translateFuncFParams(TreeNode node);
 }
