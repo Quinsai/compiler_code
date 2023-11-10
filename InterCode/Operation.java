@@ -4,11 +4,12 @@ package InterCode;
  * 四元式中的操作符
  */
 public enum Operation {
-    /**
+    /*
      * ADDRESS, a, offset, t
      * 获取`a`所指向的地址偏移（增大）`offset`后的地址
      */
-    ADDRESS,
+    // 和GET_VALUE功能重复，直接并入GET_VALUE
+    // ADDRESS,
 
     /**
      * GET_VALUE, a, null, v

@@ -570,10 +570,11 @@ public class Quaternion {
                 QuaternionIdentify offset1 = node.children.get(2).getQuaternionIdentify();
                 QuaternionIdentify address = new QuaternionIdentify("");
                 identify = new QuaternionIdentify("");
-                addIntoInterCodes(Operation.ADDRESS, name, offset1, address);
-                addIntoInterCodes(Operation.GET_VALUE, address, null, identify);
+                addIntoInterCodes(Operation.GET_VALUE, name, offset1, identify);
+                // addIntoInterCodes(Operation.GET_VALUE, address, null, identify);
                 setIdentifyToTreeNode(node, identify);
             }
+            // a[1][1]
             else if (length == 7) {
                 QuaternionIdentify name = getIdentifyOfSymbolName(node.children.get(0).value, node.children.get(0).getScope());
                 QuaternionIdentify offset1 = node.children.get(2).getQuaternionIdentify();
@@ -599,8 +600,8 @@ public class Quaternion {
                  */
                 addIntoInterCodes(Operation.MULT, size1.getValue(), offset1, temp);
                 addIntoInterCodes(Operation.PLUS, temp, offset2, temp1);
-                addIntoInterCodes(Operation.ADDRESS, name, temp1, address);
-                addIntoInterCodes(Operation.GET_VALUE, address, null, identify);
+                addIntoInterCodes(Operation.GET_VALUE, name, temp1, identify);
+                // addIntoInterCodes(Operation.GET_VALUE, address, null, identify);
                 setIdentifyToTreeNode(node, identify);
             }
         }
