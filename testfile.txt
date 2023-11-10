@@ -1,6 +1,8 @@
-int a;
-int b = 1 + 1;
-int c = 9 + 2;
+const int a = 2;
+const int b = 1 + 1;
+int c = b + a;
+int d[2][2] = {{12, 23}, {23453, 435}};
+int e = d[1][0];
 
 int main() {
 	printf("hello");
