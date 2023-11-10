@@ -100,7 +100,7 @@ public class QuaternionIdentify {
 
     public void pushIntoStack() {
         this.address = stackIndex * 4;
-        stackIndex --;
+        stackIndex ++;
     }
 
     public QuaternionIdentifyType getType() {
