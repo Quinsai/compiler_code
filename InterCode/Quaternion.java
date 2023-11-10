@@ -742,7 +742,7 @@ public class Quaternion {
                 translateFunctionRealPara(node.children.get(2));
             }
 
-            addIntoInterCodes(Operation.FUNC_CALL_END, null, null, null);
+            addIntoInterCodes(Operation.FUNC_CALL_END, funcName, null, null);
             setIdentifyToTreeNode(node, res);
         }
 
