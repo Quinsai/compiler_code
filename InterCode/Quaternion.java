@@ -261,26 +261,26 @@ public class Quaternion {
             addIntoInterCodes(Operation.FUNC_END, func, null, null);
         }
 
-        @Override
-        public void translateFuncFParam(TreeNode node) {
+        public void translateFuncFParam(TreeNode node, int count) {
 
             int length = node.children.size();
 
             traverseAllChildren(node);
 
             QuaternionIdentify paramName;
+            QuaternionIdentify countIdentify = new QuaternionIdentify(String.valueOf(count));
 
             if (length == 2) {
 
                 paramName = new QuaternionIdentify(node.children.get(1).value);
 
-                addIntoInterCodes(Operation.FORMAL_PARA_INT, paramName, null, null);
+                addIntoInterCodes(Operation.FORMAL_PARA_INT, paramName, null, countIdentify);
             }
             else if (length == 4) {
 
                 paramName = new QuaternionIdentify(node.children.get(1).value);
 
-                addIntoInterCodes(Operation.FORMAL_PARA_ARRAY, paramName, null, null);
+                addIntoInterCodes(Operation.FORMAL_PARA_ARRAY, paramName, null, countIdentify);
             }
             else {
 
@@ -288,7 +288,7 @@ public class Quaternion {
 
                 QuaternionIdentify secondSize = node.children.get(5).getQuaternionIdentify();
 
-                addIntoInterCodes(Operation.FORMAL_PARA_ARRAY, paramName, secondSize, null);
+                addIntoInterCodes(Operation.FORMAL_PARA_ARRAY, paramName, secondSize, countIdentify);
             }
 
             setIdentifyToTreeNode(node.children.get(1), paramName);
@@ -985,6 +985,22 @@ public class Quaternion {
                 childNode.traverse(this);
             }
         }
+
+        @Override
+        public void translateFuncFParams(TreeNode node) {
+            int length = node.children.size();
+
+            // 只有一个参数，被执行单传节点优化后就成了这样
+            if (length >= 2 && !node.children.get(1).value.equals(",")) {
+                translateFuncFParam(node, 1);
+                return;
+            }
+
+            for (int i = 0, j = 1; i < length; i += 2, j++) {
+                translateFuncFParam(node.children.get(i), j);
+            }
+        }
+
 
     }
 

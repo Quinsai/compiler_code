@@ -36,12 +36,14 @@ public enum Operation {
     FUNC_END,
 
     /**
-     * FORMAL_PARA_INT, name, null, null
+     * FORMAL_PARA_INT, name, null, count
+     * count的计数从1开始
      */
     FORMAL_PARA_INT,
 
     /**
-     * FORMAL_PARA_ARRAY, name, secondSize, null
+     * FORMAL_PARA_ARRAY, name, secondSize, count
+     * count的计数从1开始
      */
     FORMAL_PARA_ARRAY,
 
