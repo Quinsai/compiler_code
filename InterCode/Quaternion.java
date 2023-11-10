@@ -258,7 +258,7 @@ public class Quaternion {
                 node.children.get(i).traverse(this);
             }
 
-            addIntoInterCodes(Operation.FUNC_END, null, null, null);
+            addIntoInterCodes(Operation.FUNC_END, func, null, null);
         }
 
         @Override
