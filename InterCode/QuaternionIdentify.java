@@ -89,6 +89,11 @@ public class QuaternionIdentify {
         return register;
     }
 
+    public void setRegister(String register) {
+        this.register = register;
+        this.isUseRegister = true;
+    }
+
     public int getAddress() {
         return address;
     }
