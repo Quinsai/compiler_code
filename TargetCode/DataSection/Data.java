@@ -52,7 +52,6 @@ public class Data {
         this.dataCode += code;
     }
 
-    // TODO 明天记得把这两个函数写了，今天累P了(2023/11/07)
     private void generateInt(StringBuilder mips, SingleQuaternion quaternion) {
 
         mips.append("\t");
