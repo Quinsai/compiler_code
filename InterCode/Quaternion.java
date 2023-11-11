@@ -114,9 +114,15 @@ public class Quaternion {
          */
         static Stack<QuaternionIdentify> endLabelStack;
 
+        /**
+         * for语句中的跟新表达式的开始标签的栈
+         */
+        static Stack<QuaternionIdentify> updateLabelStack;
+
         static {
             beginLabelStack = new Stack<>();
             endLabelStack = new Stack<>();
+            updateLabelStack = new Stack<>();
         }
 
         private void traverseAllChildren(TreeNode node) {
@@ -347,8 +353,8 @@ public class Quaternion {
         }
 
         private void translateContinue(TreeNode node) {
-            QuaternionIdentify beginLabel = beginLabelStack.peek();
-            addIntoInterCodes(Operation.SKIP, beginLabel, null, null);
+            QuaternionIdentify updateLabel = updateLabelStack.peek();
+            addIntoInterCodes(Operation.SKIP, updateLabel, null, null);
         }
 
         private void translatePrintf(TreeNode node) {
@@ -397,6 +403,7 @@ public class Quaternion {
             int length = node.children.size();
             QuaternionIdentify beginLabel = new QuaternionIdentify("");
             QuaternionIdentify endLabel = new QuaternionIdentify("");
+            QuaternionIdentify updateLabel = new QuaternionIdentify("");
             QuaternionIdentify condition;
 
             /*
@@ -407,6 +414,7 @@ public class Quaternion {
              */
             beginLabelStack.push(beginLabel);
             endLabelStack.push(endLabel);
+            updateLabelStack.push(updateLabel);
 
             for (i = 0; i < 2; i++) {
                 node.children.get(i).traverse(this);
@@ -435,6 +443,8 @@ public class Quaternion {
 
             node.children.get(length - 1).traverse(this);
 
+            addIntoInterCodes(Operation.LABEL, updateLabel, null, null);
+            // 更新表达式
             if (!node.children.get(i).value.equals(")")) {
                 node.children.get(i).traverse(this);
             }
@@ -448,6 +458,9 @@ public class Quaternion {
             }
             if (!endLabelStack.isEmpty()) {
                 endLabelStack.pop();
+            }
+            if (!updateLabelStack.isEmpty()) {
+                updateLabelStack.pop();
             }
         }
 

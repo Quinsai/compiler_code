@@ -1,10 +1,43 @@
-const int a = 2;
-const int b = 1 + 1;
-int c = b + a;
-int d[2][2] = {{12, 23}, {23453, 435}};
-int e = d[1][0];
+const int aa = 12;
+int bb = 12;
+
+/*
+int f1(int aa, int bb) {
+	if (aa % 2 == 0) {
+        printf("Quinsai\n");
+    }
+    else if (bb % 3 == 2) {
+        printf("Keine\n");
+    }
+    else {
+        printf("Forever!\n");
+    }
+    printf(" Vive!\n");
+    return (aa % 2) * (bb % 3);
+}
+*/
 
 int main() {
-	printf("hello");
+
+    int m;
+    int n;
+    int k;
+    k = getint();
+    n = getint();
+    for (m = 1; m <= k; m = m + 1){
+        int i;
+
+        for (i = 0; i <= m ;i = i + 1) {
+            if (i == n) {
+                continue;
+            }
+            printf("*");
+        }
+        if (m % 5 == 0) {
+            break;
+        }
+        printf("\n");
+    }
+
 	return 0;
 }

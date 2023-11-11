@@ -33,6 +33,11 @@ public class QuaternionIdentify {
     public boolean isUseRegister;
 
     /**
+     * 是否在栈中
+     */
+    public boolean isInStack;
+
+    /**
      * 一串数组的值
      * 当且仅当操作数是INIT的时候有效
      */
@@ -60,6 +65,7 @@ public class QuaternionIdentify {
     public QuaternionIdentify(String value) {
         this.value = value;
         this.isUseRegister = false;
+        this.isInStack = false;
         this.register = "";
         this.address = 0;
         this.arrayValue = new ArrayList<>();
@@ -98,8 +104,13 @@ public class QuaternionIdentify {
         return address;
     }
 
+    public void setAddress(int address) {
+        this.address = address;
+    }
+
     public void pushIntoStack() {
         this.address = stackIndex * 4;
+        this.isInStack = true;
         stackIndex ++;
     }
 
@@ -109,5 +120,9 @@ public class QuaternionIdentify {
 
     public void setType(QuaternionIdentifyType type) {
         this.type = type;
+    }
+
+    public boolean isArray() {
+        return !this.arrayValue.isEmpty();
     }
 }

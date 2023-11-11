@@ -60,22 +60,22 @@ public class Target {
             index ++;
         }
         data.generateDataCode();
+
+        while (index < length) {
+            SingleQuaternion singleQuaternion = this.interCode.get(index);
+            Operation operation = singleQuaternion.getOperation();
+            singleFunc.addIntoQuaternions(singleQuaternion);
+            if (operation == Operation.MAIN_FUNC_END || operation == Operation.FUNC_END) {
+                text.addIntoFuncs(singleFunc);
+                singleFunc = new SingleFunc();
+            }
+
+            index ++;
+        }
+        text.generateTextCode();
+
         mips.append(data.getDataCode());
-
         mips.append("\n");
-
-//        while (index < length) {
-//            SingleQuaternion singleQuaternion = this.interCode.get(index);
-//            Operation operation = singleQuaternion.getOperation();
-//            singleFunc.addIntoQuaternions(singleQuaternion);
-//            if (operation == Operation.MAIN_FUNC_END || operation == Operation.FUNC_END) {
-//                text.addIntoFuncs(singleFunc);
-//                singleFunc = new SingleFunc();
-//            }
-//
-//            index ++;
-//        }
-//        text.generateTextCode();
         mips.append(text.getTextCode());
 
         this.targetCode = mips.toString();

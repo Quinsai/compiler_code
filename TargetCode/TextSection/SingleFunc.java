@@ -38,14 +38,14 @@ public class SingleFunc {
         int length = this.quaternions.size();
         StringBuilder mips = new StringBuilder();
 
-        String funcName = quaternions.get(0).getParam1().getValue();
-        mips.append(funcName).append("_begin:\n");
+//        String funcName = quaternions.get(0).getParam1().getValue();
+//        mips.append(funcName).append("_begin:\n");
 
-        for (int i = 1; i < length - 1; i++) {
+        for (int i = 0; i < length; i++) {
             mips.append(generateText.generateText(this.quaternions.get(i)));
         }
 
-        mips.append("\tjr $ra\n");
+//        mips.append("\tjr $ra\n");
         this.funcCode = mips.toString();
     }
 }

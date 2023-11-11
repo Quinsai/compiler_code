@@ -1,9 +1,7 @@
 package TargetCode.TextSection;
 
-import InterCode.Operation;
-import InterCode.QuaternionIdentify;
-import InterCode.QuaternionIdentifyType;
-import InterCode.SingleQuaternion;
+import InterCode.*;
+import TargetCode.Target;
 
 public class GenerateText implements IGenerateText {
 
@@ -14,20 +12,20 @@ public class GenerateText implements IGenerateText {
      * @param paramIndex 是四元式中的第几个操作做数
      * @return 最终保存了这个四元式变量的值的寄存器
      */
-    private String getIdentify(StringBuilder builder, QuaternionIdentify identify, int paramIndex) {
+    private String getIdentify(StringBuilder builder, QuaternionIdentify identify, int paramIndex, boolean canBeNumber) {
         // 分配了寄存器，直接返回寄存器号就行
         if (identify.isUseRegister) {
             return identify.getRegister();
         }
         // 是数字
         else if (identify.getType() == QuaternionIdentifyType.NUMBER) {
-            // 如果是第一个操作数，还tm要先存在一个寄存器里面
-            if (paramIndex == 1) {
+            // 如果不能直接用数字，还tm要先存在一个寄存器里面
+            if (!canBeNumber) {
                 builder.append("\tli $t3, ").append(identify.getValue()).append("\n");
                 return "$t3";
             }
-            // 如果是第二个操作数，直接输出值就行
-            else if (paramIndex == 2) {
+            // 如果能直接用数字
+            else if (canBeNumber) {
                 return identify.getValue();
             }
         }
@@ -51,7 +49,9 @@ public class GenerateText implements IGenerateText {
      * 默认它的值现在在$t0里面
      */
     private void setIdentifyIntoStack(StringBuilder builder, QuaternionIdentify identify) {
-        identify.pushIntoStack();
+        if (!identify.isInStack) {
+            identify.pushIntoStack();
+        }
         int address = identify.getAddress();
         builder.append("\tsw $t0, ").append(address).append("($sp)\n");
     }
@@ -59,8 +59,8 @@ public class GenerateText implements IGenerateText {
     private String generatePlus(SingleQuaternion quaternion) {
 
         StringBuilder mips = new StringBuilder();
-        String param1 = getIdentify(mips, quaternion.getParam1(), 1);
-        String param2 = getIdentify(mips, quaternion.getParam2(), 2);
+        String param1 = getIdentify(mips, quaternion.getParam1(), 1, false);
+        String param2 = getIdentify(mips, quaternion.getParam2(), 2, true);
 
         mips.append("\tadd $t0, ").append(param1).append(", ").append(param2).append("\n");
 
@@ -71,8 +71,8 @@ public class GenerateText implements IGenerateText {
     private String generateMinu(SingleQuaternion quaternion) {
 
         StringBuilder mips = new StringBuilder();
-        String param1 = getIdentify(mips, quaternion.getParam1(), 1);
-        String param2 = getIdentify(mips, quaternion.getParam2(), 2);
+        String param1 = getIdentify(mips, quaternion.getParam1(), 1, false);
+        String param2 = getIdentify(mips, quaternion.getParam2(), 2, true);
 
         mips.append("\tsub $t0, ").append(param1).append(", ").append(param2).append("\n");
 
@@ -83,8 +83,8 @@ public class GenerateText implements IGenerateText {
     private String generateMult(SingleQuaternion quaternion) {
 
         StringBuilder mips = new StringBuilder();
-        String param1 = getIdentify(mips, quaternion.getParam1(), 1);
-        String param2 = getIdentify(mips, quaternion.getParam2(), 2);
+        String param1 = getIdentify(mips, quaternion.getParam1(), 1, false);
+        String param2 = getIdentify(mips, quaternion.getParam2(), 2, true);
 
         mips.append("\tmul $t0, ").append(param1).append(", ").append(param2).append("\n");
 
@@ -95,10 +95,23 @@ public class GenerateText implements IGenerateText {
     private String generateDiv(SingleQuaternion quaternion) {
 
         StringBuilder mips = new StringBuilder();
-        String param1 = getIdentify(mips, quaternion.getParam1(), 1);
-        String param2 = getIdentify(mips, quaternion.getParam2(), 2);
+        String param1 = getIdentify(mips, quaternion.getParam1(), 1, false);
+        String param2 = getIdentify(mips, quaternion.getParam2(), 2, true);
 
         mips.append("\tdiv $t0, ").append(param1).append(", ").append(param2).append("\n");
+
+        setIdentifyIntoStack(mips, quaternion.getResult());
+        return mips.toString();
+    }
+
+    private String generateMod(SingleQuaternion quaternion) {
+
+        StringBuilder mips = new StringBuilder();
+        String param1 = getIdentify(mips, quaternion.getParam1(), 1, false);
+        String param2 = getIdentify(mips, quaternion.getParam2(), 2, false);
+
+        mips.append("\tdiv ").append(param1).append(", ").append(param2).append("\n");
+        mips.append("\tmfhi $t0\n");
 
         setIdentifyIntoStack(mips, quaternion.getResult());
         return mips.toString();
@@ -112,20 +125,26 @@ public class GenerateText implements IGenerateText {
 
         // 是全局数据.data段的
         if (quaternion.getParam1().getType() == QuaternionIdentifyType.GLOBAL) {
-            value = getIdentify(mips, quaternion.getParam2(), 2);
+            value = getIdentify(mips, quaternion.getParam2(), 2, true);
             mips.append("\tsw ").append(value).append(", ").append(quaternion.getParam1().getValue()).append("\n");
         }
         // 使用寄存器的局部变量，用li指令
         else if (quaternion.getParam1().isUseRegister) {
-            variable = getIdentify(mips, quaternion.getParam1(), 1);
-            value = getIdentify(mips, quaternion.getParam2(), 2);
+            variable = getIdentify(mips, quaternion.getParam1(), 1, false);
+            value = getIdentify(mips, quaternion.getParam2(), 2, true);
             mips.append("\tli ").append(variable).append(", ").append(value);
         }
         // 存在栈里的局部变量，用sw指令
         else if (quaternion.getParam1().getType() == QuaternionIdentifyType.LOCAL) {
-            variable = getIdentify(mips, quaternion.getParam1(), 1);
-            value = getIdentify(mips, quaternion.getParam2(), 2);
-            mips.append("\tsw ").append(value).append(", ").append(variable);
+            value = getIdentify(mips, quaternion.getParam2(), 2, true);
+            // 是数字
+            if (value.matches("^-?\\d+$")) {
+                mips.append("\tli $t0, ").append(value).append("\n");
+            }
+            else {
+                mips.append("\tmove $t0, ").append(value).append("\n");
+            }
+            setIdentifyIntoStack(mips, quaternion.getParam1());
         }
 
         return mips.toString();
@@ -155,7 +174,7 @@ public class GenerateText implements IGenerateText {
             // 一维数组
             if (dimension == 1) {
                 QuaternionIdentify identify = value.arrayValue.get(i);
-                String v = getIdentify(mips, identify, 2);
+                String v = getIdentify(mips, identify, 2, true);
                 mips.append("\tsw ").append(v).append(", ").append(index * 4).append("($t0)\n");
                 index ++;
             }
@@ -164,7 +183,7 @@ public class GenerateText implements IGenerateText {
                 QuaternionIdentify firstDimensionValue = value.arrayValue.get(i);
                 for (int j = 0; j < size2; j++) {
                     QuaternionIdentify identify = firstDimensionValue.arrayValue.get(j);
-                    String v = getIdentify(mips, identify, 2);
+                    String v = getIdentify(mips, identify, 2, true);
                     mips.append("\tsw ").append(v).append(", ").append(index * 4).append("($t0)\n");
                     index ++;
                 }
@@ -178,7 +197,7 @@ public class GenerateText implements IGenerateText {
 
         StringBuilder mips = new StringBuilder();
         String address = quaternion.getParam1().getValue();
-        String offset = getIdentify(mips, quaternion.getParam2(), 1);
+        String offset = getIdentify(mips, quaternion.getParam2(), 1, false);
 
         mips.append("\tmul ").append(offset).append(", ").append(offset).append(", 4\n");
         mips.append("\tlw $t0, ").append(address).append("(").append(offset).append(")\n");
@@ -186,6 +205,365 @@ public class GenerateText implements IGenerateText {
         setIdentifyIntoStack(mips, quaternion.getResult());
 
         return mips.toString();
+    }
+
+    private String generateMainFuncBegin(SingleQuaternion quaternion) {
+        return "main_begin:\n";
+    }
+
+    private String generateMainFuncEnd(SingleQuaternion quaternion) {
+
+        return """
+            main_end:
+            \tli $v0, 10
+            \tsyscall
+            """;
+    }
+
+    private String generateFuncBegin(SingleQuaternion quaternion) {
+
+        StringBuilder mips = new StringBuilder();
+        String funcName = quaternion.getParam1().getValue();
+
+
+        mips.append(funcName).append("_begin:\n");
+        // 给接下来的这个函数开辟一个504字节的不会被打扰的空间
+        // 让它岁月静好
+        mips.append("\tsubi $sp, $sp, 504\n");
+        // 500-504字节的空间用来保存$ra返回位置寄存器的值，以防在递归调用中炸了
+        mips.append("\tsw $ra, 0($sp)\n");
+        // 记得要先+1，别把返回地址给覆盖了
+        QuaternionIdentify.stackIndex ++;
+        return mips.toString();
+    }
+
+    private String generateFuncEnd(SingleQuaternion quaternion) {
+
+        StringBuilder mips = new StringBuilder();
+        String funcName = quaternion.getParam1().getValue();
+
+        mips.append(funcName).append("_end:\n");
+        // 它不得不迎来终结，不得不释放它的504个字节的岁月静好
+        // 去直面它的负重前行
+        // 记得回去的地址要先从500-504字节的空间中取到$ra中先
+        mips.append("\tlw $ra, 0($sp)\n");
+        mips.append("\taddi $sp, $sp, 504\n");
+        mips.append("\tjr $ra\n");
+        return mips.toString();
+    }
+
+    private String generateFormalParaInt(SingleQuaternion quaternion) {
+
+        int count = Integer.parseInt(quaternion.getResult().getValue());
+
+        // 可以使用a系列寄存器来存参数
+        if (count <= 4) {
+            quaternion.getParam1().setRegister("$a" + (count - 1));
+        }
+        // 超出4个，必须使用栈来传递参数
+        else {
+            quaternion.getParam1().pushIntoStack();
+        }
+
+        return "";
+    }
+
+    private String generateFormalParaArray(SingleQuaternion quaternion) {
+
+        StringBuilder mips = new StringBuilder();
+        int dimension = 1;
+
+        if (quaternion.getParam2() != null) {
+            dimension ++;
+        }
+
+        // TODO 数组作为函数形参
+        // 一维数组
+        if (dimension == 1) {
+
+        }
+        // 二维数组
+        else {
+
+        }
+
+        return mips.toString();
+    }
+
+    private String generateReturn(SingleQuaternion quaternion) {
+
+        StringBuilder mips = new StringBuilder();
+        String funcName = quaternion.getParam1().getValue();
+
+        // 确有返回值
+        if (quaternion.getParam2() != null) {
+            String returnValue = getIdentify(mips, quaternion.getParam2(), 2, false);
+            mips.append("\tmove $v0, ").append(returnValue).append("\n");
+        }
+
+        mips.append("\tj ").append(funcName).append("_end\n");
+
+        return mips.toString();
+    }
+
+    private String generateFuncCallBegin(SingleQuaternion quaternion) {
+
+        if (quaternion.getResult() != null) {
+            quaternion.getResult().setRegister("$v0");
+        }
+
+        return "";
+    }
+
+    private String generateRealPara(SingleQuaternion quaternion) {
+
+        StringBuilder mips = new StringBuilder();
+        int count = Integer.parseInt(quaternion.getParam2().getValue());
+
+        // 前4个参数，可以使用a系列寄存器来存参数
+        if (count <= 4) {
+            // 不是数组，只是单纯的值
+            if (!quaternion.getParam1().isArray()) {
+                // 直接写一个数字
+                if (quaternion.getParam1().getType() == QuaternionIdentifyType.NUMBER) {
+                    mips.append("\tli $a").append(count - 1).append(", ").append(quaternion.getParam1().getValue()).append("\n");
+                }
+                // 是一个变量
+                else {
+                    String param = getIdentify(mips, quaternion.getParam1(), 1, false);
+                    mips.append("\tmove $a").append(count - 1).append(", ").append(param).append("\n");
+                }
+            }
+            // TODO 数组作为实参，保存在a系列寄存器中
+            // 是数组
+            else {
+
+            }
+        }
+        // 4个以外的参数，只能存在栈中
+        else {
+            // 不是数组，只是单纯的值
+            if (!quaternion.getParam1().isArray()) {
+                String param = getIdentify(mips, quaternion.getParam1(), 1, false);
+                mips.append("\tsw ").append(param).append(", ").append((count - 4) * 4 - 504).append("($sp)\n");
+            }
+            // TODO 数组作为实参，保存在栈中
+            // 是数组
+            else {
+
+            }
+        }
+
+        return mips.toString();
+    }
+
+    private String generateFuncCallEnd(SingleQuaternion quaternion) {
+
+        StringBuilder mips = new StringBuilder();
+        String funcName = quaternion.getParam1().getValue();
+        mips.append("\tjal ").append(funcName).append("_begin\n");
+
+        return mips.toString();
+    }
+
+    private String generateOppo(SingleQuaternion quaternion) {
+
+        StringBuilder mips = new StringBuilder();
+        String param = getIdentify(mips, quaternion.getParam1(), 1, false);
+
+        mips.append("\tneg $t0, ").append(param).append("\n");
+        setIdentifyIntoStack(mips, quaternion.getResult());
+
+        return mips.toString();
+    }
+
+    private String generateOr(SingleQuaternion quaternion) {
+
+        StringBuilder mips = new StringBuilder();
+        String param1 = getIdentify(mips, quaternion.getParam1(), 1, false);
+        String param2 = getIdentify(mips, quaternion.getParam2(), 2, true);
+
+        mips.append("\tor $t0, ").append(param1).append(", ").append(param2).append("\n");
+        setIdentifyIntoStack(mips, quaternion.getResult());
+
+        return mips.toString();
+    }
+
+    private String generateAnd(SingleQuaternion quaternion) {
+
+        StringBuilder mips = new StringBuilder();
+        String param1 = getIdentify(mips, quaternion.getParam1(), 1, false);
+        String param2 = getIdentify(mips, quaternion.getParam2(), 2, true);
+
+        mips.append("\tand $t0, ").append(param1).append(", ").append(param2).append("\n");
+        setIdentifyIntoStack(mips, quaternion.getResult());
+
+        return mips.toString();
+    }
+
+    private String generateGreat(SingleQuaternion quaternion) {
+
+        StringBuilder mips = new StringBuilder();
+        String param1 = getIdentify(mips, quaternion.getParam1(), 1, false);
+        String param2 = getIdentify(mips, quaternion.getParam2(), 2, true);
+
+        mips.append("\tsgt $t0, ").append(param1).append(", ").append(param2).append("\n");
+        setIdentifyIntoStack(mips, quaternion.getResult());
+
+        return mips.toString();
+    }
+
+    private String generateGreatEqual(SingleQuaternion quaternion) {
+
+        StringBuilder mips = new StringBuilder();
+        String param1 = getIdentify(mips, quaternion.getParam1(), 1, false);
+        String param2 = getIdentify(mips, quaternion.getParam2(), 2, true);
+
+        mips.append("\tsge $t0, ").append(param1).append(", ").append(param2).append("\n");
+        setIdentifyIntoStack(mips, quaternion.getResult());
+
+        return mips.toString();
+    }
+
+    private String generateLittle(SingleQuaternion quaternion) {
+
+        StringBuilder mips = new StringBuilder();
+        String param1 = getIdentify(mips, quaternion.getParam1(), 1, false);
+        String param2 = getIdentify(mips, quaternion.getParam2(), 2, true);
+
+        mips.append("\tslt $t0, ").append(param1).append(", ").append(param2).append("\n");
+        setIdentifyIntoStack(mips, quaternion.getResult());
+
+        return mips.toString();
+    }
+
+    private String generateLittleEqual(SingleQuaternion quaternion) {
+
+        StringBuilder mips = new StringBuilder();
+        String param1 = getIdentify(mips, quaternion.getParam1(), 1, false);
+        String param2 = getIdentify(mips, quaternion.getParam2(), 2, true);
+
+        mips.append("\tsle $t0, ").append(param1).append(", ").append(param2).append("\n");
+        setIdentifyIntoStack(mips, quaternion.getResult());
+
+        return mips.toString();
+    }
+
+    private String generateNotEqual(SingleQuaternion quaternion) {
+
+        StringBuilder mips = new StringBuilder();
+        String param1 = getIdentify(mips, quaternion.getParam1(), 1, false);
+        String param2 = getIdentify(mips, quaternion.getParam2(), 2, true);
+
+        mips.append("\tsne $t0, ").append(param1).append(", ").append(param2).append("\n");
+        setIdentifyIntoStack(mips, quaternion.getResult());
+
+        return mips.toString();
+    }
+
+    private String generateEqual(SingleQuaternion quaternion) {
+
+        StringBuilder mips = new StringBuilder();
+        String param1 = getIdentify(mips, quaternion.getParam1(), 1, false);
+        String param2 = getIdentify(mips, quaternion.getParam2(), 2, true);
+
+        mips.append("\tseq $t0, ").append(param1).append(", ").append(param2).append("\n");
+        setIdentifyIntoStack(mips, quaternion.getResult());
+
+        return mips.toString();
+    }
+
+    private String generateNot(SingleQuaternion quaternion) {
+
+        StringBuilder mips = new StringBuilder();
+        String param = getIdentify(mips, quaternion.getParam1(), 1, false);
+
+        mips.append("\tnot $t0, ").append(param).append("\n");
+        setIdentifyIntoStack(mips, quaternion.getResult());
+
+        return mips.toString();
+    }
+
+    private String generateLabel(SingleQuaternion quaternion) {
+
+        StringBuilder mips = new StringBuilder();
+        String labelId = quaternion.getParam1().id;
+
+        mips.append("label_").append(labelId).append(":\n");
+
+        return mips.toString();
+    }
+
+    private String generateSkip(SingleQuaternion quaternion) {
+
+        StringBuilder mips = new StringBuilder();
+        String labelId = quaternion.getParam1().id;
+
+        mips.append("\tj label_").append(labelId).append("\n");
+
+        return mips.toString();
+    }
+
+    private String generateBranchIfFalse(SingleQuaternion quaternion) {
+
+        StringBuilder mips = new StringBuilder();
+        String condition = getIdentify(mips, quaternion.getParam1(), 1, false);
+        String labelId = quaternion.getParam2().id;
+
+        mips.append("\tbeqz ").append(condition).append(", label_").append(labelId).append("\n");
+        return mips.toString();
+    }
+
+    private String generatePrintString(SingleQuaternion quaternion) {
+
+        StringBuilder mips = new StringBuilder();
+        String stringId = quaternion.getParam1().id;
+        String stringContent = quaternion.getParam1().getValue();
+
+        String stringData = "\tstring_" + stringId + ": " +
+            ".asciiz \"" + stringContent + "\"\n";
+        Target.getInstance().getData().addIntoDataCode(stringData);
+
+        mips.append("\tla $a0, string_").append(stringId).append("\n");
+        mips.append("\tli $v0, 4\n");
+        mips.append("\tsyscall\n");
+
+        return mips.toString();
+    }
+
+    private String generatePrintInt(SingleQuaternion quaternion) {
+
+        StringBuilder mips = new StringBuilder();
+        String output = getIdentify(mips, quaternion.getParam1(), 1, false);
+
+        mips.append("\tmove $a0, ").append(output).append("\n");
+        mips.append("\tli $v0, 1\n");
+        mips.append("\tsyscall\n");
+
+        return mips.toString();
+    }
+
+    private String generateGetint(SingleQuaternion quaternion) {
+
+        StringBuilder mips = new StringBuilder();
+
+        mips.append("\tli $v0, 5\n");
+        mips.append("\tsyscall\n");
+        mips.append("\tmove $t0, $v0\n");
+
+        setIdentifyIntoStack(mips, quaternion.getParam1());
+
+        return mips.toString();
+    }
+
+    private String generateIntDeclare(SingleQuaternion quaternion) {
+        quaternion.getResult().pushIntoStack();
+        return "";
+    }
+
+    // TODO 数组定义
+    private String generateArrayDeclare(SingleQuaternion quaternion) {
+        return "";
     }
 
     @Override
@@ -197,10 +575,39 @@ public class GenerateText implements IGenerateText {
             case MINU -> mips.append(generateMinu(quaternion));
             case MULT -> mips.append(generateMult(quaternion));
             case DIV -> mips.append(generateDiv(quaternion));
+            case MOD -> mips.append(generateMod(quaternion));
             case SET_VALUE -> mips.append(generateSetValue(quaternion));
             case ARRAY_INIT -> mips.append(generateArrayInit(quaternion));
             // ADDRESS和GET_VALUE一定是接连出现的，因此可以把它们写在一起
             case GET_VALUE -> mips.append(generateGetValue(quaternion));
+            case MAIN_FUNC_BEGIN -> mips.append(generateMainFuncBegin(quaternion));
+            case MAIN_FUNC_END -> mips.append(generateMainFuncEnd(quaternion));
+            case FUNC_BEGIN -> mips.append(generateFuncBegin(quaternion));
+            case FUNC_END -> mips.append(generateFuncEnd(quaternion));
+            case FORMAL_PARA_INT -> mips.append(generateFormalParaInt(quaternion));
+            case FORMAL_PARA_ARRAY -> mips.append(generateFormalParaArray(quaternion));
+            case RETURN -> mips.append(generateReturn(quaternion));
+            case FUNC_CALL_BEGIN -> mips.append(generateFuncCallBegin(quaternion));
+            case REAL_PARA -> mips.append(generateRealPara(quaternion));
+            case FUNC_CALL_END -> mips.append(generateFuncCallEnd(quaternion));
+            case OPPO -> mips.append(generateOppo(quaternion));
+            case OR -> mips.append(generateOr(quaternion));
+            case AND -> mips.append(generateAnd(quaternion));
+            case GREAT -> mips.append(generateGreat(quaternion));
+            case GREAT_EQUAL -> mips.append(generateGreatEqual(quaternion));
+            case LITTLE -> mips.append(generateLittle(quaternion));
+            case LITTLE_EQUAL -> mips.append(generateLittleEqual(quaternion));
+            case NOT_EQUAL -> mips.append(generateNotEqual(quaternion));
+            case EQUAL -> mips.append(generateEqual(quaternion));
+            case NOT -> mips.append(generateNot(quaternion));
+            case LABEL -> mips.append(generateLabel(quaternion));
+            case SKIP -> mips.append(generateSkip(quaternion));
+            case BRANCH_IF_FALSE -> mips.append(generateBranchIfFalse(quaternion));
+            case PRINT_STRING -> mips.append(generatePrintString(quaternion));
+            case PRINT_INT -> mips.append(generatePrintInt(quaternion));
+            case GETINT -> mips.append(generateGetint(quaternion));
+            case VAR_INT_DECLARE, CONST_INT_DECLARE -> mips.append(generateIntDeclare(quaternion));
+            case VAR_ARRAY_DECLARE, CONST_ARRAY_DECLARE -> mips.append(generateArrayDeclare(quaternion));
         }
         return mips.toString();
     }

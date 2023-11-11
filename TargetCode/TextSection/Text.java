@@ -26,8 +26,13 @@ public class Text {
 
     public void generateTextCode() {
         StringBuilder textCodeBuilder = new StringBuilder(textCode);
-        for (SingleFunc func :
-            funcs) {
+        int length = funcs.size();
+
+        funcs.get(length - 1).generateFuncCode(new GenerateText());
+        textCodeBuilder.append(funcs.get(length - 1).getFuncCode());
+
+        for (int i = 0; i < length - 1; i++) {
+            SingleFunc func = funcs.get(i);
             func.generateFuncCode(new GenerateText());
             textCodeBuilder.append(func.getFuncCode());
         }
