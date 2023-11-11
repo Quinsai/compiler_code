@@ -59,7 +59,8 @@ public enum Operation {
     FUNC_CALL_BEGIN,
 
     /**
-     * REAL_PARA_INT, a, null, null
+     * REAL_PARA_INT, a, count, null
+     * count的计数从1开始
      */
     REAL_PARA,
 

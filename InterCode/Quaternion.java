@@ -699,6 +699,7 @@ public class Quaternion {
 
             int length = node.children.size();
             QuaternionIdentify identify;
+            int counter = 1;
 
             if (length == 0) {
                 String value = node.value;
@@ -711,18 +712,20 @@ public class Quaternion {
                     identify = new QuaternionIdentify(value);
                 }
                 setIdentifyToTreeNode(node, identify);
-                addIntoInterCodes(Operation.REAL_PARA, identify, null, null);
+                addIntoInterCodes(Operation.REAL_PARA, identify, new QuaternionIdentify(String.valueOf(counter)), null);
                 return;
             }
 
             translateAllExp(node.children.get(0));
             identify = node.children.get(0).getQuaternionIdentify();
-            addIntoInterCodes(Operation.REAL_PARA, identify, null, null);
+            addIntoInterCodes(Operation.REAL_PARA, identify, new QuaternionIdentify(String.valueOf(counter)), null);
+            counter ++;
 
             for (int i = 1; i <length; i += 2) {
                 translateAllExp(node.children.get(i+1));
                 identify = node.children.get(i+1).getQuaternionIdentify();
-                addIntoInterCodes(Operation.REAL_PARA, identify, null, null);
+                addIntoInterCodes(Operation.REAL_PARA, identify, new QuaternionIdentify(String.valueOf(counter)), null);
+                counter ++;
             }
         }
 
