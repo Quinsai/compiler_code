@@ -41,6 +41,8 @@ public class Quaternion {
      */
     private LinkedList<SingleQuaternion> quaternions;
 
+    private QuaternionIdentify currentFunc;
+
     public LinkedList<SingleQuaternion> getQuaternions() {
         return quaternions;
     }
@@ -247,6 +249,7 @@ public class Quaternion {
 
             String name = node.children.get(1).value;
             QuaternionIdentify func = new QuaternionIdentify(name);
+            currentFunc = func;
             setIdentifyToTreeNode(node.children.get(1), func);
             linkIdentifyWithSymbolTableItem(name, func, node.getScope());
             QuaternionIdentify returnType = new QuaternionIdentify(node.children.get(0).value);
@@ -312,12 +315,12 @@ public class Quaternion {
             traverseAllChildren(node);
 
             if (length == 2) {
-                addIntoInterCodes(Operation.RETURN, null, null, null);
+                addIntoInterCodes(Operation.RETURN, currentFunc, null, null);
             }
             else if (length == 3) {
                 QuaternionIdentify returnValue = node.children.get(1).getQuaternionIdentify();
 
-                addIntoInterCodes(Operation.RETURN, returnValue, null, null);
+                addIntoInterCodes(Operation.RETURN, currentFunc, returnValue, null);
             }
         }
 
@@ -945,6 +948,8 @@ public class Quaternion {
 
         @Override
         public void translateMainFunc(TreeNode node) {
+
+            currentFunc = new QuaternionIdentify("main");
             addIntoInterCodes(Operation.MAIN_FUNC_BEGIN, null, null, null);
 
             node.children.get(4).traverse(this);

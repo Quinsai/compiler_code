@@ -48,8 +48,8 @@ public enum Operation {
     FORMAL_PARA_ARRAY,
 
     /**
-     * RETURN, null, null, null
-     * RETURN, 12, null, null
+     * RETURN, currentFunc, null, null
+     * RETURN, currentFunc, 12, null
      */
     RETURN,
 
