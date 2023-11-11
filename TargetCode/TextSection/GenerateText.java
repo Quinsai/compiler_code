@@ -125,7 +125,7 @@ public class GenerateText implements IGenerateText {
 
         // 是全局数据.data段的
         if (quaternion.getParam1().getType() == QuaternionIdentifyType.GLOBAL) {
-            value = getIdentify(mips, quaternion.getParam2(), 2, true);
+            value = getIdentify(mips, quaternion.getParam2(), 2, false);
             mips.append("\tsw ").append(value).append(", ").append(quaternion.getParam1().getValue()).append("\n");
         }
         // 使用寄存器的局部变量，用li指令
@@ -174,7 +174,7 @@ public class GenerateText implements IGenerateText {
             // 一维数组
             if (dimension == 1) {
                 QuaternionIdentify identify = value.arrayValue.get(i);
-                String v = getIdentify(mips, identify, 2, true);
+                String v = getIdentify(mips, identify, 2, false);
                 mips.append("\tsw ").append(v).append(", ").append(index * 4).append("($t0)\n");
                 index ++;
             }
@@ -183,7 +183,7 @@ public class GenerateText implements IGenerateText {
                 QuaternionIdentify firstDimensionValue = value.arrayValue.get(i);
                 for (int j = 0; j < size2; j++) {
                     QuaternionIdentify identify = firstDimensionValue.arrayValue.get(j);
-                    String v = getIdentify(mips, identify, 2, true);
+                    String v = getIdentify(mips, identify, 2, false);
                     mips.append("\tsw ").append(v).append(", ").append(index * 4).append("($t0)\n");
                     index ++;
                 }
@@ -405,7 +405,7 @@ public class GenerateText implements IGenerateText {
 
         StringBuilder mips = new StringBuilder();
         String param1 = getIdentify(mips, quaternion.getParam1(), 1, false);
-        String param2 = getIdentify(mips, quaternion.getParam2(), 2, true);
+        String param2 = getIdentify(mips, quaternion.getParam2(), 2, false);
 
         mips.append("\tsgt $t0, ").append(param1).append(", ").append(param2).append("\n");
         setIdentifyIntoStack(mips, quaternion.getResult());
@@ -417,7 +417,7 @@ public class GenerateText implements IGenerateText {
 
         StringBuilder mips = new StringBuilder();
         String param1 = getIdentify(mips, quaternion.getParam1(), 1, false);
-        String param2 = getIdentify(mips, quaternion.getParam2(), 2, true);
+        String param2 = getIdentify(mips, quaternion.getParam2(), 2, false);
 
         mips.append("\tsge $t0, ").append(param1).append(", ").append(param2).append("\n");
         setIdentifyIntoStack(mips, quaternion.getResult());
@@ -429,7 +429,7 @@ public class GenerateText implements IGenerateText {
 
         StringBuilder mips = new StringBuilder();
         String param1 = getIdentify(mips, quaternion.getParam1(), 1, false);
-        String param2 = getIdentify(mips, quaternion.getParam2(), 2, true);
+        String param2 = getIdentify(mips, quaternion.getParam2(), 2, false);
 
         mips.append("\tslt $t0, ").append(param1).append(", ").append(param2).append("\n");
         setIdentifyIntoStack(mips, quaternion.getResult());
@@ -441,7 +441,7 @@ public class GenerateText implements IGenerateText {
 
         StringBuilder mips = new StringBuilder();
         String param1 = getIdentify(mips, quaternion.getParam1(), 1, false);
-        String param2 = getIdentify(mips, quaternion.getParam2(), 2, true);
+        String param2 = getIdentify(mips, quaternion.getParam2(), 2, false);
 
         mips.append("\tsle $t0, ").append(param1).append(", ").append(param2).append("\n");
         setIdentifyIntoStack(mips, quaternion.getResult());
