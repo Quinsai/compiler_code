@@ -511,6 +511,10 @@ public class Quaternion {
             int i = 0;
             int length = node.children.size();
 
+            if (length == 0) {
+                return;
+            }
+
             // 'return' [Exp] ';'
             if (node.children.get(0).value.equals("return")) {
                 translateReturn(node);
@@ -737,7 +741,7 @@ public class Quaternion {
             addIntoInterCodes(Operation.REAL_PARA, identify, new QuaternionIdentify(String.valueOf(counter)), null);
             counter ++;
 
-            for (int i = 1; i <length; i += 2) {
+            for (int i = 1; i < length - 1; i += 2) {
                 translateAllExp(node.children.get(i+1));
                 identify = node.children.get(i+1).getQuaternionIdentify();
                 addIntoInterCodes(Operation.REAL_PARA, identify, new QuaternionIdentify(String.valueOf(counter)), null);
