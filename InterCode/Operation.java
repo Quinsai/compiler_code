@@ -113,7 +113,6 @@ public enum Operation {
     EQUAL,
     NOT_EQUAL,
     NOT,
-    ASSIGN,
 
     /**
      * LABEL, label, null, null
