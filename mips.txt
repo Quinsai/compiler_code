@@ -1,81 +1,111 @@
 .data
-	aa: .word 12
-	bb: .word 12
-	string_V22: .asciiz "*"
-	string_V30: .asciiz "\n"
+	b: .word 0, 0, 0, 0, 0, 0, 
+	c: .word 0, 0, 0, 
+	string_V50: .asciiz "-"
+	string_V54: .asciiz "\n"
 
 .text
 main_begin:
-	li $v0, 5
-	syscall
-	move $t0, $v0
-	sw $t0, 8($sp)
-	li $v0, 5
-	syscall
-	move $t0, $v0
-	sw $t0, 4($sp)
-	li $t0, 1
+	li $t3, 2
+	mul $t0, $t3, 1
 	sw $t0, 0($sp)
-label_V9:
 	lw $t1, 0($sp)
-	lw $t2, 8($sp)
-	sle $t0, $t1, $t2
-	sw $t0, 12($sp)
-	lw $t1, 12($sp)
-	beqz $t1, label_V10
-	li $t0, 0
-	sw $t0, 16($sp)
-label_V15:
-	lw $t1, 16($sp)
-	lw $t2, 0($sp)
-	sle $t0, $t1, $t2
-	sw $t0, 20($sp)
-	lw $t1, 20($sp)
-	beqz $t1, label_V16
-	lw $t1, 16($sp)
+	add $t0, $t1, 2
+	sw $t0, 4($sp)
 	lw $t2, 4($sp)
-	seq $t0, $t1, $t2
+	mul $t1, $t2, 4
+	la $t0, b($t1)
+	sw $t0, 8($sp)
+	li $t3, 6
+	lw $t1, 8($sp)
+	sw $t3, 0($t1)
+	li $t3, 2
+	mul $t1, $t3, 4
+	la $t0, c($t1)
+	sw $t0, 12($sp)
+	li $t3, 7
+	lw $t1, 12($sp)
+	sw $t3, 0($t1)
+	li $t3, 0
+	mul $t1, $t3, 4
+	la $t0, c($t1)
+	sw $t0, 16($sp)
+	li $t3, 12
+	lw $t1, 16($sp)
+	sw $t3, 0($t1)
+	li $t3, 1
+	mul $t1, $t3, 4
+	la $t0, c($t1)
+	sw $t0, 20($sp)
+	li $t3, 2
+	mul $t1, $t3, 4
+	la $t0, c($t1)
 	sw $t0, 24($sp)
 	lw $t1, 24($sp)
-	beqz $t1, label_V21
-	j label_V17
-label_V21:
-	la $a0, string_V22
-	li $v0, 4
-	syscall
-label_V17:
-	lw $t1, 16($sp)
-	add $t0, $t1, 1
+	lw $t0, 0($t1)
 	sw $t0, 28($sp)
-	lw $t2, 28($sp)
-	move $t0, $t2
-	sw $t0, 16($sp)
-	j label_V15
-label_V16:
-	lw $t1, 0($sp)
-	li $t3, 5
-	div $t1, $t3
-	mfhi $t0
+	li $t3, 0
+	mul $t1, $t3, 4
+	la $t0, c($t1)
 	sw $t0, 32($sp)
 	lw $t1, 32($sp)
-	seq $t0, $t1, 0
+	lw $t0, 0($t1)
 	sw $t0, 36($sp)
-	lw $t1, 36($sp)
-	beqz $t1, label_V29
-	j label_V10
-label_V29:
-	la $a0, string_V30
-	li $v0, 4
-	syscall
-label_V11:
-	lw $t1, 0($sp)
-	add $t0, $t1, 1
+	lw $t1, 28($sp)
+	lw $t2, 36($sp)
+	add $t0, $t1, $t2
 	sw $t0, 40($sp)
 	lw $t2, 40($sp)
-	move $t0, $t2
-	sw $t0, 0($sp)
-	j label_V9
-label_V10:
+	lw $t1, 20($sp)
+	sw $t2, 0($t1)
+	li $t3, 2
+	mul $t0, $t3, 0
+	sw $t0, 44($sp)
+	lw $t1, 44($sp)
+	add $t0, $t1, 0
+	sw $t0, 48($sp)
+	lw $t2, 48($sp)
+	mul $t1, $t2, 4
+	la $t0, b($t1)
+	sw $t0, 52($sp)
+	lw $t1, 52($sp)
+	li $v0, 5
+	syscall
+	sw $v0, 0($t1)
+	li $t3, 2
+	mul $t0, $t3, 0
+	sw $t0, 56($sp)
+	lw $t1, 56($sp)
+	add $t0, $t1, 0
+	sw $t0, 60($sp)
+	lw $t2, 60($sp)
+	mul $t1, $t2, 4
+	la $t0, b($t1)
+	sw $t0, 64($sp)
+	lw $t1, 64($sp)
+	lw $t0, 0($t1)
+	sw $t0, 68($sp)
+	lw $t1, 68($sp)
+	move $a0, $t1
+	li $v0, 1
+	syscall
+	la $a0, string_V50
+	li $v0, 4
+	syscall
+	li $t3, 1
+	mul $t1, $t3, 4
+	la $t0, c($t1)
+	sw $t0, 72($sp)
+	lw $t1, 72($sp)
+	lw $t0, 0($t1)
+	sw $t0, 76($sp)
+	lw $t1, 76($sp)
+	move $a0, $t1
+	li $v0, 1
+	syscall
+	la $a0, string_V54
+	li $v0, 4
+	syscall
 	li $t3, 0
 	move $v0, $t3
 	j main_end

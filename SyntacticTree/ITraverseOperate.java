@@ -29,8 +29,9 @@ public interface ITraverseOperate {
 
     /**
      * 翻译左值表达式LVal
+     * @param isAssign 是否是赋值，true代表赋值，否则false代表引用
      */
-    void translateLVal(TreeNode node);
+    void translateLVal(TreeNode node, boolean isAssign);
 
     void translateForStmt(TreeNode node);
 

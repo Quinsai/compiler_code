@@ -209,7 +209,16 @@ public class Data {
                 }
             }
         }
-
+        // 没有被显式地赋值，各个维度均为0
+        else {
+            int size = Integer.parseInt(quaternion.getParam1().getValue());
+            if (dimension == 2) {
+                size *= Integer.parseInt(quaternion.getParam2().getValue());
+            }
+            for (int i = 0; i < size; i++) {
+                mips.append("0, ");
+            }
+        }
 //        if (index + 1 < length && quaternions.get(index + 1).getOperation() == Operation.ARRAY_INIT) {
 //
 //            SingleQuaternion assignQuaternion = this.quaternions.get(index + 1);

@@ -331,9 +331,14 @@ public class Quaternion {
         }
 
         private void translateGetint(TreeNode node) {
-            translateAllExp(node.children.get(0));
+            translateLVal(node.children.get(0), true);
             QuaternionIdentify temp = node.children.get(0).getQuaternionIdentify();
-            addIntoInterCodes(Operation.GETINT, temp, null, null);
+            if (temp.isAddress) {
+                addIntoInterCodes(Operation.GETINT_TO_ADDRESS, temp, null, null);
+            }
+            else {
+                addIntoInterCodes(Operation.GETINT, temp, null, null);
+            }
         }
 
         private void translateBreak(TreeNode node) {
@@ -526,11 +531,17 @@ public class Quaternion {
             // LVal '=' Exp ';'
             else if (length == 4 && node.children.get(1).value.equals("=")) {
 
-                traverseAllChildren(node);
+                translateLVal(node.children.get(0), true);
+                translateAllExp(node.children.get(2));
 
                 QuaternionIdentify left = node.children.get(0).getQuaternionIdentify();
                 QuaternionIdentify right = node.children.get(2).getQuaternionIdentify();
-                addIntoInterCodes(Operation.SET_VALUE, left, right, null);
+                if (left.isAddress) {
+                    addIntoInterCodes(Operation.STORE_TO_ADDRESS, left, right, null);
+                }
+                else {
+                    addIntoInterCodes(Operation.SET_VALUE, left, right, null);
+                }
             }
             // 'break' ';'
             else if (length == 2 && node.children.get(0).value.equals("break")) {
@@ -564,7 +575,7 @@ public class Quaternion {
         }
 
         @Override
-        public void translateLVal(TreeNode node) {
+        public void translateLVal(TreeNode node, boolean isAssign) {
 
             int length = node.children.size();
             String nameString;
@@ -590,8 +601,17 @@ public class Quaternion {
                 QuaternionIdentify offset1 = node.children.get(2).getQuaternionIdentify();
                 QuaternionIdentify address = new QuaternionIdentify("");
                 identify = new QuaternionIdentify("");
-                addIntoInterCodes(Operation.GET_VALUE, name, offset1, identify);
-                // addIntoInterCodes(Operation.GET_VALUE, address, null, identify);
+                // 如果是赋值也就是左边，数组以地址的姿态出现即可
+                if (isAssign) {
+                    addIntoInterCodes(Operation.GET_ADDRESS, name, offset1, identify);
+                    identify.isAddress = true;
+                }
+                // 如果是引用，也就是右边，则必须要获取到值
+                else {
+                    addIntoInterCodes(Operation.GET_ADDRESS, name, offset1, address);
+                    addIntoInterCodes(Operation.GET_VALUE, address, null, identify);
+                }
+
                 setIdentifyToTreeNode(node, identify);
             }
             // a[1][1]
@@ -620,15 +640,26 @@ public class Quaternion {
                  */
                 addIntoInterCodes(Operation.MULT, size1.getValue(), offset1, temp);
                 addIntoInterCodes(Operation.PLUS, temp, offset2, temp1);
-                addIntoInterCodes(Operation.GET_VALUE, name, temp1, identify);
+                // addIntoInterCodes(Operation.GET_ADDRESS, name, temp1, identify);
                 // addIntoInterCodes(Operation.GET_VALUE, address, null, identify);
+                // 如果是赋值也就是左边，数组以地址的姿态出现即可
+                if (isAssign) {
+                    addIntoInterCodes(Operation.GET_ADDRESS, name, temp1, identify);
+                    identify.isAddress = true;
+                }
+                // 如果是引用，也就是右边，则必须要获取到值
+                else {
+                    addIntoInterCodes(Operation.GET_ADDRESS, name, temp1, address);
+                    addIntoInterCodes(Operation.GET_VALUE, address, null, identify);
+                }
                 setIdentifyToTreeNode(node, identify);
             }
         }
 
         @Override
         public void translateForStmt(TreeNode node) {
-            traverseAllChildren(node);
+            translateLVal(node.children.get(0), true);
+            translateAllExp(node.children.get(2));
 
             QuaternionIdentify left = node.children.get(0).getQuaternionIdentify();
             QuaternionIdentify right = node.children.get(2).getQuaternionIdentify();
@@ -931,7 +962,7 @@ public class Quaternion {
             }
             // LVal → Ident '[' Exp ']'
             else if (node.children.get(1).value.equals("[")) {
-                translateLVal(node);
+                translateLVal(node, false);
             }
             // RelExp → AddExp { ('<' | '>' | '<=' | '>=') AddExp }
             else if (length >= 3 && (

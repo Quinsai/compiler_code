@@ -45,6 +45,11 @@ public class QuaternionIdentify {
 
     private QuaternionIdentifyType type;
 
+    /**
+     * 用以标明这个四元式变量本质上指的是一个地址还是一个值
+     */
+    public boolean isAddress;
+
     public String id;
 
     /**
@@ -69,6 +74,7 @@ public class QuaternionIdentify {
         this.register = "";
         this.address = 0;
         this.arrayValue = new ArrayList<>();
+        this.isAddress = false;
         count ++;
         id = "V" + count;
         if (this.value.matches("^-?\\d+$")) {

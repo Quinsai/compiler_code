@@ -5,11 +5,23 @@ package InterCode;
  */
 public enum Operation {
     /*
-     * ADDRESS, a, offset, t
+     * GET_ADDRESS, a, offset, t
      * 获取`a`所指向的地址偏移（增大）`offset`后的地址
      */
     // 和GET_VALUE功能重复，直接并入GET_VALUE
-    // ADDRESS,
+    // 重复个毛线啊！不重复
+    GET_ADDRESS,
+
+    /**
+     * STORE_TO_ADDRESS, address, value, null
+     */
+    STORE_TO_ADDRESS,
+
+    /**
+     * GETINT_TO_ADDRESS, address, null, null
+     * 把getint读入的数字直接存在address中
+     */
+    GETINT_TO_ADDRESS,
 
     /**
      * GET_VALUE, a, null, v

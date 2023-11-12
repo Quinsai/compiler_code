@@ -91,7 +91,6 @@ public class TreeNode {
             case FuncFParams -> operate.translateFuncFParams(this);
             case Block -> operate.translateBlock(this);
             case Stmt -> operate.translateStmt(this);
-            case LVal -> operate.translateLVal(this);
             case ForStmt -> operate.translateForStmt(this);
             case Exp, AddExp, MulExp, UnaryExp, PrimaryExp, Cond, ConstExp, LOrExp, LAndExp, EqExp, RelExp
                 -> operate.translateAllExp(this);

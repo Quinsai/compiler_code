@@ -196,11 +196,9 @@ public class GenerateText implements IGenerateText {
     private String generateGetValue(SingleQuaternion quaternion) {
 
         StringBuilder mips = new StringBuilder();
-        String address = quaternion.getParam1().getValue();
-        String offset = getIdentify(mips, quaternion.getParam2(), 1, false);
+        String address = getIdentify(mips, quaternion.getParam1(), 1, false);
 
-        mips.append("\tmul ").append(offset).append(", ").append(offset).append(", 4\n");
-        mips.append("\tlw $t0, ").append(address).append("(").append(offset).append(")\n");
+        mips.append("\tlw $t0, 0(").append(address).append(")\n");
 
         setIdentifyIntoStack(mips, quaternion.getResult());
 
@@ -563,7 +561,58 @@ public class GenerateText implements IGenerateText {
 
     // TODO 数组定义
     private String generateArrayDeclare(SingleQuaternion quaternion) {
-        return "";
+
+        StringBuilder mips = new StringBuilder();
+        int dimension = 1;
+        int size = 0;
+
+        if (quaternion.getParam2() != null) {
+            dimension ++;
+        }
+        size = Integer.parseInt(quaternion.getParam1().getValue());
+        if (dimension == 2) {
+            size *= Integer.parseInt(quaternion.getParam2().getValue());
+        }
+
+        return mips.toString();
+    }
+
+    private String generateGetAddress(SingleQuaternion quaternion) {
+
+        StringBuilder mips = new StringBuilder();
+        String offset = getIdentify(mips, quaternion.getParam2(), 2, false);
+
+        if (quaternion.getParam1().getType() == QuaternionIdentifyType.GLOBAL) {
+            String name = quaternion.getParam1().getValue();
+            mips.append("\tmul $t1, ").append(offset).append(", 4\n");
+            mips.append("\tla $t0, ").append(name).append("($t1)\n");
+            setIdentifyIntoStack(mips, quaternion.getResult());
+        }
+
+        return mips.toString();
+    }
+
+    private String generateStoreToAddress(SingleQuaternion quaternion) {
+
+        StringBuilder mips = new StringBuilder();
+        String value = getIdentify(mips, quaternion.getParam2(), 2, false);
+        String address = getIdentify(mips, quaternion.getParam1(), 1, false);
+
+        mips.append("\tsw ").append(value).append(", 0(").append(address).append(")\n");
+
+        return mips.toString();
+    }
+
+    private String generateGetintToAddress(SingleQuaternion quaternion) {
+
+        StringBuilder mips = new StringBuilder();
+        String address = getIdentify(mips, quaternion.getParam1(), 1, false);
+
+        mips.append("\tli $v0, 5\n");
+        mips.append("\tsyscall\n");
+        mips.append("\tsw $v0, 0(").append(address).append(")\n");
+
+        return mips.toString();
     }
 
     @Override
@@ -578,7 +627,6 @@ public class GenerateText implements IGenerateText {
             case MOD -> mips.append(generateMod(quaternion));
             case SET_VALUE -> mips.append(generateSetValue(quaternion));
             case ARRAY_INIT -> mips.append(generateArrayInit(quaternion));
-            // ADDRESS和GET_VALUE一定是接连出现的，因此可以把它们写在一起
             case GET_VALUE -> mips.append(generateGetValue(quaternion));
             case MAIN_FUNC_BEGIN -> mips.append(generateMainFuncBegin(quaternion));
             case MAIN_FUNC_END -> mips.append(generateMainFuncEnd(quaternion));
@@ -608,6 +656,9 @@ public class GenerateText implements IGenerateText {
             case GETINT -> mips.append(generateGetint(quaternion));
             case VAR_INT_DECLARE, CONST_INT_DECLARE -> mips.append(generateIntDeclare(quaternion));
             case VAR_ARRAY_DECLARE, CONST_ARRAY_DECLARE -> mips.append(generateArrayDeclare(quaternion));
+            case GET_ADDRESS -> mips.append(generateGetAddress(quaternion));
+            case STORE_TO_ADDRESS -> mips.append(generateStoreToAddress(quaternion));
+            case GETINT_TO_ADDRESS -> mips.append(generateGetintToAddress(quaternion));
         }
         return mips.toString();
     }

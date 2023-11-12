@@ -1,43 +1,13 @@
-const int aa = 12;
-int bb = 12;
-
-/*
-int f1(int aa, int bb) {
-	if (aa % 2 == 0) {
-        printf("Quinsai\n");
-    }
-    else if (bb % 3 == 2) {
-        printf("Keine\n");
-    }
-    else {
-        printf("Forever!\n");
-    }
-    printf(" Vive!\n");
-    return (aa % 2) * (bb % 3);
-}
-*/
+int b[2][3] ;
+int c[3];
 
 int main() {
-
-    int m;
-    int n;
-    int k;
-    k = getint();
-    n = getint();
-    for (m = 1; m <= k; m = m + 1){
-        int i;
-
-        for (i = 0; i <= m ;i = i + 1) {
-            if (i == n) {
-                continue;
-            }
-            printf("*");
-        }
-        if (m % 5 == 0) {
-            break;
-        }
-        printf("\n");
-    }
-
+	b[1][2] = 6;
+	c[2] = 7;
+	c[0] = 12;
+	c[1] = c[2] + c[0];
+	b[0][0] = getint();
+	printf("%d-", b[0][0]);
+	printf("%d\n", c[1]);
 	return 0;
 }
