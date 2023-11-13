@@ -39,10 +39,13 @@ public class Tree {
     }
 
     /**
-     * 简化语法树，删除合并单传结点
+     * 简化语法树，计算ConstExp的值并删除合并单传结点
      */
     public void simplifyTree() {
-        this.root.simplifyNode();
+        // 为了更简单的计算ConstExp的值，
+        // 我最终决定先算值再进行合并单传节点的优化
+        this.root.simplifyConstValue();
+        this.root.mergeSingleChild();
     }
 
     public void traverse(ITraverseOperate operate) {

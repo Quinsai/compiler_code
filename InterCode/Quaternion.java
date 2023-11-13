@@ -204,7 +204,7 @@ public class Quaternion {
             }
             // 数组
             else {
-                translateAllExp(children.get(2));
+                translateConst(children.get(2));
                 QuaternionIdentify arraySizeOne = children.get(2).getQuaternionIdentify();
                 Operation operation = Operation.VAR_ARRAY_DECLARE;
                 if (varOrConst == 2) {
@@ -213,7 +213,7 @@ public class Quaternion {
                 // 二维数组
                 if (length > 4 && children.get(4).value.equals("[")) {
                     dimension = 2;
-                    translateAllExp(children.get(5));
+                    translateConst(children.get(5));
                     QuaternionIdentify arraySizeTwo = children.get(5).getQuaternionIdentify();
                     identify.getSymbolTableItem().setArraySize(arraySizeOne, arraySizeTwo);
                     addIntoInterCodes(operation, arraySizeOne, arraySizeTwo, identify);
@@ -230,17 +230,47 @@ public class Quaternion {
             if (children.get(length - 2).value.equals("=")) {
                 // 给int初始化一个int值
                 if (dimension == 0) {
-                    translateAllExp(node.children.get(length - 1));
+                    switch (node.children.get(length - 1).name) {
+                        case ConstInitVal -> translateConst(node.children.get(length - 1));
+                        case InitVal -> translateAllExp(node.children.get(length - 1));
+                    }
                     QuaternionIdentify intInitialValue = node.children.get(length - 1).getQuaternionIdentify();
                     addIntoInterCodes(Operation.SET_VALUE, identify, intInitialValue, null);
                 }
                 // 给数组初始化一个数组
                 else {
-                    translateArrayInit(node.children.get(length - 1));
+                    switch (node.children.get(length - 1).name) {
+                        case ConstInitVal -> translateConstArrayInit(node.children.get(length - 1));
+                        case InitVal -> translateArrayInit(node.children.get(length - 1));
+                    }
                     QuaternionIdentify arrayInitialValue = node.children.get(length - 1).getQuaternionIdentify();
                     addIntoInterCodes(Operation.ARRAY_INIT, identify, arrayInitialValue, null);
                 }
             }
+        }
+
+        private void translateConstArrayInit(TreeNode node) {
+            QuaternionIdentify identify = new QuaternionIdentify("");
+            // 一维
+            if (!node.constOneDArrayValue.isEmpty()) {
+                for (int value :
+                    node.constOneDArrayValue) {
+                    identify.arrayValue.add(new QuaternionIdentify(String.valueOf(value)));
+                }
+            }
+            // 二维
+            else {
+                for (ArrayList<Integer> dimensionOne :
+                    node.constTwoDArrayValue) {
+                    QuaternionIdentify temp = new QuaternionIdentify("");
+                    for (int value :
+                        dimensionOne) {
+                        temp.arrayValue.add(new QuaternionIdentify(String.valueOf(value)));
+                    }
+                    identify.arrayValue.add(temp);
+                }
+            }
+            setIdentifyToTreeNode(node,identify);
         }
 
         @Override
@@ -1055,6 +1085,11 @@ public class Quaternion {
             for (int i = 0, j = 1; i < length; i += 2, j++) {
                 translateFuncFParam(node.children.get(i), j);
             }
+        }
+
+        @Override
+        public void translateConst(TreeNode node) {
+            node.setQuaternionIdentify(new QuaternionIdentify(String.valueOf(node.constValue)));
         }
 
 

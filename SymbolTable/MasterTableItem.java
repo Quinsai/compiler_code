@@ -61,6 +61,21 @@ public class MasterTableItem {
     private QuaternionIdentify quaternionIdentify;
 
     /**
+     * constExp的value
+     */
+    public int constValue;
+
+    /**
+     * 一维数组常量值
+     */
+    public ArrayList<Integer> constOneDArrayValue;
+
+    /**
+     * 二维数组常量值
+     */
+    public ArrayList<ArrayList<Integer>> constTwoDArrayValue;
+
+    /**
      * 新定义一个有符号意义的条目
      */
     public MasterTableItem(String name, SymbolConst category, SymbolConst type, int scope) {
@@ -72,6 +87,8 @@ public class MasterTableItem {
         this.functionLink = null;
         this.scope = scope;
         this.subTableLink = null;
+        this.constOneDArrayValue = new ArrayList<>();
+        this.constTwoDArrayValue = new ArrayList<>();
     }
 
     /**
