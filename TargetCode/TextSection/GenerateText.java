@@ -256,10 +256,12 @@ public class GenerateText implements IGenerateText {
 
         // 可以使用a系列寄存器来存参数
         if (count <= 4) {
+            quaternion.getParam1().setType(QuaternionIdentifyType.PARAM);
             quaternion.getParam1().setRegister("$a" + (count - 1));
         }
         // 超出4个，必须使用栈来传递参数
         else {
+            quaternion.getParam1().setType(QuaternionIdentifyType.PARAM);
             quaternion.getParam1().pushIntoStack();
         }
 

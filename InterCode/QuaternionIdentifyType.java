@@ -18,5 +18,10 @@ public enum QuaternionIdentifyType {
     /**
      * 数字
      */
-    NUMBER
+    NUMBER,
+
+    /**
+     * 参数
+     */
+    PARAM,
 }
