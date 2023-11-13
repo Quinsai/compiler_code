@@ -60,6 +60,8 @@ public class TreeNode {
      */
     public ArrayList<ArrayList<Integer>> constTwoDArrayValue;
 
+    static boolean isGlobal = true;
+
     public TreeNode(TreeNodeName name, String value, TreeNode parent) {
         this.name = name;
         this.value = value;
@@ -260,8 +262,6 @@ public class TreeNode {
 
     public void simplifyConstValue() {
 
-        boolean isGlobal = true;
-
         switch (this.name) {
             case ConstDef -> setConstIdentifyValue();
             case ConstExp, ConstInitVal -> {
@@ -277,6 +277,10 @@ public class TreeNode {
             }
             case MainFuncDef -> {
                 isGlobal = false;
+                for (TreeNode childNode :
+                    this.children) {
+                    childNode.simplifyConstValue();
+                }
             }
             default -> {
                 for (TreeNode childNode :
