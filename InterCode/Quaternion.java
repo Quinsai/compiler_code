@@ -303,6 +303,7 @@ public class Quaternion {
         public void translateFuncFParam(TreeNode node, int count) {
 
             int length = node.children.size();
+            int dimension = 0;
 
             traverseAllChildren(node);
 
@@ -318,12 +319,14 @@ public class Quaternion {
             else if (length == 4) {
 
                 paramName = new QuaternionIdentify(node.children.get(1).value);
+                dimension = 1;
 
                 addIntoInterCodes(Operation.FORMAL_PARA_ARRAY, paramName, null, countIdentify);
             }
             else {
 
                 paramName = new QuaternionIdentify(node.children.get(1).value);
+                dimension = 2;
 
                 QuaternionIdentify secondSize = node.children.get(5).getQuaternionIdentify();
 
@@ -332,6 +335,10 @@ public class Quaternion {
 
             setIdentifyToTreeNode(node.children.get(1), paramName);
             linkIdentifyWithSymbolTableItem(node.children.get(1).value, paramName, node.getScope());
+
+            if (dimension == 2) {
+                paramName.getSymbolTableItem().setArraySize(new QuaternionIdentify(""), null);
+            }
         }
 
         @Override
@@ -668,7 +675,7 @@ public class Quaternion {
                  * 6 + 4 = 10;
                  * a + 10
                  */
-                addIntoInterCodes(Operation.MULT, size1.getValue(), offset1, temp);
+                /*addIntoInterCodes(Operation.MULT, resultOfSize1.getValue(), offset1, temp);
                 addIntoInterCodes(Operation.PLUS, temp, offset2, temp1);
                 // addIntoInterCodes(Operation.GET_ADDRESS, name, temp1, identify);
                 // addIntoInterCodes(Operation.GET_VALUE, address, null, identify);
@@ -680,6 +687,29 @@ public class Quaternion {
                 // 如果是引用，也就是右边，则必须要获取到值
                 else {
                     addIntoInterCodes(Operation.GET_ADDRESS, name, temp1, address);
+                    addIntoInterCodes(Operation.GET_VALUE, address, null, identify);
+                }
+                setIdentifyToTreeNode(node, identify);*/
+
+                // 事到如今我们不得不重新考虑二维数组存的形式了
+                // 反复的实践证明了一件事情，试图把二维数组连起来变成一维数组只有死路一条
+                // 因为在函数形参中，我绝无可能在四元式阶段及其之前获取到二维数组第一维度的尺寸
+                // 我们不得不试图从另一个角度看待二维数组：
+                // 二维数组是一维数组的首地址组成的数组
+                // 也许这才是符合逻辑的方法
+                // 也许这会更复杂
+                // 但还有什么办法呢
+                // 我们只能这么做了
+                if (isAssign) {
+                    QuaternionIdentify dimension1 = new QuaternionIdentify("");
+                    addIntoInterCodes(Operation.GET_ADDRESS, name, offset1, dimension1);
+                    addIntoInterCodes(Operation.GET_ADDRESS, dimension1, offset2, identify);
+                    identify.isAddress = true;
+                }
+                else {
+                    QuaternionIdentify dimension1 = new QuaternionIdentify("");
+                    addIntoInterCodes(Operation.GET_ADDRESS, name, offset1, dimension1);
+                    addIntoInterCodes(Operation.GET_ADDRESS, dimension1, offset2, address);
                     addIntoInterCodes(Operation.GET_VALUE, address, null, identify);
                 }
                 setIdentifyToTreeNode(node, identify);
