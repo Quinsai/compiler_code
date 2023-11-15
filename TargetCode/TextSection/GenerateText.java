@@ -32,7 +32,13 @@ public class GenerateText implements IGenerateText {
         }
         // 是全局变量
         else if (identify.getType() == QuaternionIdentifyType.GLOBAL) {
-            String getCode = "\tlw $t" + paramIndex + ", " + identify.getValue() + "\n";
+            String getCode;
+            if (identify.isArrayIdentify) {
+                getCode = "\tla $t" + paramIndex + ", " + identify.getValue() + "\n";
+            }
+            else {
+                getCode = "\tlw $t" + paramIndex + ", " + identify.getValue() + "\n";
+            }
             builder.append(getCode);
             return "$t" + paramIndex;
         }
@@ -168,16 +174,13 @@ public class GenerateText implements IGenerateText {
             size2 = value.arrayValue.get(0).arrayValue.size();
         }
 
-        getIdentify(mips, array, 1, false);
+        String arrayHead = getIdentify(mips, array, 1, false);
 
-        int index = 0;
+        /*int index = 0;
         for (int i = 0; i < size1; i++) {
             // 一维数组
             if (dimension == 1) {
-                QuaternionIdentify identify = value.arrayValue.get(i);
-                String v = getIdentify(mips, identify, 2, false);
-                mips.append("\tsw ").append(v).append(", ").append(index * 4).append("($t1)\n");
-                index ++;
+
             }
             // 二维数组
             else {
@@ -190,6 +193,24 @@ public class GenerateText implements IGenerateText {
                     String v = getIdentify(mips, identify, 2, false);
                     mips.append("\tsw ").append(v).append(", ").append(j * 4).append("($t4)\n");
                     index ++;
+                }
+            }
+        }*/
+
+        if (dimension == 1) {
+            for (int i = 0; i < size1; i++) {
+                QuaternionIdentify identify = value.arrayValue.get(i);
+                String v = getIdentify(mips, identify, 2, false);
+                mips.append("\tsw ").append(v).append(", ").append(i * 4).append("(").append(arrayHead).append(")\n");
+            }
+        }
+        else {
+            for (int i = 0; i < size1; i++) {
+                QuaternionIdentify firstDimensionValue = value.arrayValue.get(i);
+                for (int j = 0; j < size2; j++) {
+                    QuaternionIdentify identify = firstDimensionValue.arrayValue.get(j);
+                    String v = getIdentify(mips, identify, 2, false);
+                    mips.append("\tsw ").append(v).append(", ").append(((i * size2) + j) * 4).append("(").append(arrayHead).append(")\n");
                 }
             }
         }
@@ -594,6 +615,7 @@ public class GenerateText implements IGenerateText {
 
             mips.append("\tla $t0, ").append(4 * (QuaternionIdentify.stackIndex + 1)).append("($sp)\n");
             setIdentifyIntoStack(mips, quaternion.getResult());
+            QuaternionIdentify.stackIndex ++;
 
             QuaternionIdentify.stackIndex += size1;
         }
@@ -601,14 +623,8 @@ public class GenerateText implements IGenerateText {
 
             mips.append("\tla $t0, ").append(4 * (QuaternionIdentify.stackIndex + 1)).append("($sp)\n");
             setIdentifyIntoStack(mips, quaternion.getResult());
+            QuaternionIdentify.stackIndex ++;
 
-            int headOfSecondDimension = QuaternionIdentify.stackIndex + size1;
-            for (int i = 0; i < size1; i++) {
-                mips.append("\tla $t0, ").append(4 * headOfSecondDimension).append("($sp)\n");
-                mips.append("\tsw $t0, ").append(4 * QuaternionIdentify.stackIndex).append("($sp)\n");
-                QuaternionIdentify.stackIndex ++;
-                headOfSecondDimension += size2;
-            }
             QuaternionIdentify.stackIndex += size1 * size2;
         }
 
@@ -620,18 +636,17 @@ public class GenerateText implements IGenerateText {
         StringBuilder mips = new StringBuilder();
         String offset = getIdentify(mips, quaternion.getParam2(), 2, false);
 
+        // TODO 这里要改
         if (quaternion.getParam1().getType() == QuaternionIdentifyType.GLOBAL) {
             String name = quaternion.getParam1().getValue();
             mips.append("\tmul $t1, ").append(offset).append(", 4\n");
-            mips.append("\tla $t0, ").append(name).append("($t1)\n");
+            mips.append("\tla $t2, ").append(name).append("\n");
+            mips.append("\tadd $t0, $t1, $t2\n");
             setIdentifyIntoStack(mips, quaternion.getResult());
         }
         else if (quaternion.getParam1().getType() == QuaternionIdentifyType.LOCAL) {
             mips.append("\tmul $t2, ").append(offset).append(", 4\n");
             String address = getIdentify(mips, quaternion.getParam1(), 1, false);
-//            mips.append("\tla $t2, ").append(quaternion.getParam1().getAddress()).append("($sp)\n");
-//            mips.append("\tadd $t0, $t1, $t2\n");
-//            setIdentifyIntoStack(mips, quaternion.getResult());
             mips.append("\tadd $t0, $t2, ").append(address).append("\n");
             setIdentifyIntoStack(mips, quaternion.getResult());
 

@@ -167,7 +167,7 @@ public class Quaternion {
         }
 
         @Override
-        public void translateDeclare(TreeNode node, int varOrConst) {
+        public void translateDeclare(TreeNode node, int varOrConst, boolean isGlobal) {
 
             // traverseAllChildren(node);
 
@@ -189,6 +189,9 @@ public class Quaternion {
 
             name = children.get(0).value;
             identify = new QuaternionIdentify(name);
+            if (isGlobal) {
+                identify.setType(QuaternionIdentifyType.GLOBAL);
+            }
             setIdentifyToTreeNode(children.get(0), identify);
             linkIdentifyWithSymbolTableItem(name, identify, node.getScope());
 
@@ -216,12 +219,14 @@ public class Quaternion {
                     translateConst(children.get(5));
                     QuaternionIdentify arraySizeTwo = children.get(5).getQuaternionIdentify();
                     identify.getSymbolTableItem().setArraySize(arraySizeOne, arraySizeTwo);
+                    identify.isArrayIdentify = true;
                     addIntoInterCodes(operation, arraySizeOne, arraySizeTwo, identify);
                 }
                 // 一维数组
                 else {
                     dimension = 1;
                     identify.getSymbolTableItem().setArraySize(arraySizeOne, null);
+                    identify.isArrayIdentify = true;
                     addIntoInterCodes(operation, arraySizeOne, null, identify);
                 }
             }
@@ -632,23 +637,27 @@ public class Quaternion {
                 return;
             }
 
+            QuaternionIdentify name = getIdentifyOfSymbolName(node.children.get(0).value, node.children.get(0).getScope());
+
+            if (name == null) {
+                return;
+            }
+
             // a[1]
             if (length == 4) {
-                QuaternionIdentify name = getIdentifyOfSymbolName(node.children.get(0).value, node.children.get(0).getScope());
-                QuaternionIdentify headAddress = new QuaternionIdentify("");
-                QuaternionIdentify offset1 = node.children.get(2).getQuaternionIdentify();
-                QuaternionIdentify address = new QuaternionIdentify("");
-                identify = new QuaternionIdentify("");
-                // 如果是赋值也就是左边，数组以地址的姿态出现即可
+                // 如果是赋值，必须拿到地址
                 if (isAssign) {
-                    addIntoInterCodes(Operation.GET_ARRAY_HEAD_ADDRESS, name, null, headAddress);
-                    addIntoInterCodes(Operation.GET_ADDRESS, headAddress, offset1, identify);
+                    QuaternionIdentify offset1 = node.children.get(2).getQuaternionIdentify();
+                    identify = new QuaternionIdentify("");
+                    addIntoInterCodes(Operation.GET_ADDRESS, name, offset1, identify);
                     identify.isAddress = true;
                 }
-                // 如果是引用，也就是右边，则必须要获取到值
+                // 如果是引用，还需要拿到值
                 else {
-                    addIntoInterCodes(Operation.GET_ARRAY_HEAD_ADDRESS, name, null, headAddress);
-                    addIntoInterCodes(Operation.GET_ADDRESS, headAddress, offset1, address);
+                    QuaternionIdentify offset1 = node.children.get(2).getQuaternionIdentify();
+                    QuaternionIdentify address = new QuaternionIdentify("");
+                    identify = new QuaternionIdentify("");
+                    addIntoInterCodes(Operation.GET_ADDRESS, name, offset1, address);
                     addIntoInterCodes(Operation.GET_VALUE, address, null, identify);
                 }
 
@@ -656,12 +665,10 @@ public class Quaternion {
             }
             // a[1][1]
             else if (length == 7) {
-                QuaternionIdentify name = getIdentifyOfSymbolName(node.children.get(0).value, node.children.get(0).getScope());
+
                 QuaternionIdentify offset1 = node.children.get(2).getQuaternionIdentify();
                 QuaternionIdentify offset2 = node.children.get(5).getQuaternionIdentify();
                 identify = new QuaternionIdentify("");
-                QuaternionIdentify headAddress = new QuaternionIdentify("");
-                QuaternionIdentify address = new QuaternionIdentify("");
 
                 ParamResult<QuaternionIdentify> size1;
                 ParamResult<QuaternionIdentify> size2;
@@ -669,59 +676,156 @@ public class Quaternion {
                 size2 = new ParamResult<QuaternionIdentify>(new QuaternionIdentify(""));
                 name.getSymbolTableItem().getArraySize(size1, size2);
 
-                /*
-                 * int a[2][2];
-                 * a第一维度为3， 第二维度为4
-                 * 则
-                 * 2 * 3 = 6;
-                 * 6 + 4 = 10;
-                 * a + 10
-                 */
-                /*addIntoInterCodes(Operation.MULT, resultOfSize1.getValue(), offset1, temp);
-                addIntoInterCodes(Operation.PLUS, temp, offset2, temp1);
-                // addIntoInterCodes(Operation.GET_ADDRESS, name, temp1, identify);
-                // addIntoInterCodes(Operation.GET_VALUE, address, null, identify);
-                // 如果是赋值也就是左边，数组以地址的姿态出现即可
-                if (isAssign) {
-                    addIntoInterCodes(Operation.GET_ADDRESS, name, temp1, identify);
-                    identify.isAddress = true;
-                }
-                // 如果是引用，也就是右边，则必须要获取到值
-                else {
-                    addIntoInterCodes(Operation.GET_ADDRESS, name, temp1, address);
-                    addIntoInterCodes(Operation.GET_VALUE, address, null, identify);
-                }
-                setIdentifyToTreeNode(node, identify);*/
+                QuaternionIdentify offset = new QuaternionIdentify("");
 
-                // 事到如今我们不得不重新考虑二维数组存的形式了
-                // 反复的实践证明了一件事情，试图把二维数组连起来变成一维数组只有死路一条
-                // 因为在函数形参中，我绝无可能在四元式阶段及其之前获取到二维数组第一维度的尺寸
-                // 我们不得不试图从另一个角度看待二维数组：
-                // 二维数组是一维数组的首地址组成的数组
-                // 也许这才是符合逻辑的方法
-                // 也许这会更复杂
-                // 但还有什么办法呢
-                // 我们只能这么做了
+                QuaternionIdentify dimension1 = new QuaternionIdentify("");
+
+                // 我是傻逼
+                // 这里要乘上的是第二维的大小！
+                // 所以完全不用考虑第一维的大小
+                // 啊啊啊啊啊啊啊啊啊
+                // 困扰了这么多天
+                // 终于明白了
+                addIntoInterCodes(Operation.MULT, size2.getValue(), offset1, dimension1);
+                addIntoInterCodes(Operation.PLUS, dimension1, offset2, offset);
+
+                // 如果是赋值，必须拿到地址
                 if (isAssign) {
-                    QuaternionIdentify dimension1 = new QuaternionIdentify("");
-                    QuaternionIdentify dimensionHeadAddress1 = new QuaternionIdentify("");
-                    addIntoInterCodes(Operation.GET_ARRAY_HEAD_ADDRESS, name, null, headAddress);
-                    addIntoInterCodes(Operation.GET_ADDRESS, headAddress, offset1, dimension1);
-                    addIntoInterCodes(Operation.GET_VALUE, dimension1, null, dimensionHeadAddress1);
-                    addIntoInterCodes(Operation.GET_ADDRESS, dimensionHeadAddress1, offset2, identify);
+                    addIntoInterCodes(Operation.GET_ADDRESS, name, offset, identify);
                     identify.isAddress = true;
                 }
+                // 如果是引用，还需要拿到值
                 else {
-                    QuaternionIdentify dimension1 = new QuaternionIdentify("");
-                    QuaternionIdentify dimensionHeadAddress1 = new QuaternionIdentify("");
-                    addIntoInterCodes(Operation.GET_ARRAY_HEAD_ADDRESS, name, null, headAddress);
-                    addIntoInterCodes(Operation.GET_ADDRESS, headAddress, offset1, dimension1);
-                    addIntoInterCodes(Operation.GET_VALUE, dimension1, null, dimensionHeadAddress1);
-                    addIntoInterCodes(Operation.GET_ADDRESS, dimensionHeadAddress1, offset2, address);
+                    QuaternionIdentify address = new QuaternionIdentify("");
+                    addIntoInterCodes(Operation.GET_ADDRESS, name, offset, address);
                     addIntoInterCodes(Operation.GET_VALUE, address, null, identify);
                 }
+
                 setIdentifyToTreeNode(node, identify);
             }
+
+            /*// 如果是全局中的数组
+            if (name.getType() == QuaternionIdentifyType.GLOBAL) {
+                // a[1]
+                if (length == 4) {
+                    // 如果是赋值，必须拿到地址
+                    if (isAssign) {
+                        QuaternionIdentify offset1 = node.children.get(2).getQuaternionIdentify();
+                        identify = new QuaternionIdentify("");
+                        addIntoInterCodes(Operation.GET_ADDRESS, name, offset1, identify);
+                        identify.isAddress = true;
+                    }
+                    // 如果是引用，还需要拿到值
+                    else {
+                        QuaternionIdentify offset1 = node.children.get(2).getQuaternionIdentify();
+                        QuaternionIdentify address = new QuaternionIdentify("");
+                        identify = new QuaternionIdentify("");
+                        addIntoInterCodes(Operation.GET_ADDRESS, name, offset1, address);
+                        addIntoInterCodes(Operation.GET_VALUE, address, null, identify);
+                    }
+
+                    setIdentifyToTreeNode(node, identify);
+                }
+                // a[1][1]
+                else if (length == 7) {
+
+                    QuaternionIdentify offset1 = node.children.get(2).getQuaternionIdentify();
+                    QuaternionIdentify offset2 = node.children.get(5).getQuaternionIdentify();
+                    identify = new QuaternionIdentify("");
+
+                    ParamResult<QuaternionIdentify> size1;
+                    ParamResult<QuaternionIdentify> size2;
+                    size1 = new ParamResult<QuaternionIdentify>(new QuaternionIdentify(""));
+                    size2 = new ParamResult<QuaternionIdentify>(new QuaternionIdentify(""));
+                    name.getSymbolTableItem().getArraySize(size1, size2);
+
+                    QuaternionIdentify offset = new QuaternionIdentify("");
+
+                    QuaternionIdentify dimension1 = new QuaternionIdentify("");
+                    addIntoInterCodes(Operation.MULT, size2.getValue(), offset1, dimension1);
+                    addIntoInterCodes(Operation.PLUS, dimension1, offset2, offset);
+
+                    // 如果是赋值，必须拿到地址
+                    if (isAssign) {
+                        addIntoInterCodes(Operation.GET_ADDRESS, name, offset, identify);
+                        identify.isAddress = true;
+                    }
+                    // 如果是引用，还需要拿到值
+                    else {
+                        QuaternionIdentify address = new QuaternionIdentify("");
+                        addIntoInterCodes(Operation.GET_ADDRESS, name, offset, address);
+                        addIntoInterCodes(Operation.GET_VALUE, address, null, identify);
+                    }
+
+                    setIdentifyToTreeNode(node, identify);
+                }
+            }
+            // 如果是局部定义的数组
+            else if (name.getType() == QuaternionIdentifyType.LOCAL) {
+                // a[1]
+                if (length == 4) {
+                    QuaternionIdentify headAddress = new QuaternionIdentify("");
+                    QuaternionIdentify offset1 = node.children.get(2).getQuaternionIdentify();
+                    QuaternionIdentify address = new QuaternionIdentify("");
+                    identify = new QuaternionIdentify("");
+                    // 如果是赋值也就是左边，数组以地址的姿态出现即可
+                    if (isAssign) {
+                        addIntoInterCodes(Operation.GET_ARRAY_HEAD_ADDRESS, name, null, headAddress);
+                        addIntoInterCodes(Operation.GET_ADDRESS, headAddress, offset1, identify);
+                        identify.isAddress = true;
+                    }
+                    // 如果是引用，也就是右边，则必须要获取到值
+                    else {
+                        addIntoInterCodes(Operation.GET_ARRAY_HEAD_ADDRESS, name, null, headAddress);
+                        addIntoInterCodes(Operation.GET_ADDRESS, headAddress, offset1, address);
+                        addIntoInterCodes(Operation.GET_VALUE, address, null, identify);
+                    }
+
+                    setIdentifyToTreeNode(node, identify);
+                }
+                // a[1][1]
+                else if (length == 7) {
+                    QuaternionIdentify offset1 = node.children.get(2).getQuaternionIdentify();
+                    QuaternionIdentify offset2 = node.children.get(5).getQuaternionIdentify();
+                    identify = new QuaternionIdentify("");
+                    QuaternionIdentify headAddress = new QuaternionIdentify("");
+                    QuaternionIdentify address = new QuaternionIdentify("");
+
+                    ParamResult<QuaternionIdentify> size1;
+                    ParamResult<QuaternionIdentify> size2;
+                    size1 = new ParamResult<QuaternionIdentify>(new QuaternionIdentify(""));
+                    size2 = new ParamResult<QuaternionIdentify>(new QuaternionIdentify(""));
+                    name.getSymbolTableItem().getArraySize(size1, size2);
+
+                    // 事到如今我们不得不重新考虑二维数组存的形式了
+                    // 反复的实践证明了一件事情，试图把二维数组连起来变成一维数组只有死路一条
+                    // 因为在函数形参中，我绝无可能在四元式阶段及其之前获取到二维数组第一维度的尺寸
+                    // 我们不得不试图从另一个角度看待二维数组：
+                    // 二维数组是一维数组的首地址组成的数组
+                    // 也许这才是符合逻辑的方法
+                    // 也许这会更复杂
+                    // 但还有什么办法呢
+                    // 我们只能这么做了
+                    if (isAssign) {
+                        QuaternionIdentify dimension1 = new QuaternionIdentify("");
+                        QuaternionIdentify dimensionHeadAddress1 = new QuaternionIdentify("");
+                        addIntoInterCodes(Operation.GET_ARRAY_HEAD_ADDRESS, name, null, headAddress);
+                        addIntoInterCodes(Operation.GET_ADDRESS, headAddress, offset1, dimension1);
+                        addIntoInterCodes(Operation.GET_VALUE, dimension1, null, dimensionHeadAddress1);
+                        addIntoInterCodes(Operation.GET_ADDRESS, dimensionHeadAddress1, offset2, identify);
+                        identify.isAddress = true;
+                    } else {
+                        QuaternionIdentify dimension1 = new QuaternionIdentify("");
+                        QuaternionIdentify dimensionHeadAddress1 = new QuaternionIdentify("");
+                        addIntoInterCodes(Operation.GET_ARRAY_HEAD_ADDRESS, name, null, headAddress);
+                        addIntoInterCodes(Operation.GET_ADDRESS, headAddress, offset1, dimension1);
+                        addIntoInterCodes(Operation.GET_VALUE, dimension1, null, dimensionHeadAddress1);
+                        addIntoInterCodes(Operation.GET_ADDRESS, dimensionHeadAddress1, offset2, address);
+                        addIntoInterCodes(Operation.GET_VALUE, address, null, identify);
+                    }
+                    setIdentifyToTreeNode(node, identify);
+                }
+            }*/
         }
 
         @Override
@@ -1080,7 +1184,7 @@ public class Quaternion {
             if (length >= 1 && node.children.get(0).value.equals("const")) {
                 int i = 2;
                 while (i < length) {
-                    translateDeclare(node.children.get(i), 2);
+                    translateDeclare(node.children.get(i), 2, false);
                     i += 2;
                 }
 
@@ -1088,7 +1192,7 @@ public class Quaternion {
             else if (length >= 1 && node.children.get(0).value.equals("int")) {
                 int i = 1;
                 while (i < length) {
-                    translateDeclare(node.children.get(i), 1);
+                    translateDeclare(node.children.get(i), 1, false);
                     i += 2;
                 }
             }

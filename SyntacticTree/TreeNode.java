@@ -62,6 +62,8 @@ public class TreeNode {
 
     static boolean isGlobal = true;
 
+    public boolean isGlobalData;
+
     public TreeNode(TreeNodeName name, String value, TreeNode parent) {
         this.name = name;
         this.value = value;
@@ -70,6 +72,7 @@ public class TreeNode {
         this.scope = ScopeStack.getInstance().getCurrentScope();
         this.constOneDArrayValue = new ArrayList<>();
         this.constTwoDArrayValue = new ArrayList<>();
+        this.isGlobalData = TreeNode.isGlobal;
         if (parent != null) {
             parent.children.add(this);
         }
@@ -301,8 +304,8 @@ public class TreeNode {
 
     public void traverse(ITraverseOperate operate) {
         switch (this.name) {
-            case ConstDef -> operate.translateDeclare(this, 2);
-            case VarDef -> operate.translateDeclare(this, 1);
+            case ConstDef -> operate.translateDeclare(this, 2, this.isGlobalData);
+            case VarDef -> operate.translateDeclare(this, 1, this.isGlobalData);
             case FuncDef -> operate.translateFuncDefine(this);
             case FuncFParams -> operate.translateFuncFParams(this);
             case Block -> operate.translateBlock(this);

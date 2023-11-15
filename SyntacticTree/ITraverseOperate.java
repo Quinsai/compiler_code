@@ -9,8 +9,9 @@ public interface ITraverseOperate {
     /**
      * 声明语句
      * @param varOrConst 1表示变量，2表示常量
+     * @param isGlobal 是否是全局
      */
-    void translateDeclare(TreeNode node, int varOrConst);
+    void translateDeclare(TreeNode node, int varOrConst, boolean isGlobal);
 
     /**
      * 函数定义

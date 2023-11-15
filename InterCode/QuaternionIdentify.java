@@ -43,6 +43,8 @@ public class QuaternionIdentify {
      */
     public ArrayList<QuaternionIdentify> arrayValue;
 
+    public boolean isArrayIdentify;
+
     private QuaternionIdentifyType type;
 
     /**
@@ -82,6 +84,7 @@ public class QuaternionIdentify {
         this.arrayValue = new ArrayList<>();
         this.isAddress = false;
         this.isArrayParam = false;
+        this.isArrayIdentify = false;
         count ++;
         id = "V" + count;
         if (this.value.matches("^-?\\d+$")) {
