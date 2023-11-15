@@ -65,7 +65,9 @@ public class Data {
         // 接下来的是赋值，而不是下一个变量/常量的定义
         if (index + 1 < length &&
             quaternions.get(index + 1).getOperation() != Operation.VAR_INT_DECLARE &&
-            quaternions.get(index + 1).getOperation() != Operation.CONST_INT_DECLARE
+            quaternions.get(index + 1).getOperation() != Operation.CONST_INT_DECLARE &&
+            quaternions.get(index + 1).getOperation() != Operation.VAR_ARRAY_DECLARE &&
+            quaternions.get(index + 1).getOperation() != Operation.CONST_ARRAY_DECLARE
         ) {
             // 直接使用数字写明，最简单的赋值方式
             if (quaternions.get(index + 1).getOperation() == Operation.SET_VALUE &&
@@ -118,7 +120,9 @@ public class Data {
         // 接下来的是赋值，而不是下一个变量/常量的定义
         if (index + 1 < length &&
             quaternions.get(index + 1).getOperation() != Operation.VAR_ARRAY_DECLARE &&
-            quaternions.get(index + 1).getOperation() != Operation.CONST_ARRAY_DECLARE
+            quaternions.get(index + 1).getOperation() != Operation.CONST_ARRAY_DECLARE &&
+            quaternions.get(index + 1).getOperation() != Operation.VAR_INT_DECLARE &&
+            quaternions.get(index + 1).getOperation() != Operation.CONST_INT_DECLARE
         ) {
             SingleQuaternion nextQuaternion = quaternions.get(index + 1);
             /*
@@ -219,44 +223,6 @@ public class Data {
                 mips.append("0, ");
             }
         }
-//        if (index + 1 < length && quaternions.get(index + 1).getOperation() == Operation.ARRAY_INIT) {
-//
-//            SingleQuaternion assignQuaternion = this.quaternions.get(index + 1);
-//
-//            StringBuilder initialValueString = new StringBuilder();
-//            QuaternionIdentify initialValue = assignQuaternion.getParam2();
-//
-//            int sizeOne = initialValue.arrayValue.size();
-//            for (int i = sizeOne - 1; i >= 0; i--) {
-//                QuaternionIdentify oneDimension = initialValue.arrayValue.get(i);
-//                // 二维数组
-//                if (dimension == 2) {
-//                    int sizeTwo = oneDimension.arrayValue.size();
-//                    for (int j = sizeTwo - 1; j >= 0; j--) {
-//                        QuaternionIdentify twoDimension = oneDimension.arrayValue.get(j);
-//                        mips.append(twoDimension.getValue()).append(", ");
-//                    }
-//                }
-//                // 一维数组
-//                else {
-//                    mips.append(oneDimension.getValue()).append(", ");
-//                }
-//            }
-//
-//            index ++;
-//        }
-//        else {
-//
-//            int numOfZero = 0;
-//            if (dimension == 2) {
-//                numOfZero += Integer.parseInt(quaternion.getParam1().getValue()) * Integer.parseInt(quaternion.getParam2().getValue());
-//            }
-//            else {
-//                numOfZero += Integer.parseInt(quaternion.getParam1().getValue());
-//            }
-//
-//            mips.append("0, ".repeat(Math.max(0, numOfZero)));
-//        }
 
         mips.append("\n");
     }
