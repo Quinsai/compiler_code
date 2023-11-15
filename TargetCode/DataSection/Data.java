@@ -167,12 +167,12 @@ public class Data {
                 QuaternionIdentify initialValue = assignQuaternion.getParam2();
 
                 int sizeOne = initialValue.arrayValue.size();
-                for (int i = sizeOne - 1; i >= 0; i--) {
+                for (int i = 0; i < sizeOne; i++) {
                     QuaternionIdentify oneDimension = initialValue.arrayValue.get(i);
                     // 二维数组
                     if (dimension == 2) {
                         int sizeTwo = oneDimension.arrayValue.size();
-                        for (int j = sizeTwo - 1; j >= 0; j--) {
+                        for (int j = 0; j < sizeTwo; j++) {
                             QuaternionIdentify twoDimension = oneDimension.arrayValue.get(j);
                             mips.append(twoDimension.getValue()).append(", ");
                         }
