@@ -53,6 +53,12 @@ public class QuaternionIdentify {
     public String id;
 
     /**
+     * 是否是数组参数
+     * 数组参数是整个里面唯一一个必须浅拷贝的东西
+     */
+    public boolean isArrayParam;
+
+    /**
      * 这个count仅仅用于ID相关
      */
     static int count;
@@ -75,6 +81,7 @@ public class QuaternionIdentify {
         this.address = 0;
         this.arrayValue = new ArrayList<>();
         this.isAddress = false;
+        this.isArrayParam = false;
         count ++;
         id = "V" + count;
         if (this.value.matches("^-?\\d+$")) {

@@ -1,6 +1,7 @@
 package TargetCode.TextSection;
 
 import InterCode.*;
+import Other.ParamResult;
 import TargetCode.Target;
 
 public class GenerateText implements IGenerateText {
@@ -167,7 +168,7 @@ public class GenerateText implements IGenerateText {
             size2 = value.arrayValue.get(0).arrayValue.size();
         }
 
-        mips.append("\tla $t0, ").append(array.getValue()).append("\n");
+        getIdentify(mips, array, 1, false);
 
         int index = 0;
         for (int i = 0; i < size1; i++) {
@@ -175,16 +176,19 @@ public class GenerateText implements IGenerateText {
             if (dimension == 1) {
                 QuaternionIdentify identify = value.arrayValue.get(i);
                 String v = getIdentify(mips, identify, 2, false);
-                mips.append("\tsw ").append(v).append(", ").append(index * 4).append("($t0)\n");
+                mips.append("\tsw ").append(v).append(", ").append(index * 4).append("($t1)\n");
                 index ++;
             }
             // 二维数组
             else {
+
+                mips.append("\tlw $t4, ").append(i * 4).append("($t1)\n");
+
                 QuaternionIdentify firstDimensionValue = value.arrayValue.get(i);
                 for (int j = 0; j < size2; j++) {
                     QuaternionIdentify identify = firstDimensionValue.arrayValue.get(j);
                     String v = getIdentify(mips, identify, 2, false);
-                    mips.append("\tsw ").append(v).append(", ").append(index * 4).append("($t0)\n");
+                    mips.append("\tsw ").append(v).append(", ").append(j * 4).append("($t4)\n");
                     index ++;
                 }
             }
@@ -262,13 +266,15 @@ public class GenerateText implements IGenerateText {
         // 超出4个，必须使用栈来传递参数
         else {
             quaternion.getParam1().setType(QuaternionIdentifyType.PARAM);
-            quaternion.getParam1().pushIntoStack();
+            quaternion.getParam1().setAddress((count - 4) * 4);
         }
 
         return "";
     }
 
     private String generateFormalParaArray(SingleQuaternion quaternion) {
+
+        int count = Integer.parseInt(quaternion.getResult().getValue());
 
         StringBuilder mips = new StringBuilder();
         int dimension = 1;
@@ -277,14 +283,15 @@ public class GenerateText implements IGenerateText {
             dimension ++;
         }
 
+        quaternion.getParam1().setType(QuaternionIdentifyType.PARAM);
+        quaternion.getParam1().isArrayParam = true;
+
         // TODO 数组作为函数形参
-        // 一维数组
-        if (dimension == 1) {
-
+        if (count <= 4) {
+            quaternion.getParam1().setRegister("$a" + (count - 1));
         }
-        // 二维数组
         else {
-
+            quaternion.getParam1().setAddress((count - 4) * 4);
         }
 
         return mips.toString();
@@ -338,6 +345,9 @@ public class GenerateText implements IGenerateText {
             // 是数组
             else {
 
+                String array = getIdentify(mips, quaternion.getParam1(), 1, false);
+
+                mips.append("\tmove $a").append(count - 1).append(", ").append(array).append("\n");
             }
         }
         // 4个以外的参数，只能存在栈中
@@ -351,6 +361,9 @@ public class GenerateText implements IGenerateText {
             // 是数组
             else {
 
+                String array = getIdentify(mips, quaternion.getParam1(), 1, false);
+
+                mips.append("\tsw ").append(array).append(", ").append((count - 4) * 4 - 504).append("($sp)\n");
             }
         }
 
@@ -566,14 +579,37 @@ public class GenerateText implements IGenerateText {
 
         StringBuilder mips = new StringBuilder();
         int dimension = 1;
-        int size = 0;
+        int size1 = 0;
+        int size2 = 0;
 
         if (quaternion.getParam2() != null) {
             dimension ++;
         }
-        size = Integer.parseInt(quaternion.getParam1().getValue());
+        size1 = Integer.parseInt(quaternion.getParam1().getValue());
         if (dimension == 2) {
-            size *= Integer.parseInt(quaternion.getParam2().getValue());
+            size2 = Integer.parseInt(quaternion.getParam2().getValue());
+        }
+
+        if (dimension == 1) {
+
+            mips.append("\tla $t0, ").append(4 * (QuaternionIdentify.stackIndex + 1)).append("($sp)\n");
+            setIdentifyIntoStack(mips, quaternion.getResult());
+
+            QuaternionIdentify.stackIndex += size1;
+        }
+        else {
+
+            mips.append("\tla $t0, ").append(4 * (QuaternionIdentify.stackIndex + 1)).append("($sp)\n");
+            setIdentifyIntoStack(mips, quaternion.getResult());
+
+            int headOfSecondDimension = QuaternionIdentify.stackIndex + size1;
+            for (int i = 0; i < size1; i++) {
+                mips.append("\tla $t0, ").append(4 * headOfSecondDimension).append("($sp)\n");
+                mips.append("\tsw $t0, ").append(4 * QuaternionIdentify.stackIndex).append("($sp)\n");
+                QuaternionIdentify.stackIndex ++;
+                headOfSecondDimension += size2;
+            }
+            QuaternionIdentify.stackIndex += size1 * size2;
         }
 
         return mips.toString();
@@ -589,6 +625,16 @@ public class GenerateText implements IGenerateText {
             mips.append("\tmul $t1, ").append(offset).append(", 4\n");
             mips.append("\tla $t0, ").append(name).append("($t1)\n");
             setIdentifyIntoStack(mips, quaternion.getResult());
+        }
+        else if (quaternion.getParam1().getType() == QuaternionIdentifyType.LOCAL) {
+            mips.append("\tmul $t2, ").append(offset).append(", 4\n");
+            String address = getIdentify(mips, quaternion.getParam1(), 1, false);
+//            mips.append("\tla $t2, ").append(quaternion.getParam1().getAddress()).append("($sp)\n");
+//            mips.append("\tadd $t0, $t1, $t2\n");
+//            setIdentifyIntoStack(mips, quaternion.getResult());
+            mips.append("\tadd $t0, $t2, ").append(address).append("\n");
+            setIdentifyIntoStack(mips, quaternion.getResult());
+
         }
 
         return mips.toString();
@@ -613,6 +659,17 @@ public class GenerateText implements IGenerateText {
         mips.append("\tli $v0, 5\n");
         mips.append("\tsyscall\n");
         mips.append("\tsw $v0, 0(").append(address).append(")\n");
+
+        return mips.toString();
+    }
+
+    private String generateGetArrayHeadAddress(SingleQuaternion quaternion) {
+
+        StringBuilder mips = new StringBuilder();
+        String array = getIdentify(mips, quaternion.getParam1(), 1, false);
+
+        mips.append("\tmove $t0, ").append(array).append("\n");
+        setIdentifyIntoStack(mips, quaternion.getResult());
 
         return mips.toString();
     }
@@ -661,6 +718,7 @@ public class GenerateText implements IGenerateText {
             case GET_ADDRESS -> mips.append(generateGetAddress(quaternion));
             case STORE_TO_ADDRESS -> mips.append(generateStoreToAddress(quaternion));
             case GETINT_TO_ADDRESS -> mips.append(generateGetintToAddress(quaternion));
+            case GET_ARRAY_HEAD_ADDRESS -> mips.append(generateGetArrayHeadAddress(quaternion));
         }
         return mips.toString();
     }

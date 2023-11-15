@@ -635,17 +635,20 @@ public class Quaternion {
             // a[1]
             if (length == 4) {
                 QuaternionIdentify name = getIdentifyOfSymbolName(node.children.get(0).value, node.children.get(0).getScope());
+                QuaternionIdentify headAddress = new QuaternionIdentify("");
                 QuaternionIdentify offset1 = node.children.get(2).getQuaternionIdentify();
                 QuaternionIdentify address = new QuaternionIdentify("");
                 identify = new QuaternionIdentify("");
                 // 如果是赋值也就是左边，数组以地址的姿态出现即可
                 if (isAssign) {
-                    addIntoInterCodes(Operation.GET_ADDRESS, name, offset1, identify);
+                    addIntoInterCodes(Operation.GET_ARRAY_HEAD_ADDRESS, name, null, headAddress);
+                    addIntoInterCodes(Operation.GET_ADDRESS, headAddress, offset1, identify);
                     identify.isAddress = true;
                 }
                 // 如果是引用，也就是右边，则必须要获取到值
                 else {
-                    addIntoInterCodes(Operation.GET_ADDRESS, name, offset1, address);
+                    addIntoInterCodes(Operation.GET_ARRAY_HEAD_ADDRESS, name, null, headAddress);
+                    addIntoInterCodes(Operation.GET_ADDRESS, headAddress, offset1, address);
                     addIntoInterCodes(Operation.GET_VALUE, address, null, identify);
                 }
 
@@ -657,8 +660,7 @@ public class Quaternion {
                 QuaternionIdentify offset1 = node.children.get(2).getQuaternionIdentify();
                 QuaternionIdentify offset2 = node.children.get(5).getQuaternionIdentify();
                 identify = new QuaternionIdentify("");
-                QuaternionIdentify temp = new QuaternionIdentify("");
-                QuaternionIdentify temp1 = new QuaternionIdentify("");
+                QuaternionIdentify headAddress = new QuaternionIdentify("");
                 QuaternionIdentify address = new QuaternionIdentify("");
 
                 ParamResult<QuaternionIdentify> size1;
@@ -702,14 +704,20 @@ public class Quaternion {
                 // 我们只能这么做了
                 if (isAssign) {
                     QuaternionIdentify dimension1 = new QuaternionIdentify("");
-                    addIntoInterCodes(Operation.GET_ADDRESS, name, offset1, dimension1);
-                    addIntoInterCodes(Operation.GET_ADDRESS, dimension1, offset2, identify);
+                    QuaternionIdentify dimensionHeadAddress1 = new QuaternionIdentify("");
+                    addIntoInterCodes(Operation.GET_ARRAY_HEAD_ADDRESS, name, null, headAddress);
+                    addIntoInterCodes(Operation.GET_ADDRESS, headAddress, offset1, dimension1);
+                    addIntoInterCodes(Operation.GET_VALUE, dimension1, null, dimensionHeadAddress1);
+                    addIntoInterCodes(Operation.GET_ADDRESS, dimensionHeadAddress1, offset2, identify);
                     identify.isAddress = true;
                 }
                 else {
                     QuaternionIdentify dimension1 = new QuaternionIdentify("");
-                    addIntoInterCodes(Operation.GET_ADDRESS, name, offset1, dimension1);
-                    addIntoInterCodes(Operation.GET_ADDRESS, dimension1, offset2, address);
+                    QuaternionIdentify dimensionHeadAddress1 = new QuaternionIdentify("");
+                    addIntoInterCodes(Operation.GET_ARRAY_HEAD_ADDRESS, name, null, headAddress);
+                    addIntoInterCodes(Operation.GET_ADDRESS, headAddress, offset1, dimension1);
+                    addIntoInterCodes(Operation.GET_VALUE, dimension1, null, dimensionHeadAddress1);
+                    addIntoInterCodes(Operation.GET_ADDRESS, dimensionHeadAddress1, offset2, address);
                     addIntoInterCodes(Operation.GET_VALUE, address, null, identify);
                 }
                 setIdentifyToTreeNode(node, identify);
