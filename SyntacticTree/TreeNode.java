@@ -278,7 +278,7 @@ public class TreeNode {
                     this.children.clear();
                 }
             }
-            case MainFuncDef -> {
+            case MainFuncDef, FuncDef -> {
                 isGlobal = false;
                 for (TreeNode childNode :
                     this.children) {
