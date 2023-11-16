@@ -13,6 +13,7 @@ import SyntacticTree.TreeNode;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Objects;
 import java.util.Stack;
 
 public class Quaternion {
@@ -938,6 +939,14 @@ public class Quaternion {
                 addIntoInterCodes(Operation.REAL_PARA, identify, new QuaternionIdentify(String.valueOf(counter)), null);
                 return;
             }
+            else if (length >= 2 && !node.children.get(1).value.equals(",")) {
+
+                translateAllExp(node);
+                identify = node.getQuaternionIdentify();
+                addIntoInterCodes(Operation.REAL_PARA, identify, new QuaternionIdentify("1"), null);
+
+                return;
+            }
 
             translateAllExp(node.children.get(0));
             identify = node.children.get(0).getQuaternionIdentify();
@@ -968,7 +977,7 @@ public class Quaternion {
                 translateFunctionRealPara(node.children.get(2));
             }
 
-            addIntoInterCodes(Operation.FUNC_CALL_END, funcName, null, null);
+            addIntoInterCodes(Operation.FUNC_CALL_END, funcName, null, res);
             setIdentifyToTreeNode(node, res);
         }
 

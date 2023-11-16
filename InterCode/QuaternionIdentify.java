@@ -3,6 +3,7 @@ package InterCode;
 import SymbolTable.MasterTableItem;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class QuaternionIdentify {
 
@@ -70,9 +71,21 @@ public class QuaternionIdentify {
      */
     public static int stackIndex;
 
+    private static final Stack<Integer> stackOfStackIndex;
+
+    public static void updateStackIndexWhenEnterNewFunction() {
+        stackOfStackIndex.push(stackIndex);
+        stackIndex = 0;
+    }
+
+    public static void recoverStackIndexWhenQuitFucntion() {
+        stackIndex = stackOfStackIndex.pop();
+    }
+
     static {
         count = 0;
         stackIndex = 0;
+        stackOfStackIndex = new Stack<>();
     }
 
     public QuaternionIdentify(String value) {

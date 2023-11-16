@@ -248,6 +248,7 @@ public class GenerateText implements IGenerateText {
         StringBuilder mips = new StringBuilder();
         String funcName = quaternion.getParam1().getValue();
 
+        QuaternionIdentify.updateStackIndexWhenEnterNewFunction();
 
         mips.append(funcName).append("_begin:\n");
         // 给接下来的这个函数开辟一个504字节的不会被打扰的空间
@@ -257,6 +258,8 @@ public class GenerateText implements IGenerateText {
         mips.append("\tsw $ra, 0($sp)\n");
         // 记得要先+1，别把返回地址给覆盖了
         QuaternionIdentify.stackIndex ++;
+        // 受不了了，我赌它一个函数里不会有超过30个参数！
+        QuaternionIdentify.stackIndex += 30;
         return mips.toString();
     }
 
@@ -272,6 +275,9 @@ public class GenerateText implements IGenerateText {
         mips.append("\tlw $ra, 0($sp)\n");
         mips.append("\taddi $sp, $sp, 504\n");
         mips.append("\tjr $ra\n");
+
+        QuaternionIdentify.recoverStackIndexWhenQuitFucntion();
+
         return mips.toString();
     }
 
@@ -280,15 +286,17 @@ public class GenerateText implements IGenerateText {
         int count = Integer.parseInt(quaternion.getResult().getValue());
 
         // 可以使用a系列寄存器来存参数
-        if (count <= 4) {
-            quaternion.getParam1().setType(QuaternionIdentifyType.PARAM);
-            quaternion.getParam1().setRegister("$a" + (count - 1));
-        }
+//        if (count <= 4) {
+//            quaternion.getParam1().setType(QuaternionIdentifyType.PARAM);
+//            quaternion.getParam1().setRegister("$a" + (count - 1));
+//        }
         // 超出4个，必须使用栈来传递参数
-        else {
-            quaternion.getParam1().setType(QuaternionIdentifyType.PARAM);
-            quaternion.getParam1().setAddress((count - 4) * 4);
-        }
+//        else {
+//            quaternion.getParam1().setType(QuaternionIdentifyType.PARAM);
+//            quaternion.getParam1().setAddress((count - 4) * 4);
+//        }
+
+        quaternion.getParam1().setAddress(count * 4);
 
         return "";
     }
@@ -308,12 +316,12 @@ public class GenerateText implements IGenerateText {
         quaternion.getParam1().isArrayParam = true;
 
         // TODO 数组作为函数形参
-        if (count <= 4) {
+        /*if (count <= 4) {
             quaternion.getParam1().setRegister("$a" + (count - 1));
         }
         else {
             quaternion.getParam1().setAddress((count - 4) * 4);
-        }
+        }*/
 
         return mips.toString();
     }
@@ -336,9 +344,9 @@ public class GenerateText implements IGenerateText {
 
     private String generateFuncCallBegin(SingleQuaternion quaternion) {
 
-        if (quaternion.getResult() != null) {
-            quaternion.getResult().setRegister("$v0");
-        }
+//        if (quaternion.getResult() != null) {
+//            quaternion.getResult().setRegister("$v0");
+//        }
 
         return "";
     }
@@ -349,7 +357,7 @@ public class GenerateText implements IGenerateText {
         int count = Integer.parseInt(quaternion.getParam2().getValue());
 
         // 前4个参数，可以使用a系列寄存器来存参数
-        if (count <= 4) {
+        if (count <= -1) {
             // 不是数组，只是单纯的值
             if (!quaternion.getParam1().isArray()) {
                 // 直接写一个数字
@@ -376,7 +384,7 @@ public class GenerateText implements IGenerateText {
             // 不是数组，只是单纯的值
             if (!quaternion.getParam1().isArray()) {
                 String param = getIdentify(mips, quaternion.getParam1(), 1, false);
-                mips.append("\tsw ").append(param).append(", ").append((count - 4) * 4 - 504).append("($sp)\n");
+                mips.append("\tsw ").append(param).append(", ").append(count * 4 - 504).append("($sp)\n");
             }
             // TODO 数组作为实参，保存在栈中
             // 是数组
@@ -384,7 +392,7 @@ public class GenerateText implements IGenerateText {
 
                 String array = getIdentify(mips, quaternion.getParam1(), 1, false);
 
-                mips.append("\tsw ").append(array).append(", ").append((count - 4) * 4 - 504).append("($sp)\n");
+                mips.append("\tsw ").append(array).append(", ").append(count * 4 - 504).append("($sp)\n");
             }
         }
 
@@ -396,6 +404,15 @@ public class GenerateText implements IGenerateText {
         StringBuilder mips = new StringBuilder();
         String funcName = quaternion.getParam1().getValue();
         mips.append("\tjal ").append(funcName).append("_begin\n");
+
+        QuaternionIdentify result = quaternion.getResult();
+        if (result != null) {
+            if (!result.isInStack) {
+                result.pushIntoStack();
+            }
+            int address = result.getAddress();
+            mips.append("\tsw $v0, ").append(address).append("($sp)\n");
+        }
 
         return mips.toString();
     }
