@@ -315,6 +315,7 @@ public class Quaternion {
 
             QuaternionIdentify paramName;
             QuaternionIdentify countIdentify = new QuaternionIdentify(String.valueOf(count));
+            QuaternionIdentify secondSize = new QuaternionIdentify("");
 
             if (length == 2) {
 
@@ -334,7 +335,7 @@ public class Quaternion {
                 paramName = new QuaternionIdentify(node.children.get(1).value);
                 dimension = 2;
 
-                QuaternionIdentify secondSize = node.children.get(5).getQuaternionIdentify();
+                secondSize = node.children.get(5).getQuaternionIdentify();
 
                 addIntoInterCodes(Operation.FORMAL_PARA_ARRAY, paramName, secondSize, countIdentify);
             }
@@ -343,7 +344,7 @@ public class Quaternion {
             linkIdentifyWithSymbolTableItem(node.children.get(1).value, paramName, node.getScope());
 
             if (dimension == 2) {
-                paramName.getSymbolTableItem().setArraySize(new QuaternionIdentify(""), null);
+                paramName.getSymbolTableItem().setArraySize(new QuaternionIdentify(""), secondSize);
             }
         }
 
@@ -617,6 +618,7 @@ public class Quaternion {
             }
         }
 
+        // TODO 这里有一个问题，就是把二维数组的一部分作为参数传递给函数
         @Override
         public void translateLVal(TreeNode node, boolean isAssign) {
 
@@ -646,23 +648,49 @@ public class Quaternion {
 
             // a[1]
             if (length == 4) {
-                // 如果是赋值，必须拿到地址
-                if (isAssign) {
-                    QuaternionIdentify offset1 = node.children.get(2).getQuaternionIdentify();
-                    identify = new QuaternionIdentify("");
-                    addIntoInterCodes(Operation.GET_ADDRESS, name, offset1, identify);
-                    identify.isAddress = true;
-                }
-                // 如果是引用，还需要拿到值
-                else {
-                    QuaternionIdentify offset1 = node.children.get(2).getQuaternionIdentify();
-                    QuaternionIdentify address = new QuaternionIdentify("");
-                    identify = new QuaternionIdentify("");
-                    addIntoInterCodes(Operation.GET_ADDRESS, name, offset1, address);
-                    addIntoInterCodes(Operation.GET_VALUE, address, null, identify);
-                }
+                // 如果是只取二维数组某一维的值
+                if (name.getSymbolTableItem().isTwoDimensionArray()) {
 
-                setIdentifyToTreeNode(node, identify);
+                    QuaternionIdentify offset1 = node.children.get(2).getQuaternionIdentify();
+                    identify = new QuaternionIdentify("");
+
+                    ParamResult<QuaternionIdentify> size1;
+                    ParamResult<QuaternionIdentify> size2;
+                    size1 = new ParamResult<QuaternionIdentify>(new QuaternionIdentify(""));
+                    size2 = new ParamResult<QuaternionIdentify>(new QuaternionIdentify(""));
+                    name.getSymbolTableItem().getArraySize(size1, size2);
+
+                    QuaternionIdentify dimension1 = new QuaternionIdentify("");
+                    QuaternionIdentify address = new QuaternionIdentify("");
+
+                    addIntoInterCodes(Operation.MULT, size2.getValue(), offset1, dimension1);
+
+                    addIntoInterCodes(Operation.GET_ADDRESS, name, dimension1, address);
+                    addIntoInterCodes(Operation.SET_VALUE, identify, address, null);
+                    identify.isAddress = true;
+
+                    setIdentifyToTreeNode(node, identify);
+                }
+                // 如果真的是个一维数组就好了
+                else {
+                    // 如果是赋值，必须拿到地址
+                    if (isAssign) {
+                        QuaternionIdentify offset1 = node.children.get(2).getQuaternionIdentify();
+                        identify = new QuaternionIdentify("");
+                        addIntoInterCodes(Operation.GET_ADDRESS, name, offset1, identify);
+                        identify.isAddress = true;
+                    }
+                    // 如果是引用，还需要拿到值
+                    else {
+                        QuaternionIdentify offset1 = node.children.get(2).getQuaternionIdentify();
+                        QuaternionIdentify address = new QuaternionIdentify("");
+                        identify = new QuaternionIdentify("");
+                        addIntoInterCodes(Operation.GET_ADDRESS, name, offset1, address);
+                        addIntoInterCodes(Operation.GET_VALUE, address, null, identify);
+                    }
+
+                    setIdentifyToTreeNode(node, identify);
+                }
             }
             // a[1][1]
             else if (length == 7) {
