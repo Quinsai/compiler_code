@@ -565,7 +565,7 @@ public class GenerateText implements IGenerateText {
         StringBuilder mips = new StringBuilder();
         String param = getIdentify(mips, quaternion.getParam1(), 1, false);
 
-        mips.append("\tnot $t0, ").append(param).append("\n");
+        mips.append("\tseq $t0, ").append(param).append(", 0\n");
         setIdentifyIntoStack(mips, quaternion.getResult());
 
         return mips.toString();
