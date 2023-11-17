@@ -307,6 +307,7 @@ public class GenerateText implements IGenerateText {
 //            quaternion.getParam1().setAddress((count - 4) * 4);
 //        }
 
+        quaternion.getParam1().isInStack = true;
         quaternion.getParam1().setAddress(count * 4);
 
         return "";
@@ -325,6 +326,7 @@ public class GenerateText implements IGenerateText {
 
         quaternion.getParam1().setType(QuaternionIdentifyType.PARAM);
         quaternion.getParam1().isArrayParam = true;
+        quaternion.getParam1().isInStack = true;
 
         // TODO 数组作为函数形参
         /*if (count <= 4) {
