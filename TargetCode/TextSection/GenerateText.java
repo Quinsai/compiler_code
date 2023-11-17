@@ -6,6 +6,17 @@ import TargetCode.Target;
 
 public class GenerateText implements IGenerateText {
 
+    private int numOfFuncCallBegin;
+
+    private int numOfFuncCallEnd;
+
+    private static final int spaceOfFunc = 504;
+
+    public GenerateText() {
+        this.numOfFuncCallBegin = 0;
+        this.numOfFuncCallEnd = 0;
+    }
+
     /**
      * 获取一个四元式变量
      * @param builder 调用它的那个generateXXX中的那个StringBuilder
@@ -250,10 +261,9 @@ public class GenerateText implements IGenerateText {
 
         QuaternionIdentify.updateStackIndexWhenEnterNewFunction();
 
+        int levelOfFuncCallNest = numOfFuncCallBegin - numOfFuncCallEnd + 1;
+
         mips.append(funcName).append("_begin:\n");
-        // 给接下来的这个函数开辟一个504字节的不会被打扰的空间
-        // 让它岁月静好
-        mips.append("\tsubi $sp, $sp, 504\n");
         // 500-504字节的空间用来保存$ra返回位置寄存器的值，以防在递归调用中炸了
         mips.append("\tsw $ra, 0($sp)\n");
         // 记得要先+1，别把返回地址给覆盖了
@@ -268,12 +278,13 @@ public class GenerateText implements IGenerateText {
         StringBuilder mips = new StringBuilder();
         String funcName = quaternion.getParam1().getValue();
 
+        int levelOfFuncCallNest = numOfFuncCallBegin - numOfFuncCallEnd + 1;
+
         mips.append(funcName).append("_end:\n");
         // 它不得不迎来终结，不得不释放它的504个字节的岁月静好
         // 去直面它的负重前行
         // 记得回去的地址要先从500-504字节的空间中取到$ra中先
         mips.append("\tlw $ra, 0($sp)\n");
-        mips.append("\taddi $sp, $sp, 504\n");
         mips.append("\tjr $ra\n");
 
         QuaternionIdentify.recoverStackIndexWhenQuitFucntion();
@@ -348,6 +359,8 @@ public class GenerateText implements IGenerateText {
 //            quaternion.getResult().setRegister("$v0");
 //        }
 
+        this.numOfFuncCallBegin ++;
+
         return "";
     }
 
@@ -356,7 +369,17 @@ public class GenerateText implements IGenerateText {
         StringBuilder mips = new StringBuilder();
         int count = Integer.parseInt(quaternion.getParam2().getValue());
 
+        // 就是像这样
+        // int a = func1(12, func2(10));
+        // 这么写的话，在执行func1的时候，实际上的第一个参数是10，而不是12
+        // 这里怎么办，只有天知道
+        // 一个可能可以的办法是，在函数调用的时候就移动栈顶指针
+
         // 前4个参数，可以使用a系列寄存器来存参数
+        // 全tm给我滚到栈里面去！
+
+        int levelOfFuncCallNest = this.numOfFuncCallBegin - this.numOfFuncCallEnd;
+
         if (count <= -1) {
             // 不是数组，只是单纯的值
             if (!quaternion.getParam1().isArray()) {
@@ -384,7 +407,7 @@ public class GenerateText implements IGenerateText {
             // 不是数组，只是单纯的值
             if (!quaternion.getParam1().isArray()) {
                 String param = getIdentify(mips, quaternion.getParam1(), 1, false);
-                mips.append("\tsw ").append(param).append(", ").append(count * 4 - 504).append("($sp)\n");
+                mips.append("\tsw ").append(param).append(", ").append(count * 4 - spaceOfFunc * levelOfFuncCallNest).append("($sp)\n");
             }
             // TODO 数组作为实参，保存在栈中
             // 是数组
@@ -392,7 +415,7 @@ public class GenerateText implements IGenerateText {
 
                 String array = getIdentify(mips, quaternion.getParam1(), 1, false);
 
-                mips.append("\tsw ").append(array).append(", ").append(count * 4 - 504).append("($sp)\n");
+                mips.append("\tsw ").append(array).append(", ").append(count * 4 - spaceOfFunc * levelOfFuncCallNest).append("($sp)\n");
             }
         }
 
@@ -403,7 +426,16 @@ public class GenerateText implements IGenerateText {
 
         StringBuilder mips = new StringBuilder();
         String funcName = quaternion.getParam1().getValue();
+
+        int levelOfFuncCallNest = this.numOfFuncCallBegin - this.numOfFuncCallEnd;
+
+        // 给接下来的这个函数开辟一个504字节的不会被打扰的空间
+        // 让它岁月静好
+        mips.append("\tsubi $sp, $sp, ").append(spaceOfFunc * levelOfFuncCallNest).append("\n");
+
         mips.append("\tjal ").append(funcName).append("_begin\n");
+
+        mips.append("\taddi $sp, $sp, ").append(spaceOfFunc * levelOfFuncCallNest).append("\n");
 
         QuaternionIdentify result = quaternion.getResult();
         if (result != null) {
@@ -413,6 +445,8 @@ public class GenerateText implements IGenerateText {
             int address = result.getAddress();
             mips.append("\tsw $v0, ").append(address).append("($sp)\n");
         }
+
+        this.numOfFuncCallEnd ++;
 
         return mips.toString();
     }
