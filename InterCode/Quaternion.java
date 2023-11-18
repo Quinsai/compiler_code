@@ -433,18 +433,31 @@ public class Quaternion {
                 i += 2;
             }
             int numberOfSubString = subStrings.length;
-            int j = 0;
-            if (subStrings.length == 0 || subStrings[0].isEmpty()) {
-                j ++;
-            }
-            for (; j < numberOfSubString; j++) {
-                addIntoInterCodes(Operation.PRINT_STRING, new QuaternionIdentify(subStrings[j]), null, null);
-                if (!node.children.get(i).value.equals(";")) {
+            // 没有字符串输出，全tm是数字
+            if (numberOfSubString == 0) {
+                while (!node.children.get(i).value.equals(";")) {
                     translateAllExp(node.children.get(i));
                     addIntoInterCodes(Operation.PRINT_INT, node.children.get(i).getQuaternionIdentify(), null, null);
                     i += 2;
                 }
             }
+            else {
+
+                int j = 0;
+
+                if (subStrings[0].isEmpty()) {
+                    j ++;
+                }
+                for (; j < numberOfSubString; j++) {
+                    addIntoInterCodes(Operation.PRINT_STRING, new QuaternionIdentify(subStrings[j]), null, null);
+                    if (!node.children.get(i).value.equals(";")) {
+                        translateAllExp(node.children.get(i));
+                        addIntoInterCodes(Operation.PRINT_INT, node.children.get(i).getQuaternionIdentify(), null, null);
+                        i += 2;
+                    }
+                }
+            }
+
         }
 
         private void translateFor(TreeNode node) {
