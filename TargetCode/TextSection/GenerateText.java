@@ -324,9 +324,10 @@ public class GenerateText implements IGenerateText {
             dimension ++;
         }
 
-        quaternion.getParam1().setType(QuaternionIdentifyType.PARAM);
+        quaternion.getParam1().setType(QuaternionIdentifyType.LOCAL);
         quaternion.getParam1().isArrayParam = true;
         quaternion.getParam1().isInStack = true;
+        quaternion.getParam1().setAddress(count * 4);
 
         // TODO 数组作为函数形参
         /*if (count <= 4) {
@@ -414,9 +415,7 @@ public class GenerateText implements IGenerateText {
             // TODO 数组作为实参，保存在栈中
             // 是数组
             else {
-
                 String array = getIdentify(mips, quaternion.getParam1(), 1, false);
-
                 mips.append("\tsw ").append(array).append(", ").append(count * 4 - spaceOfFunc * levelOfFuncCallNest).append("($sp)\n");
             }
         }
