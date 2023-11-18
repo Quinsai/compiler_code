@@ -376,12 +376,14 @@ public class Quaternion {
 
         private void translateGetint(TreeNode node) {
             translateLVal(node.children.get(0), true);
-            QuaternionIdentify temp = node.children.get(0).getQuaternionIdentify();
-            if (temp.isAddress) {
-                addIntoInterCodes(Operation.GETINT_TO_ADDRESS, temp, null, null);
+            QuaternionIdentify value = new QuaternionIdentify("");
+            QuaternionIdentify identify = node.children.get(0).getQuaternionIdentify();
+            if (identify.isAddress) {
+                addIntoInterCodes(Operation.GETINT_TO_ADDRESS, identify, null, null);
             }
             else {
-                addIntoInterCodes(Operation.GETINT, temp, null, null);
+                addIntoInterCodes(Operation.GETINT, value, null, null);
+                addIntoInterCodes(Operation.SET_VALUE, identify, value, null);
             }
         }
 
