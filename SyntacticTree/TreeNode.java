@@ -137,7 +137,7 @@ public class TreeNode {
                 if (length == 2) {
                     this.children.get(1).calculateConstValue();
                     this.constValue = this.children.get(1).constValue;
-                    String operate = this.children.get(0).value;
+                    String operate = this.children.get(0).children.get(0).value;
                     if (operate.equals("-")) {
                         this.constValue *= -1;
                     }
