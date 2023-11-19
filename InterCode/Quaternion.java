@@ -11,10 +11,7 @@ import SyntacticTree.ITraverseOperate;
 import SyntacticTree.Tree;
 import SyntacticTree.TreeNode;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Objects;
-import java.util.Stack;
+import java.util.*;
 
 public class Quaternion {
 
@@ -60,16 +57,26 @@ public class Quaternion {
     /**
      * 获取这个name对应的符号表条目对应的四元式的变量
      */
-    private QuaternionIdentify getIdentifyOfSymbolName(String name, int scope) {
+    private QuaternionIdentify getIdentifyOfSymbolName(String name, int scope, int codeIndex) {
         SymbolTableResult res;
         ParamResult<MasterTableItem> identify = new ParamResult<>(null);
 
+        /*
+        TODO 这里有一个问题，就是我必须用更细粒度的方法来标识定义的位置
+        否则按照目前的写法，会有这样的问题
+        int a; // alpha
+        {
+            a = 1; // bug is here
+            int a = 2; // beta
+        }
+        按照目前的写法，这里面标注了bug is here的那一行中的a会被对应到在beta处定义的那个a
+         */
         ArrayList<Integer> allVisibleScope = ScopeStack.getInstance().getAllVisible(scope);
         for (Integer outer :
             allVisibleScope) {
             int visible = outer;
             res = MasterTable.getMasterTable().getItemByNameInAllTable(name, visible, identify);
-            if (res == SymbolTableResult.EXIST) {
+            if (res == SymbolTableResult.EXIST && identify.getValue().defineIndex <= codeIndex) {
                 /*
                 我tm知道了
                 我确实能够完美地找到对应的符号表中的条目
@@ -78,7 +85,12 @@ public class Quaternion {
                 我tm没给函数形参分配四元式变量
                 wocsb
                  */
-                return identify.getValue().getQuaternionIdentify();
+                QuaternionIdentify result = identify.getValue().getQuaternionIdentify();
+                if (result == null) {
+                    result = new QuaternionIdentify(name);
+                    identify.getValue().setQuaternionIdentify(result);
+                }
+                return result;
             }
         }
 
@@ -141,7 +153,7 @@ public class Quaternion {
                 QuaternionIdentify identify;
                 // 如果是个标识符（这个标识符一定是已经出现过了的）
                 if (!value.matches("^-?\\d+$")) {
-                    identify = getIdentifyOfSymbolName(value, node.getScope());
+                    identify = getIdentifyOfSymbolName(value, node.getScope(), node.getCodeIndex());
                 }
                 // 如果不是标识符，那就应该仅仅是一个数字罢了
                 else {
@@ -633,7 +645,6 @@ public class Quaternion {
             }
         }
 
-        // TODO 这里有一个问题，就是把二维数组的一部分作为参数传递给函数
         @Override
         public void translateLVal(TreeNode node, boolean isAssign) {
 
@@ -650,12 +661,12 @@ public class Quaternion {
             // a
             if (length == 0) {
                 nameString = node.value;
-                identify = getIdentifyOfSymbolName(nameString, node.getScope());
+                identify = getIdentifyOfSymbolName(nameString, node.getScope(), node.getCodeIndex());
                 setIdentifyToTreeNode(node, identify);
                 return;
             }
 
-            QuaternionIdentify name = getIdentifyOfSymbolName(node.children.get(0).value, node.children.get(0).getScope());
+            QuaternionIdentify name = getIdentifyOfSymbolName(node.children.get(0).value, node.children.get(0).getScope(), node.children.get(0).getCodeIndex());
 
             if (name == null) {
                 return;
@@ -972,7 +983,7 @@ public class Quaternion {
                 String value = node.value;
                 // 如果是个标识符（这个标识符一定是已经出现过了的）
                 if (!value.matches("^-?\\d+$")) {
-                    identify = getIdentifyOfSymbolName(value, node.getScope());
+                    identify = getIdentifyOfSymbolName(value, node.getScope(), node.getCodeIndex());
                 }
                 // 如果不是标识符，那就应该仅仅是一个数字罢了
                 else {
@@ -1007,7 +1018,7 @@ public class Quaternion {
         private void translateFunctionCall(TreeNode node) {
 
             int length = node.children.size();
-            QuaternionIdentify funcName = getIdentifyOfSymbolName(node.children.get(0).value, node.getScope());
+            QuaternionIdentify funcName = getIdentifyOfSymbolName(node.children.get(0).value, node.getScope(), node.getCodeIndex());
             QuaternionIdentify res = new QuaternionIdentify("");
 
             if (funcName.getSymbolTableItem().getFunctionReturnType() == SymbolConst.VOID) {
@@ -1138,7 +1149,7 @@ public class Quaternion {
                 QuaternionIdentify identify;
                 // 如果是个标识符（这个标识符一定是已经出现过了的）
                 if (!value.matches("^-?\\d+$")) {
-                    identify = getIdentifyOfSymbolName(value, node.getScope());
+                    identify = getIdentifyOfSymbolName(value, node.getScope(), node.getCodeIndex());
                 }
                 // 如果不是标识符，那就应该仅仅是一个数字罢了
                 else {

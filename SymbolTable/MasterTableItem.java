@@ -1,6 +1,7 @@
 package SymbolTable;
 
 import InterCode.QuaternionIdentify;
+import Lexical.LexicalAnalysis;
 import Other.ParamResult;
 import Result.Error.AnalysisErrorType;
 import Result.Error.HandleError;
@@ -75,6 +76,8 @@ public class MasterTableItem {
      */
     public ArrayList<ArrayList<Integer>> constTwoDArrayValue;
 
+    public int defineIndex;
+
     /**
      * 新定义一个有符号意义的条目
      */
@@ -89,6 +92,7 @@ public class MasterTableItem {
         this.subTableLink = null;
         this.constOneDArrayValue = new ArrayList<>();
         this.constTwoDArrayValue = new ArrayList<>();
+        this.defineIndex = LexicalAnalysis.getInstance().getCurrentIndex();
     }
 
     /**

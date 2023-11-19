@@ -578,5 +578,9 @@ public class LexicalAnalysis {
         this.source = new String(stringBuilder);
         this.sourceLength ++;
     }
+
+    public int getCurrentIndex() {
+        return currentIndex;
+    }
 }
 

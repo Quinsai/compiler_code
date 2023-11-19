@@ -1,6 +1,7 @@
 package SyntacticTree;
 
 import InterCode.QuaternionIdentify;
+import Lexical.LexicalAnalysis;
 import Other.ParamResult;
 import SymbolTable.MasterTable;
 import SymbolTable.MasterTableItem;
@@ -64,6 +65,8 @@ public class TreeNode {
 
     public boolean isGlobalData;
 
+    private int codeIndex;
+
     public TreeNode(TreeNodeName name, String value, TreeNode parent) {
         this.name = name;
         this.value = value;
@@ -73,6 +76,7 @@ public class TreeNode {
         this.constOneDArrayValue = new ArrayList<>();
         this.constTwoDArrayValue = new ArrayList<>();
         this.isGlobalData = TreeNode.isGlobal;
+        this.codeIndex = LexicalAnalysis.getInstance().getCurrentIndex();
         if (parent != null) {
             parent.children.add(this);
         }
@@ -328,5 +332,9 @@ public class TreeNode {
 
     public int getScope() {
         return scope;
+    }
+
+    public int getCodeIndex() {
+        return codeIndex;
     }
 }

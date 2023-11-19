@@ -329,7 +329,6 @@ public class GenerateText implements IGenerateText {
         quaternion.getParam1().isInStack = true;
         quaternion.getParam1().setAddress(count * 4);
 
-        // TODO 数组作为函数形参
         /*if (count <= 4) {
             quaternion.getParam1().setRegister("$a" + (count - 1));
         }
@@ -396,7 +395,6 @@ public class GenerateText implements IGenerateText {
                     mips.append("\tmove $a").append(count - 1).append(", ").append(param).append("\n");
                 }
             }
-            // TODO 数组作为实参，保存在a系列寄存器中
             // 是数组
             else {
 
@@ -412,7 +410,6 @@ public class GenerateText implements IGenerateText {
                 String param = getIdentify(mips, quaternion.getParam1(), 1, false);
                 mips.append("\tsw ").append(param).append(", ").append(count * 4 - spaceOfFunc * levelOfFuncCallNest).append("($sp)\n");
             }
-            // TODO 数组作为实参，保存在栈中
             // 是数组
             else {
                 String array = getIdentify(mips, quaternion.getParam1(), 1, false);
@@ -647,7 +644,6 @@ public class GenerateText implements IGenerateText {
         return "";
     }
 
-    // TODO 数组定义
     private String generateArrayDeclare(SingleQuaternion quaternion) {
 
         StringBuilder mips = new StringBuilder();
@@ -688,7 +684,6 @@ public class GenerateText implements IGenerateText {
         StringBuilder mips = new StringBuilder();
         String offset = getIdentify(mips, quaternion.getParam2(), 2, false);
 
-        // TODO 这里要改
         if (quaternion.getParam1().getType() == QuaternionIdentifyType.GLOBAL) {
             String name = quaternion.getParam1().getValue();
             mips.append("\tmul $t1, ").append(offset).append(", 4\n");
