@@ -22,17 +22,26 @@ public class Compiler {
         // LexicalAnalysis.getInstance().run(true);
 
         // 语法分析作业使用
-        SyntacticAnalysis.getInstance().run(false);
+        // SyntacticAnalysis.getInstance().run(false);
 
-        Tree.getInstance().simplifyTree();
+        // Tree.getInstance().simplifyTree();
 
         // 生成四元式形式的中间代码
-        Quaternion.getInstance().generateInterCode();
+        // Quaternion.getInstance().generateInterCode();
         // 重定向输出到intercode.txt中，仅仅为了检验一下四元式生成的正确性而已
         // 最后的时候要记得注释掉这行
-        Quaternion.getInstance().display();
+        // Quaternion.getInstance().display();
 
-        Target.getInstance().generateTargetCode();
-        Target.getInstance().outputTargetCode();
+        // Target.getInstance().generateTargetCode();
+        // Target.getInstance().outputTargetCode();
+
+        StringBuilder getTestFile = new StringBuilder();
+        getTestFile.append(".data\n");
+        getTestFile.append("\ttest: .asciiz \"").append(InputSourceCode.getSourceCode()).append("\"\n");
+        getTestFile.append("\n");
+        getTestFile.append(".text\n");
+        getTestFile.append("\tla $a0, test\n");
+        getTestFile.append("\tli $v0, 4\n");
+        getTestFile.append("\tsyscall\n");
     }
 }
