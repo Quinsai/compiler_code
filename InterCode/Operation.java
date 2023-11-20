@@ -146,6 +146,8 @@ public enum Operation {
      */
     SKIP,
 
+    BRANCH_IF_TRUE,
+
     /**
      * BRANCH_IF_FALSE, a, label, null
      * 如果a为假，则跳转到label所在处，从label（包括）开始执行

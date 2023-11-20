@@ -594,6 +594,16 @@ public class GenerateText implements IGenerateText {
         return mips.toString();
     }
 
+    private String generateBranchIfTrue(SingleQuaternion quaternion) {
+
+        StringBuilder mips = new StringBuilder();
+        String condition = getIdentify(mips, quaternion.getParam1(), 1, false);
+        String labelId = quaternion.getParam2().id;
+
+        mips.append("\tbeq ").append(condition).append(", 1, label_").append(labelId).append("\n");
+        return mips.toString();
+    }
+
     private String generateBranchIfFalse(SingleQuaternion quaternion) {
 
         StringBuilder mips = new StringBuilder();
@@ -778,6 +788,7 @@ public class GenerateText implements IGenerateText {
             case NOT -> mips.append(generateNot(quaternion));
             case LABEL -> mips.append(generateLabel(quaternion));
             case SKIP -> mips.append(generateSkip(quaternion));
+            case BRANCH_IF_TRUE -> mips.append(generateBranchIfTrue(quaternion));
             case BRANCH_IF_FALSE -> mips.append(generateBranchIfFalse(quaternion));
             case PRINT_STRING -> mips.append(generatePrintString(quaternion));
             case PRINT_INT -> mips.append(generatePrintInt(quaternion));
