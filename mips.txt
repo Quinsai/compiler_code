@@ -1,294 +1,216 @@
 .data
-	a: .word 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-	prime: .word 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-	reflect1: .word 711942876, 1060809599, 1758839997, 423174272, 1412407466, 375872692, 1543568839, 915987033, 698198080, 2143283456, 2059223660, 34179219, 378910912, 1498631475, 1853883889, 1640319187, 
-	reflect2: .word 1152785601, 1891446969, 938484211, 1596516698, 1681072330, 128222498, 1090169129, 347746822, 326257601, 1366930863, 823961496, 2103453081, 402114823, 2139806715, 732814375, 1302967469, 1623817872, 898372270, 812618050, 1403178881, 1776328495, 958769364, 47496017, 1384738865, 1751940200, 
-	string_V118: .asciiz " "
-	string_V142: .asciiz "\n"
+	ZERO: .word 0
+	ONE: .word 1
+	var2: .word 2
+	var3: .word 3
+	string_V24: .asciiz "21373457\n"
+	string_V42: .asciiz "ERROR!\n"
+	string_V43: .asciiz "And success!\n"
+	string_V69: .asciiz "Or pass!\n"
+	string_V70: .asciiz "Test1 Success!"
+	string_V22: .asciiz "\n"
 
 .text
 main_begin:
-	li $t0, 2
-	sw $t0, 0($sp)
-	li $v0, 5
+	la $a0, string_V24
+	li $v0, 4
 	syscall
-	move $t0, $v0
-	sw $t0, 8($sp)
-	lw $t2, 8($sp)
-	move $t0, $t2
+	lw $t1, ZERO
+	lw $t2, var2
+	add $t0, $t1, $t2
+	sw $t0, 0($sp)
+	lw $t1, var3
+	lw $t2, ONE
+	sub $t0, $t1, $t2
 	sw $t0, 4($sp)
-label_V63:
 	lw $t1, 0($sp)
 	lw $t2, 4($sp)
-	slt $t0, $t1, $t2
+	seq $t0, $t1, $t2
+	sw $t0, 8($sp)
+	lw $t1, 8($sp)
+	beqz $t1, label_V26
+	lw $t1, ONE
+	beqz $t1, label_V26
+	lw $t1, 8($sp)
+	lw $t2, ONE
+	sne $t1, $t1, $zero
+	sne $t2, $t2, $zero
+	and $t0, $t1, $t2
+	sw $t0, 8($sp)
+	lw $t1, 8($sp)
+	beqz $t1, label_V26
+label_V25:
+	lw $t1, ZERO
+	beq $t1, 1, label_V32
+	lw $t1, ZERO
+	seq $t0, $t1, 0
 	sw $t0, 12($sp)
-	lw $t1, 12($sp)
-	beqz $t1, label_V64
-	lw $t2, 0($sp)
-	mul $t1, $t2, 4
-	la $t2, a
+	lw $t1, ONE
+	add $t0, $t1, 1
+	sw $t0, 16($sp)
+	lw $t1, 16($sp)
+	lw $t2, var2
 	add $t0, $t1, $t2
 	sw $t0, 16($sp)
-	li $t3, 1
 	lw $t1, 16($sp)
-	sw $t3, 0($t1)
-	lw $t1, 0($sp)
-	add $t0, $t1, 1
+	li $t4, 0
+	slt $t0, $t1, $t4
 	sw $t0, 20($sp)
+	lw $t1, 12($sp)
 	lw $t2, 20($sp)
-	move $t0, $t2
-	sw $t0, 0($sp)
-label_V65:
-	j label_V63
-label_V64:
-	li $t0, 2
-	sw $t0, 0($sp)
-	li $t0, 0
+	sne $t1, $t1, $zero
+	sne $t2, $t2, $zero
+	and $t0, $t1, $t2
 	sw $t0, 24($sp)
-label_V74:
-	lw $t1, 0($sp)
-	lw $t2, 4($sp)
-	slt $t0, $t1, $t2
+	lw $t1, 24($sp)
+	beq $t1, 1, label_V32
+	lw $t1, ZERO
+	lw $t2, 24($sp)
+	sne $t1, $t1, $zero
+	sne $t2, $t2, $zero
+	or $t0, $t1, $t2
 	sw $t0, 28($sp)
-	lw $t1, 28($sp)
-	beqz $t1, label_V75
-	lw $t2, 0($sp)
-	mul $t1, $t2, 4
-	la $t2, a
-	add $t0, $t1, $t2
+	lw $t1, ZERO
+	beqz $t1, label_V34
+label_V32:
+	la $a0, string_V42
+	li $v0, 4
+	syscall
+	j label_V33
+label_V34:
+	la $a0, string_V43
+	li $v0, 4
+	syscall
+label_V33:
+label_V26:
+	lw $t1, var3
+	sne $t0, $t1, 3
 	sw $t0, 32($sp)
 	lw $t1, 32($sp)
-	lw $t0, 0($t1)
+	beq $t1, 1, label_V44
+	lw $t1, var2
+	sub $t0, $t1, 22
 	sw $t0, 36($sp)
-	lw $t1, 36($sp)
-	beqz $t1, label_V80
-	lw $t2, 24($sp)
-	mul $t1, $t2, 4
-	la $t2, prime
-	add $t0, $t1, $t2
+	li $t3, 20
+	neg $t0, $t3
 	sw $t0, 40($sp)
-	lw $t2, 0($sp)
-	lw $t1, 40($sp)
-	sw $t2, 0($t1)
-	lw $t1, 24($sp)
-	add $t0, $t1, 1
+	lw $t1, 36($sp)
+	lw $t2, 40($sp)
+	seq $t0, $t1, $t2
 	sw $t0, 44($sp)
+	lw $t1, 44($sp)
+	beq $t1, 1, label_V44
+	lw $t1, 32($sp)
 	lw $t2, 44($sp)
-	move $t0, $t2
-	sw $t0, 24($sp)
-label_V80:
-	li $t0, 0
+	sne $t1, $t1, $zero
+	sne $t2, $t2, $zero
+	or $t0, $t1, $t2
+	sw $t0, 32($sp)
+	lw $t1, 32($sp)
+	beqz $t1, label_V45
+label_V44:
+	lw $t1, ONE
+	li $t4, 2
+	div $t1, $t4
+	mfhi $t0
 	sw $t0, 48($sp)
-label_V86:
 	lw $t1, 48($sp)
-	lw $t2, 24($sp)
-	slt $t0, $t1, $t2
+	add $t0, $t1, 3
 	sw $t0, 52($sp)
-	lw $t2, 48($sp)
-	mul $t1, $t2, 4
-	la $t2, prime
-	add $t0, $t1, $t2
+	li $t3, 4
+	mul $t0, $t3, 2
 	sw $t0, 56($sp)
-	lw $t1, 56($sp)
-	lw $t0, 0($t1)
-	sw $t0, 60($sp)
-	lw $t1, 0($sp)
-	lw $t2, 60($sp)
-	mul $t0, $t1, $t2
-	sw $t0, 64($sp)
-	lw $t1, 64($sp)
-	lw $t2, 4($sp)
-	sle $t0, $t1, $t2
-	sw $t0, 68($sp)
 	lw $t1, 52($sp)
-	lw $t2, 68($sp)
-	and $t0, $t1, $t2
-	sw $t0, 72($sp)
-	lw $t1, 72($sp)
-	beqz $t1, label_V87
-	lw $t2, 48($sp)
-	mul $t1, $t2, 4
-	la $t2, prime
+	lw $t2, 56($sp)
+	sub $t0, $t1, $t2
+	sw $t0, 52($sp)
+	lw $t1, 52($sp)
+	lw $t2, var3
 	add $t0, $t1, $t2
-	sw $t0, 76($sp)
-	lw $t1, 76($sp)
-	lw $t0, 0($t1)
-	sw $t0, 80($sp)
-	lw $t1, 0($sp)
-	lw $t2, 80($sp)
-	mul $t0, $t1, $t2
-	sw $t0, 84($sp)
-	lw $t2, 84($sp)
-	mul $t1, $t2, 4
-	la $t2, a
+	sw $t0, 52($sp)
+	lw $t1, 52($sp)
+	lw $t2, var2
 	add $t0, $t1, $t2
-	sw $t0, 88($sp)
-	li $t3, 0
-	lw $t1, 88($sp)
-	sw $t3, 0($t1)
-	lw $t2, 48($sp)
-	mul $t1, $t2, 4
-	la $t2, prime
-	add $t0, $t1, $t2
-	sw $t0, 92($sp)
-	lw $t1, 92($sp)
-	lw $t0, 0($t1)
-	sw $t0, 96($sp)
-	lw $t1, 0($sp)
-	lw $t2, 96($sp)
-	div $t1, $t2
-	mfhi $t0
-	sw $t0, 100($sp)
-	lw $t1, 100($sp)
-	seq $t0, $t1, 0
-	sw $t0, 104($sp)
-	lw $t1, 104($sp)
-	beqz $t1, label_V105
-	j label_V87
-label_V105:
-	lw $t1, 48($sp)
-	add $t0, $t1, 1
-	sw $t0, 108($sp)
-	lw $t2, 108($sp)
-	move $t0, $t2
-	sw $t0, 48($sp)
-label_V88:
-	j label_V86
-label_V87:
-	lw $t1, 0($sp)
-	add $t0, $t1, 1
-	sw $t0, 112($sp)
-	lw $t2, 112($sp)
-	move $t0, $t2
-	sw $t0, 0($sp)
-label_V76:
-	j label_V74
-label_V75:
-	li $t0, 0
-	sw $t0, 0($sp)
-label_V111:
-	li $t3, 114514
-	beqz $t3, label_V112
-	lw $t2, 0($sp)
-	mul $t1, $t2, 4
-	la $t2, a
-	add $t0, $t1, $t2
-	sw $t0, 116($sp)
-	lw $t1, 116($sp)
-	lw $t0, 0($t1)
-	sw $t0, 120($sp)
-	lw $t1, 120($sp)
-	beqz $t1, label_V117
-	lw $t1, 0($sp)
-	move $a0, $t1
-	li $v0, 1
-	syscall
-	la $a0, string_V118
+	sw $t0, 52($sp)
+	lw $t1, 52($sp)
+	li $t4, 100
+	sle $t0, $t1, $t4
+	sw $t0, 60($sp)
+	lw $t1, 60($sp)
+	beq $t1, 1, label_V56
+	lw $t1, ONE
+	beq $t1, 1, label_V56
+	lw $t1, 60($sp)
+	lw $t2, ONE
+	sne $t1, $t1, $zero
+	sne $t2, $t2, $zero
+	or $t0, $t1, $t2
+	sw $t0, 60($sp)
+	lw $t1, 60($sp)
+	beqz $t1, label_V57
+label_V56:
+	la $a0, string_V69
 	li $v0, 4
 	syscall
-	lw $t1, 0($sp)
-	li $t3, 2
-	div $t1, $t3
-	mfhi $t0
-	sw $t0, 124($sp)
-	lw $t1, 0($sp)
-	li $t3, 16
-	div $t1, $t3
-	mfhi $t0
-	sw $t0, 128($sp)
-	lw $t2, 128($sp)
-	mul $t1, $t2, 4
-	la $t2, reflect1
-	add $t0, $t1, $t2
-	sw $t0, 132($sp)
-	lw $t1, 132($sp)
-	lw $t0, 0($t1)
-	sw $t0, 136($sp)
-	lw $t1, 124($sp)
-	lw $t2, 136($sp)
-	mul $t0, $t1, $t2
-	sw $t0, 140($sp)
-	lw $t1, 0($sp)
-	add $t0, $t1, 1
-	sw $t0, 144($sp)
-	lw $t1, 144($sp)
-	li $t3, 2
-	div $t1, $t3
-	mfhi $t0
-	sw $t0, 148($sp)
-	lw $t1, 0($sp)
-	li $t3, 5
-	div $t1, $t3
-	mfhi $t0
-	sw $t0, 152($sp)
-	lw $t1, 0($sp)
-	li $t3, 5
-	div $t1, $t3
-	mfhi $t0
-	sw $t0, 156($sp)
-	li $t3, 5
-	lw $t2, 152($sp)
-	mul $t0, $t3, $t2
-	sw $t0, 160($sp)
-	lw $t1, 160($sp)
-	lw $t2, 156($sp)
-	add $t0, $t1, $t2
-	sw $t0, 164($sp)
-	lw $t2, 164($sp)
-	mul $t1, $t2, 4
-	la $t2, reflect2
-	add $t0, $t1, $t2
-	sw $t0, 168($sp)
-	lw $t1, 168($sp)
-	lw $t0, 0($t1)
-	sw $t0, 172($sp)
-	lw $t1, 148($sp)
-	lw $t2, 172($sp)
-	mul $t0, $t1, $t2
-	sw $t0, 176($sp)
-	lw $t1, 140($sp)
-	lw $t2, 176($sp)
-	add $t0, $t1, $t2
-	sw $t0, 180($sp)
-	lw $t1, 180($sp)
-	move $a0, $t1
-	li $v0, 1
-	syscall
-	la $a0, string_V142
+label_V57:
+label_V45:
+	la $a0, string_V70
 	li $v0, 4
 	syscall
-label_V117:
-	lw $t1, 0($sp)
-	add $t0, $t1, 1
-	sw $t0, 184($sp)
-	lw $t2, 184($sp)
-	move $t0, $t2
-	sw $t0, 0($sp)
-	lw $t1, 0($sp)
-	lw $t2, 4($sp)
-	slt $t0, $t1, $t2
-	sw $t0, 188($sp)
-	lw $t1, 188($sp)
-	beqz $t1, label_V147
-	j label_V113
-	j label_V146
-label_V147:
-	j label_V112
-label_V146:
-	j label_V113
-	j label_V112
-	j label_V113
-	j label_V112
-	j label_V113
-	j label_V112
-	j label_V113
-	j label_V112
-label_V113:
-	j label_V111
-label_V112:
-	li $t3, 0
-	move $v0, $t3
+	subi $sp, $sp, 504
+	jal fun_begin
+	addi $sp, $sp, 504
+	subi $sp, $sp, 504
+	jal fun_begin
+	addi $sp, $sp, 504
+	subi $sp, $sp, 504
+	jal fun_begin
+	addi $sp, $sp, 504
+	subi $sp, $sp, 504
+	jal fun_begin
+	addi $sp, $sp, 504
+	subi $sp, $sp, 504
+	jal fun_begin
+	addi $sp, $sp, 504
+	subi $sp, $sp, 504
+	jal fun_begin
+	addi $sp, $sp, 504
+	li $t4, 0
+	move $v0, $t4
 	j main_end
 main_end:
 	li $v0, 10
 	syscall
+fun_begin:
+	sw $ra, 0($sp)
+	li $t0, 1
+	sw $t0, 124($sp)
+	li $t0, 1
+	sw $t0, 128($sp)
+label_V15:
+	lw $t1, 128($sp)
+	li $t4, 1000
+	slt $t0, $t1, $t4
+	sw $t0, 132($sp)
+	lw $t1, 132($sp)
+	beqz $t1, label_V16
+	lw $t1, 128($sp)
+	mul $t0, $t1, 2
+	sw $t0, 136($sp)
+	lw $t2, 136($sp)
+	move $t0, $t2
+	sw $t0, 128($sp)
+label_V17:
+	j label_V15
+label_V16:
+	la $a0, string_V22
+	li $v0, 4
+	syscall
+	lw $t1, 128($sp)
+	move $a0, $t1
+	li $v0, 1
+	syscall
+	j fun_end
+fun_end:
+	lw $ra, 0($sp)
+	jr $ra
