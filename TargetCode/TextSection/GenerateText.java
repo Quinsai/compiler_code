@@ -33,8 +33,9 @@ public class GenerateText implements IGenerateText {
         else if (identify.getType() == QuaternionIdentifyType.NUMBER) {
             // 如果不能直接用数字，还tm要先存在一个寄存器里面
             if (!canBeNumber) {
-                builder.append("\tli $t3, ").append(identify.getValue()).append("\n");
-                return "$t3";
+                int numOfRegister = 2 + paramIndex;
+                builder.append("\tli $t").append(numOfRegister).append(", ").append(identify.getValue()).append("\n");
+                return "$t" + numOfRegister;
             }
             // 如果能直接用数字
             else if (canBeNumber) {
