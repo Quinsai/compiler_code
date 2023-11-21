@@ -52,6 +52,11 @@ public class FuncDef extends SyntacticComponent {
         Tree.getInstance().addTerminalNodeIntoTree(this.treeNode, nextWordValue.getValue());
 
         name = nextWordValue.getValue();
+
+        if (name.equals("_memset")) {
+            System.out.println("chhhhhh");
+        }
+
         res = masterTable.insertIntoTable(name, SymbolConst.FUNCTION, SymbolConst.NO_MEANING, returnType, item);
         if (res == AnalysisResult.FAIL) {
             ScopeStack.getInstance().enterScope();

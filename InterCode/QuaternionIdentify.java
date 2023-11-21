@@ -78,7 +78,7 @@ public class QuaternionIdentify {
         stackIndex = 0;
     }
 
-    public static void recoverStackIndexWhenQuitFucntion() {
+    public static void recoverStackIndexWhenQuitFunction() {
         stackIndex = stackOfStackIndex.pop();
     }
 

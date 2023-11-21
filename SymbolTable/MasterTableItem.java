@@ -7,6 +7,7 @@ import Result.Error.AnalysisErrorType;
 import Result.Error.HandleError;
 import SymbolTable.Array.ArrayDetail;
 import SymbolTable.Function.FunctionDetail;
+import SymbolTable.Scope.ScopeStack;
 import Syntactic.SyntacticComponents.ComponentValueType;
 
 import java.util.ArrayList;
@@ -100,6 +101,7 @@ public class MasterTableItem {
      */
     public MasterTableItem(MasterTable subTableLink) {
         this.subTableLink = subTableLink;
+        this.scope = ScopeStack.getInstance().getCurrentScope();
     }
 
     public void setArrayLink(ArrayDetail arrayLink) {

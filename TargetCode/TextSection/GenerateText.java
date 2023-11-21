@@ -1,7 +1,6 @@
 package TargetCode.TextSection;
 
 import InterCode.*;
-import Other.ParamResult;
 import TargetCode.Target;
 
 public class GenerateText implements IGenerateText {
@@ -10,7 +9,7 @@ public class GenerateText implements IGenerateText {
 
     private int numOfFuncCallEnd;
 
-    private static final int spaceOfFunc = 504;
+    private static final int spaceOfFunc = 6004;
 
     public GenerateText() {
         this.numOfFuncCallBegin = 0;
@@ -81,7 +80,7 @@ public class GenerateText implements IGenerateText {
         String param1 = getIdentify(mips, quaternion.getParam1(), 1, false);
         String param2 = getIdentify(mips, quaternion.getParam2(), 2, true);
 
-        mips.append("\tadd $t0, ").append(param1).append(", ").append(param2).append("\n");
+        mips.append("\taddu $t0, ").append(param1).append(", ").append(param2).append("\n");
 
         setIdentifyIntoStack(mips, quaternion.getResult());
         return mips.toString();
@@ -93,7 +92,7 @@ public class GenerateText implements IGenerateText {
         String param1 = getIdentify(mips, quaternion.getParam1(), 1, false);
         String param2 = getIdentify(mips, quaternion.getParam2(), 2, true);
 
-        mips.append("\tsub $t0, ").append(param1).append(", ").append(param2).append("\n");
+        mips.append("\tsubu $t0, ").append(param1).append(", ").append(param2).append("\n");
 
         setIdentifyIntoStack(mips, quaternion.getResult());
         return mips.toString();
@@ -295,7 +294,7 @@ public class GenerateText implements IGenerateText {
         mips.append("\tlw $ra, 0($sp)\n");
         mips.append("\tjr $ra\n");
 
-        QuaternionIdentify.recoverStackIndexWhenQuitFucntion();
+        QuaternionIdentify.recoverStackIndexWhenQuitFunction();
 
         return mips.toString();
     }

@@ -1,216 +1,989 @@
 .data
-	ZERO: .word 0
-	ONE: .word 1
-	var2: .word 2
-	var3: .word 3
-	string_V24: .asciiz "21373457\n"
-	string_V42: .asciiz "ERROR!\n"
-	string_V43: .asciiz "And success!\n"
-	string_V69: .asciiz "Or pass!\n"
-	string_V70: .asciiz "Test1 Success!"
-	string_V22: .asciiz "\n"
+	maxn: .word 10
+	mod: .word 1000000007
+	n: .word 0
+	matrix: .word 998, 165, 750, 985, 734, 868, 500, 0, 0, 0, 670, 684, 885, 314, 652, 506, 113, 0, 0, 0, 582, 128, 310, 485, 613, 799, 366, 0, 0, 0, 534, 517, 168, 226, 603, 132, 546, 0, 0, 0, 329, 765, 412, 825, 275, 288, 158, 0, 0, 0, 787, 884, 912, 455, 224, 358, 141, 0, 0, 0, 439, 248, 588, 178, 710, 961, 579, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+	k: .word 0, 0, 
+	string_V402: .asciiz " "
+	string_V417: .asciiz "\n"
 
 .text
 main_begin:
-	la $a0, string_V24
-	li $v0, 4
+	li $v0, 5
 	syscall
-	lw $t1, ZERO
-	lw $t2, var2
-	add $t0, $t1, $t2
+	move $t0, $v0
 	sw $t0, 0($sp)
-	lw $t1, var3
-	lw $t2, ONE
-	sub $t0, $t1, $t2
-	sw $t0, 4($sp)
-	lw $t1, 0($sp)
-	lw $t2, 4($sp)
-	seq $t0, $t1, $t2
-	sw $t0, 8($sp)
-	lw $t1, 8($sp)
-	beqz $t1, label_V26
-	lw $t1, ONE
-	beqz $t1, label_V26
-	lw $t1, 8($sp)
-	lw $t2, ONE
-	sne $t1, $t1, $zero
-	sne $t2, $t2, $zero
-	and $t0, $t1, $t2
-	sw $t0, 8($sp)
-	lw $t1, 8($sp)
-	beqz $t1, label_V26
-label_V25:
-	lw $t1, ZERO
-	beq $t1, 1, label_V32
-	lw $t1, ZERO
-	seq $t0, $t1, 0
+	lw $t2, 0($sp)
+	sw $t2, n
+	la $t1, k
+	sw $t1, -6000($sp)
+	subi $sp, $sp, 6004
+	jal getlong_begin
+	addi $sp, $sp, 6004
+	la $t0, 16($sp)
 	sw $t0, 12($sp)
-	lw $t1, ONE
-	add $t0, $t1, 1
-	sw $t0, 16($sp)
-	lw $t1, 16($sp)
-	lw $t2, var2
-	add $t0, $t1, $t2
-	sw $t0, 16($sp)
-	lw $t1, 16($sp)
-	li $t4, 0
-	slt $t0, $t1, $t4
-	sw $t0, 20($sp)
+	la $t1, matrix
+	sw $t1, -6000($sp)
+	la $t1, k
+	sw $t1, -5996($sp)
 	lw $t1, 12($sp)
-	lw $t2, 20($sp)
-	sne $t1, $t1, $zero
-	sne $t2, $t2, $zero
-	and $t0, $t1, $t2
-	sw $t0, 24($sp)
-	lw $t1, 24($sp)
-	beq $t1, 1, label_V32
-	lw $t1, ZERO
-	lw $t2, 24($sp)
-	sne $t1, $t1, $zero
-	sne $t2, $t2, $zero
-	or $t0, $t1, $t2
-	sw $t0, 28($sp)
-	lw $t1, ZERO
-	beqz $t1, label_V34
-label_V32:
-	la $a0, string_V42
-	li $v0, 4
-	syscall
-	j label_V33
-label_V34:
-	la $a0, string_V43
-	li $v0, 4
-	syscall
-label_V33:
-label_V26:
-	lw $t1, var3
-	sne $t0, $t1, 3
-	sw $t0, 32($sp)
-	lw $t1, 32($sp)
-	beq $t1, 1, label_V44
-	lw $t1, var2
-	sub $t0, $t1, 22
-	sw $t0, 36($sp)
-	li $t3, 20
-	neg $t0, $t3
-	sw $t0, 40($sp)
-	lw $t1, 36($sp)
-	lw $t2, 40($sp)
-	seq $t0, $t1, $t2
-	sw $t0, 44($sp)
-	lw $t1, 44($sp)
-	beq $t1, 1, label_V44
-	lw $t1, 32($sp)
-	lw $t2, 44($sp)
-	sne $t1, $t1, $zero
-	sne $t2, $t2, $zero
-	or $t0, $t1, $t2
-	sw $t0, 32($sp)
-	lw $t1, 32($sp)
-	beqz $t1, label_V45
-label_V44:
-	lw $t1, ONE
-	li $t4, 2
-	div $t1, $t4
-	mfhi $t0
-	sw $t0, 48($sp)
-	lw $t1, 48($sp)
-	add $t0, $t1, 3
-	sw $t0, 52($sp)
-	li $t3, 4
-	mul $t0, $t3, 2
-	sw $t0, 56($sp)
-	lw $t1, 52($sp)
-	lw $t2, 56($sp)
-	sub $t0, $t1, $t2
-	sw $t0, 52($sp)
-	lw $t1, 52($sp)
-	lw $t2, var3
-	add $t0, $t1, $t2
-	sw $t0, 52($sp)
-	lw $t1, 52($sp)
-	lw $t2, var2
-	add $t0, $t1, $t2
-	sw $t0, 52($sp)
-	lw $t1, 52($sp)
-	li $t4, 100
-	sle $t0, $t1, $t4
-	sw $t0, 60($sp)
-	lw $t1, 60($sp)
-	beq $t1, 1, label_V56
-	lw $t1, ONE
-	beq $t1, 1, label_V56
-	lw $t1, 60($sp)
-	lw $t2, ONE
-	sne $t1, $t1, $zero
-	sne $t2, $t2, $zero
-	or $t0, $t1, $t2
-	sw $t0, 60($sp)
-	lw $t1, 60($sp)
-	beqz $t1, label_V57
-label_V56:
-	la $a0, string_V69
-	li $v0, 4
-	syscall
-label_V57:
-label_V45:
-	la $a0, string_V70
-	li $v0, 4
-	syscall
-	subi $sp, $sp, 504
-	jal fun_begin
-	addi $sp, $sp, 504
-	subi $sp, $sp, 504
-	jal fun_begin
-	addi $sp, $sp, 504
-	subi $sp, $sp, 504
-	jal fun_begin
-	addi $sp, $sp, 504
-	subi $sp, $sp, 504
-	jal fun_begin
-	addi $sp, $sp, 504
-	subi $sp, $sp, 504
-	jal fun_begin
-	addi $sp, $sp, 504
-	subi $sp, $sp, 504
-	jal fun_begin
-	addi $sp, $sp, 504
+	sw $t1, -5992($sp)
+	subi $sp, $sp, 6004
+	jal matrix_pow_begin
+	addi $sp, $sp, 6004
+	lw $t1, 12($sp)
+	sw $t1, -6000($sp)
+	subi $sp, $sp, 6004
+	jal print_begin
+	addi $sp, $sp, 6004
 	li $t4, 0
 	move $v0, $t4
 	j main_end
 main_end:
 	li $v0, 10
 	syscall
-fun_begin:
+getlong_begin:
 	sw $ra, 0($sp)
-	li $t0, 1
+	li $t4, 1
+	mul $t2, $t4, 4
+	lw $t1, 4($sp)
+	add $t0, $t2, $t1
 	sw $t0, 124($sp)
-	li $t0, 1
+	lw $t1, 124($sp)
+	li $v0, 5
+	syscall
+	sw $v0, 0($t1)
+	li $t4, 0
+	mul $t2, $t4, 4
+	lw $t1, 4($sp)
+	add $t0, $t2, $t1
 	sw $t0, 128($sp)
-label_V15:
 	lw $t1, 128($sp)
-	li $t4, 1000
-	slt $t0, $t1, $t4
+	li $v0, 5
+	syscall
+	sw $v0, 0($t1)
+getlong_end:
+	lw $ra, 0($sp)
+	jr $ra
+_memset_begin:
+	sw $ra, 0($sp)
+	li $t0, 0
+	sw $t0, 124($sp)
+label_V145:
+	lw $t1, 124($sp)
+	lw $t2, 12($sp)
+	slt $t0, $t1, $t2
+	sw $t0, 128($sp)
+	lw $t1, 128($sp)
+	beqz $t1, label_V146
+	lw $t2, 124($sp)
+	mul $t2, $t2, 4
+	lw $t1, 4($sp)
+	add $t0, $t2, $t1
 	sw $t0, 132($sp)
+	lw $t2, 8($sp)
 	lw $t1, 132($sp)
-	beqz $t1, label_V16
-	lw $t1, 128($sp)
-	mul $t0, $t1, 2
+	sw $t2, 0($t1)
+label_V147:
+	lw $t1, 124($sp)
+	add $t0, $t1, 1
 	sw $t0, 136($sp)
 	lw $t2, 136($sp)
 	move $t0, $t2
+	sw $t0, 124($sp)
+	j label_V145
+label_V146:
+_memset_end:
+	lw $ra, 0($sp)
+	jr $ra
+_memcpy_begin:
+	sw $ra, 0($sp)
+	li $t0, 0
+	sw $t0, 124($sp)
+label_V166:
+	lw $t1, 124($sp)
+	lw $t2, 12($sp)
+	slt $t0, $t1, $t2
 	sw $t0, 128($sp)
-label_V17:
-	j label_V15
-label_V16:
-	la $a0, string_V22
+	lw $t1, 128($sp)
+	beqz $t1, label_V167
+	lw $t2, 124($sp)
+	mul $t2, $t2, 4
+	lw $t1, 4($sp)
+	add $t0, $t2, $t1
+	sw $t0, 132($sp)
+	lw $t2, 124($sp)
+	mul $t2, $t2, 4
+	lw $t1, 8($sp)
+	add $t0, $t2, $t1
+	sw $t0, 136($sp)
+	lw $t1, 136($sp)
+	lw $t0, 0($t1)
+	sw $t0, 140($sp)
+	lw $t2, 140($sp)
+	lw $t1, 132($sp)
+	sw $t2, 0($t1)
+	lw $t1, 124($sp)
+	add $t0, $t1, 1
+	sw $t0, 144($sp)
+	lw $t2, 144($sp)
+	move $t0, $t2
+	sw $t0, 124($sp)
+label_V168:
+	j label_V166
+label_V167:
+_memcpy_end:
+	lw $ra, 0($sp)
+	jr $ra
+_mult_int_begin:
+	sw $ra, 0($sp)
+	li $t0, 32768
+	sw $t0, 124($sp)
+	li $t0, 1073741824
+	sw $t0, 128($sp)
+	lw $t1, 4($sp)
+	lw $t2, 124($sp)
+	div $t0, $t1, $t2
+	sw $t0, 136($sp)
+	lw $t2, 136($sp)
+	move $t0, $t2
+	sw $t0, 132($sp)
+	lw $t1, 4($sp)
+	lw $t2, 124($sp)
+	rem $t0, $t1, $t2
+	sw $t0, 144($sp)
+	lw $t2, 144($sp)
+	move $t0, $t2
+	sw $t0, 140($sp)
+	lw $t1, 8($sp)
+	lw $t2, 124($sp)
+	div $t0, $t1, $t2
+	sw $t0, 152($sp)
+	lw $t2, 152($sp)
+	move $t0, $t2
+	sw $t0, 148($sp)
+	lw $t1, 8($sp)
+	lw $t2, 124($sp)
+	rem $t0, $t1, $t2
+	sw $t0, 160($sp)
+	lw $t2, 160($sp)
+	move $t0, $t2
+	sw $t0, 156($sp)
+	lw $t1, 132($sp)
+	lw $t2, 148($sp)
+	mul $t0, $t1, $t2
+	sw $t0, 168($sp)
+	lw $t2, 168($sp)
+	move $t0, $t2
+	sw $t0, 164($sp)
+	lw $t1, 132($sp)
+	lw $t2, 156($sp)
+	mul $t0, $t1, $t2
+	sw $t0, 176($sp)
+	lw $t1, 140($sp)
+	lw $t2, 148($sp)
+	mul $t0, $t1, $t2
+	sw $t0, 180($sp)
+	lw $t1, 176($sp)
+	lw $t2, 180($sp)
+	add $t0, $t1, $t2
+	sw $t0, 184($sp)
+	lw $t2, 184($sp)
+	move $t0, $t2
+	sw $t0, 172($sp)
+	lw $t1, 140($sp)
+	lw $t2, 156($sp)
+	mul $t0, $t1, $t2
+	sw $t0, 192($sp)
+	lw $t2, 192($sp)
+	move $t0, $t2
+	sw $t0, 188($sp)
+	li $t4, 0
+	mul $t2, $t4, 4
+	lw $t1, 12($sp)
+	add $t0, $t2, $t1
+	sw $t0, 196($sp)
+	lw $t1, 172($sp)
+	lw $t2, 124($sp)
+	rem $t0, $t1, $t2
+	sw $t0, 200($sp)
+	lw $t1, 200($sp)
+	lw $t2, 124($sp)
+	mul $t0, $t1, $t2
+	sw $t0, 204($sp)
+	lw $t1, 188($sp)
+	lw $t2, 204($sp)
+	add $t0, $t1, $t2
+	sw $t0, 208($sp)
+	lw $t2, 208($sp)
+	lw $t1, 196($sp)
+	sw $t2, 0($t1)
+	li $t4, 1
+	mul $t2, $t4, 4
+	lw $t1, 12($sp)
+	add $t0, $t2, $t1
+	sw $t0, 212($sp)
+	lw $t1, 172($sp)
+	lw $t2, 124($sp)
+	div $t0, $t1, $t2
+	sw $t0, 216($sp)
+	lw $t1, 164($sp)
+	lw $t2, 216($sp)
+	add $t0, $t1, $t2
+	sw $t0, 220($sp)
+	li $t4, 0
+	mul $t2, $t4, 4
+	lw $t1, 12($sp)
+	add $t0, $t2, $t1
+	sw $t0, 224($sp)
+	lw $t1, 224($sp)
+	lw $t0, 0($t1)
+	sw $t0, 228($sp)
+	lw $t1, 228($sp)
+	lw $t2, 128($sp)
+	div $t0, $t1, $t2
+	sw $t0, 232($sp)
+	lw $t1, 220($sp)
+	lw $t2, 232($sp)
+	add $t0, $t1, $t2
+	sw $t0, 220($sp)
+	lw $t2, 220($sp)
+	lw $t1, 212($sp)
+	sw $t2, 0($t1)
+	li $t4, 0
+	mul $t2, $t4, 4
+	lw $t1, 12($sp)
+	add $t0, $t2, $t1
+	sw $t0, 236($sp)
+	li $t4, 0
+	mul $t2, $t4, 4
+	lw $t1, 12($sp)
+	add $t0, $t2, $t1
+	sw $t0, 240($sp)
+	lw $t1, 240($sp)
+	lw $t0, 0($t1)
+	sw $t0, 244($sp)
+	lw $t1, 244($sp)
+	lw $t2, 128($sp)
+	rem $t0, $t1, $t2
+	sw $t0, 248($sp)
+	lw $t2, 248($sp)
+	lw $t1, 236($sp)
+	sw $t2, 0($t1)
+	j _mult_int_end
+_mult_int_end:
+	lw $ra, 0($sp)
+	jr $ra
+_mod_long_begin:
+	sw $ra, 0($sp)
+	li $t0, 32768
+	sw $t0, 124($sp)
+	li $t0, 1073741824
+	sw $t0, 128($sp)
+	lw $t1, 128($sp)
+	lw $t2, 8($sp)
+	rem $t0, $t1, $t2
+	sw $t0, 136($sp)
+	lw $t2, 136($sp)
+	move $t0, $t2
+	sw $t0, 132($sp)
+	la $t0, 144($sp)
+	sw $t0, 140($sp)
+	li $t4, 0
+	mul $t2, $t4, 4
+	lw $t1, 4($sp)
+	add $t0, $t2, $t1
+	sw $t0, 156($sp)
+	lw $t1, 156($sp)
+	lw $t0, 0($t1)
+	sw $t0, 160($sp)
+	li $t4, 1
+	mul $t2, $t4, 4
+	lw $t1, 4($sp)
+	add $t0, $t2, $t1
+	sw $t0, 164($sp)
+	lw $t1, 164($sp)
+	lw $t0, 0($t1)
+	sw $t0, 168($sp)
+	lw $t1, 140($sp)
+	lw $t2, 160($sp)
+	sw $t2, 0($t1)
+	lw $t2, 168($sp)
+	sw $t2, 4($t1)
+	li $t4, 0
+	mul $t2, $t4, 4
+	lw $t1, 4($sp)
+	add $t0, $t2, $t1
+	sw $t0, 176($sp)
+	lw $t1, 176($sp)
+	lw $t0, 0($t1)
+	sw $t0, 180($sp)
+	lw $t1, 180($sp)
+	lw $t2, 8($sp)
+	rem $t0, $t1, $t2
+	sw $t0, 184($sp)
+	lw $t2, 184($sp)
+	move $t0, $t2
+	sw $t0, 172($sp)
+label_V253:
+	li $t4, 1
+	mul $t2, $t4, 4
+	lw $t1, 140($sp)
+	add $t0, $t2, $t1
+	sw $t0, 188($sp)
+	lw $t1, 188($sp)
+	lw $t0, 0($t1)
+	sw $t0, 192($sp)
+	li $t4, 1
+	mul $t2, $t4, 4
+	lw $t1, 140($sp)
+	add $t0, $t2, $t1
+	sw $t0, 196($sp)
+	lw $t1, 196($sp)
+	lw $t0, 0($t1)
+	sw $t0, 200($sp)
+	lw $t1, 200($sp)
+	seq $t0, $t1, 0
+	sw $t0, 204($sp)
+	lw $t1, 204($sp)
+	beqz $t1, label_V257
+label_V256:
+	j label_V254
+label_V257:
+	li $t4, 1
+	mul $t2, $t4, 4
+	lw $t1, 140($sp)
+	add $t0, $t2, $t1
+	sw $t0, 208($sp)
+	lw $t1, 208($sp)
+	lw $t0, 0($t1)
+	sw $t0, 212($sp)
+	lw $t1, 212($sp)
+	sw $t1, -6000($sp)
+	lw $t1, 132($sp)
+	sw $t1, -5996($sp)
+	lw $t1, 140($sp)
+	sw $t1, -5992($sp)
+	subi $sp, $sp, 6004
+	jal _mult_int_begin
+	addi $sp, $sp, 6004
+	li $t4, 0
+	mul $t2, $t4, 4
+	lw $t1, 140($sp)
+	add $t0, $t2, $t1
+	sw $t0, 216($sp)
+	lw $t1, 216($sp)
+	lw $t0, 0($t1)
+	sw $t0, 220($sp)
+	lw $t1, 172($sp)
+	lw $t2, 220($sp)
+	add $t0, $t1, $t2
+	sw $t0, 224($sp)
+	lw $t1, 224($sp)
+	lw $t2, 8($sp)
+	rem $t0, $t1, $t2
+	sw $t0, 228($sp)
+	lw $t2, 228($sp)
+	move $t0, $t2
+	sw $t0, 172($sp)
+label_V255:
+	j label_V253
+label_V254:
+	lw $t2, 172($sp)
+	move $v0, $t2
+	j _mod_long_end
+_mod_long_end:
+	lw $ra, 0($sp)
+	jr $ra
+_mult_mod_begin:
+	sw $ra, 0($sp)
+	la $t0, 128($sp)
+	sw $t0, 124($sp)
+	lw $t1, 4($sp)
+	sw $t1, -6000($sp)
+	lw $t1, 8($sp)
+	sw $t1, -5996($sp)
+	lw $t1, 124($sp)
+	sw $t1, -5992($sp)
+	subi $sp, $sp, 6004
+	jal _mult_int_begin
+	addi $sp, $sp, 6004
+	lw $t1, 124($sp)
+	sw $t1, -6000($sp)
+	lw $t1, 12($sp)
+	sw $t1, -5996($sp)
+	subi $sp, $sp, 6004
+	jal _mod_long_begin
+	addi $sp, $sp, 6004
+	sw $v0, 140($sp)
+	lw $t2, 140($sp)
+	move $v0, $t2
+	j _mult_mod_end
+_mult_mod_end:
+	lw $ra, 0($sp)
+	jr $ra
+matrix_mult_begin:
+	sw $ra, 0($sp)
+	li $t3, 10
+	mul $t0, $t3, 0
+	sw $t0, 124($sp)
+	lw $t2, 124($sp)
+	mul $t2, $t2, 4
+	lw $t1, 12($sp)
+	add $t0, $t2, $t1
+	sw $t0, 128($sp)
+	lw $t2, 128($sp)
+	move $t0, $t2
+	sw $t0, 132($sp)
+	lw $t1, 132($sp)
+	sw $t1, -6000($sp)
+	li $t3, 0
+	sw $t3, -5996($sp)
+	lw $t1, maxn
+	lw $t2, maxn
+	mul $t0, $t1, $t2
+	sw $t0, 136($sp)
+	lw $t1, 136($sp)
+	sw $t1, -5992($sp)
+	subi $sp, $sp, 6004
+	jal _memset_begin
+	addi $sp, $sp, 6004
+	li $t0, 0
+	sw $t0, 140($sp)
+label_V330:
+	lw $t1, 140($sp)
+	lw $t2, n
+	slt $t0, $t1, $t2
+	sw $t0, 152($sp)
+	lw $t1, 152($sp)
+	beqz $t1, label_V331
+	li $t0, 0
+	sw $t0, 144($sp)
+label_V335:
+	lw $t1, 144($sp)
+	lw $t2, n
+	slt $t0, $t1, $t2
+	sw $t0, 156($sp)
+	lw $t1, 156($sp)
+	beqz $t1, label_V336
+	li $t0, 0
+	sw $t0, 148($sp)
+label_V340:
+	lw $t1, 148($sp)
+	lw $t2, n
+	slt $t0, $t1, $t2
+	sw $t0, 160($sp)
+	lw $t1, 160($sp)
+	beqz $t1, label_V341
+	li $t3, 10
+	lw $t2, 140($sp)
+	mul $t0, $t3, $t2
+	sw $t0, 164($sp)
+	lw $t1, 164($sp)
+	lw $t2, 144($sp)
+	add $t0, $t1, $t2
+	sw $t0, 168($sp)
+	lw $t2, 168($sp)
+	mul $t2, $t2, 4
+	lw $t1, 12($sp)
+	add $t0, $t2, $t1
+	sw $t0, 172($sp)
+	li $t3, 10
+	lw $t2, 140($sp)
+	mul $t0, $t3, $t2
+	sw $t0, 176($sp)
+	lw $t1, 176($sp)
+	lw $t2, 144($sp)
+	add $t0, $t1, $t2
+	sw $t0, 180($sp)
+	lw $t2, 180($sp)
+	mul $t2, $t2, 4
+	lw $t1, 12($sp)
+	add $t0, $t2, $t1
+	sw $t0, 184($sp)
+	lw $t1, 184($sp)
+	lw $t0, 0($t1)
+	sw $t0, 188($sp)
+	li $t3, 10
+	lw $t2, 140($sp)
+	mul $t0, $t3, $t2
+	sw $t0, 192($sp)
+	lw $t1, 192($sp)
+	lw $t2, 148($sp)
+	add $t0, $t1, $t2
+	sw $t0, 196($sp)
+	lw $t2, 196($sp)
+	mul $t2, $t2, 4
+	lw $t1, 4($sp)
+	add $t0, $t2, $t1
+	sw $t0, 200($sp)
+	lw $t1, 200($sp)
+	lw $t0, 0($t1)
+	sw $t0, 204($sp)
+	lw $t1, 204($sp)
+	sw $t1, -6000($sp)
+	li $t3, 10
+	lw $t2, 148($sp)
+	mul $t0, $t3, $t2
+	sw $t0, 208($sp)
+	lw $t1, 208($sp)
+	lw $t2, 144($sp)
+	add $t0, $t1, $t2
+	sw $t0, 212($sp)
+	lw $t2, 212($sp)
+	mul $t2, $t2, 4
+	lw $t1, 8($sp)
+	add $t0, $t2, $t1
+	sw $t0, 216($sp)
+	lw $t1, 216($sp)
+	lw $t0, 0($t1)
+	sw $t0, 220($sp)
+	lw $t1, 220($sp)
+	sw $t1, -5996($sp)
+	lw $t1, mod
+	sw $t1, -5992($sp)
+	subi $sp, $sp, 6004
+	jal _mult_mod_begin
+	addi $sp, $sp, 6004
+	sw $v0, 224($sp)
+	lw $t1, 188($sp)
+	lw $t2, 224($sp)
+	add $t0, $t1, $t2
+	sw $t0, 228($sp)
+	lw $t1, 228($sp)
+	lw $t2, mod
+	rem $t0, $t1, $t2
+	sw $t0, 232($sp)
+	lw $t2, 232($sp)
+	lw $t1, 172($sp)
+	sw $t2, 0($t1)
+label_V342:
+	lw $t1, 148($sp)
+	add $t0, $t1, 1
+	sw $t0, 236($sp)
+	lw $t2, 236($sp)
+	move $t0, $t2
+	sw $t0, 148($sp)
+	j label_V340
+label_V341:
+label_V337:
+	lw $t1, 144($sp)
+	add $t0, $t1, 1
+	sw $t0, 240($sp)
+	lw $t2, 240($sp)
+	move $t0, $t2
+	sw $t0, 144($sp)
+	j label_V335
+label_V336:
+label_V332:
+	lw $t1, 140($sp)
+	add $t0, $t1, 1
+	sw $t0, 244($sp)
+	lw $t2, 244($sp)
+	move $t0, $t2
+	sw $t0, 140($sp)
+	j label_V330
+label_V331:
+	j matrix_mult_end
+matrix_mult_end:
+	lw $ra, 0($sp)
+	jr $ra
+print_begin:
+	sw $ra, 0($sp)
+	li $t0, 0
+	sw $t0, 124($sp)
+label_V389:
+	lw $t1, 124($sp)
+	lw $t2, n
+	slt $t0, $t1, $t2
+	sw $t0, 132($sp)
+	lw $t1, 132($sp)
+	beqz $t1, label_V390
+	li $t0, 0
+	sw $t0, 128($sp)
+label_V394:
+	lw $t1, 128($sp)
+	lw $t2, n
+	slt $t0, $t1, $t2
+	sw $t0, 136($sp)
+	lw $t1, 136($sp)
+	beqz $t1, label_V395
+	lw $t1, 128($sp)
+	beqz $t1, label_V401
+label_V399:
+	la $a0, string_V402
 	li $v0, 4
 	syscall
-	lw $t1, 128($sp)
+	li $t3, 10
+	lw $t2, 124($sp)
+	mul $t0, $t3, $t2
+	sw $t0, 140($sp)
+	lw $t1, 140($sp)
+	lw $t2, 128($sp)
+	add $t0, $t1, $t2
+	sw $t0, 144($sp)
+	lw $t2, 144($sp)
+	mul $t2, $t2, 4
+	lw $t1, 4($sp)
+	add $t0, $t2, $t1
+	sw $t0, 148($sp)
+	lw $t1, 148($sp)
+	lw $t0, 0($t1)
+	sw $t0, 152($sp)
+	lw $t1, 152($sp)
 	move $a0, $t1
 	li $v0, 1
 	syscall
-	j fun_end
-fun_end:
+	j label_V400
+label_V401:
+	li $t3, 10
+	lw $t2, 124($sp)
+	mul $t0, $t3, $t2
+	sw $t0, 156($sp)
+	lw $t1, 156($sp)
+	lw $t2, 128($sp)
+	add $t0, $t1, $t2
+	sw $t0, 160($sp)
+	lw $t2, 160($sp)
+	mul $t2, $t2, 4
+	lw $t1, 4($sp)
+	add $t0, $t2, $t1
+	sw $t0, 164($sp)
+	lw $t1, 164($sp)
+	lw $t0, 0($t1)
+	sw $t0, 168($sp)
+	lw $t1, 168($sp)
+	move $a0, $t1
+	li $v0, 1
+	syscall
+label_V400:
+label_V396:
+	lw $t1, 128($sp)
+	add $t0, $t1, 1
+	sw $t0, 172($sp)
+	lw $t2, 172($sp)
+	move $t0, $t2
+	sw $t0, 128($sp)
+	j label_V394
+label_V395:
+	la $a0, string_V417
+	li $v0, 4
+	syscall
+label_V391:
+	lw $t1, 124($sp)
+	add $t0, $t1, 1
+	sw $t0, 176($sp)
+	lw $t2, 176($sp)
+	move $t0, $t2
+	sw $t0, 124($sp)
+	j label_V389
+label_V390:
+print_end:
+	lw $ra, 0($sp)
+	jr $ra
+matrix_pow_begin:
+	sw $ra, 0($sp)
+	li $t3, 10
+	mul $t0, $t3, 0
+	sw $t0, 124($sp)
+	lw $t2, 124($sp)
+	mul $t2, $t2, 4
+	lw $t1, 12($sp)
+	add $t0, $t2, $t1
+	sw $t0, 128($sp)
+	lw $t2, 128($sp)
+	move $t0, $t2
+	sw $t0, 132($sp)
+	lw $t1, 132($sp)
+	sw $t1, -6000($sp)
+	li $t3, 0
+	sw $t3, -5996($sp)
+	lw $t1, maxn
+	lw $t2, maxn
+	mul $t0, $t1, $t2
+	sw $t0, 136($sp)
+	lw $t1, 136($sp)
+	sw $t1, -5992($sp)
+	subi $sp, $sp, 6004
+	jal _memset_begin
+	addi $sp, $sp, 6004
+	li $t0, 0
+	sw $t0, 140($sp)
+label_V448:
+	lw $t1, 140($sp)
+	lw $t2, n
+	slt $t0, $t1, $t2
+	sw $t0, 144($sp)
+	lw $t1, 144($sp)
+	beqz $t1, label_V449
+	li $t3, 10
+	lw $t2, 140($sp)
+	mul $t0, $t3, $t2
+	sw $t0, 148($sp)
+	lw $t1, 148($sp)
+	lw $t2, 140($sp)
+	add $t0, $t1, $t2
+	sw $t0, 152($sp)
+	lw $t2, 152($sp)
+	mul $t2, $t2, 4
+	lw $t1, 12($sp)
+	add $t0, $t2, $t1
+	sw $t0, 156($sp)
+	li $t4, 1
+	lw $t1, 156($sp)
+	sw $t4, 0($t1)
+label_V450:
+	lw $t1, 140($sp)
+	add $t0, $t1, 1
+	sw $t0, 160($sp)
+	lw $t2, 160($sp)
+	move $t0, $t2
+	sw $t0, 140($sp)
+	j label_V448
+label_V449:
+	li $t0, 536870912
+	sw $t0, 164($sp)
+	la $t0, 172($sp)
+	sw $t0, 168($sp)
+	la $t0, 580($sp)
+	sw $t0, 576($sp)
+	la $t0, 988($sp)
+	sw $t0, 984($sp)
+	li $t3, 10
+	mul $t0, $t3, 0
+	sw $t0, 1000($sp)
+	lw $t2, 1000($sp)
+	mul $t2, $t2, 4
+	lw $t1, 168($sp)
+	add $t0, $t2, $t1
+	sw $t0, 1004($sp)
+	lw $t2, 1004($sp)
+	move $t0, $t2
+	sw $t0, 1008($sp)
+	lw $t1, 1008($sp)
+	sw $t1, -6000($sp)
+	li $t3, 10
+	mul $t0, $t3, 0
+	sw $t0, 1012($sp)
+	lw $t2, 1012($sp)
+	mul $t2, $t2, 4
+	lw $t1, 4($sp)
+	add $t0, $t2, $t1
+	sw $t0, 1016($sp)
+	lw $t2, 1016($sp)
+	move $t0, $t2
+	sw $t0, 1020($sp)
+	lw $t1, 1020($sp)
+	sw $t1, -5996($sp)
+	lw $t1, maxn
+	lw $t2, maxn
+	mul $t0, $t1, $t2
+	sw $t0, 1024($sp)
+	lw $t1, 1024($sp)
+	sw $t1, -5992($sp)
+	subi $sp, $sp, 6004
+	jal _memcpy_begin
+	addi $sp, $sp, 6004
+	lw $t1, 984($sp)
+	sw $t1, -6000($sp)
+	lw $t1, 8($sp)
+	sw $t1, -5996($sp)
+	li $t3, 2
+	sw $t3, -5992($sp)
+	subi $sp, $sp, 6004
+	jal _memcpy_begin
+	addi $sp, $sp, 6004
+label_V493:
+	li $t4, 1
+	mul $t2, $t4, 4
+	lw $t1, 984($sp)
+	add $t0, $t2, $t1
+	sw $t0, 1028($sp)
+	lw $t1, 1028($sp)
+	lw $t0, 0($t1)
+	sw $t0, 1032($sp)
+	li $t4, 0
+	mul $t2, $t4, 4
+	lw $t1, 984($sp)
+	add $t0, $t2, $t1
+	sw $t0, 1036($sp)
+	lw $t1, 1036($sp)
+	lw $t0, 0($t1)
+	sw $t0, 1040($sp)
+	lw $t1, 1032($sp)
+	lw $t2, 1040($sp)
+	sne $t1, $t1, $zero
+	sne $t2, $t2, $zero
+	or $t0, $t1, $t2
+	sw $t0, 1044($sp)
+	lw $t1, 1044($sp)
+	beqz $t1, label_V494
+	li $t4, 0
+	mul $t2, $t4, 4
+	lw $t1, 984($sp)
+	add $t0, $t2, $t1
+	sw $t0, 1048($sp)
+	lw $t1, 1048($sp)
+	lw $t0, 0($t1)
+	sw $t0, 1052($sp)
+	lw $t1, 1052($sp)
+	li $t4, 2
+	rem $t0, $t1, $t4
+	sw $t0, 1056($sp)
+	lw $t1, 1056($sp)
+	beqz $t1, label_V504
+label_V503:
+	li $t3, 10
+	mul $t0, $t3, 0
+	sw $t0, 1060($sp)
+	lw $t2, 1060($sp)
+	mul $t2, $t2, 4
+	lw $t1, 576($sp)
+	add $t0, $t2, $t1
+	sw $t0, 1064($sp)
+	lw $t2, 1064($sp)
+	move $t0, $t2
+	sw $t0, 1068($sp)
+	lw $t1, 1068($sp)
+	sw $t1, -6000($sp)
+	li $t3, 10
+	mul $t0, $t3, 0
+	sw $t0, 1072($sp)
+	lw $t2, 1072($sp)
+	mul $t2, $t2, 4
+	lw $t1, 12($sp)
+	add $t0, $t2, $t1
+	sw $t0, 1076($sp)
+	lw $t2, 1076($sp)
+	move $t0, $t2
+	sw $t0, 1080($sp)
+	lw $t1, 1080($sp)
+	sw $t1, -5996($sp)
+	lw $t1, maxn
+	lw $t2, maxn
+	mul $t0, $t1, $t2
+	sw $t0, 1084($sp)
+	lw $t1, 1084($sp)
+	sw $t1, -5992($sp)
+	subi $sp, $sp, 6004
+	jal _memcpy_begin
+	addi $sp, $sp, 6004
+	lw $t1, 576($sp)
+	sw $t1, -6000($sp)
+	lw $t1, 168($sp)
+	sw $t1, -5996($sp)
+	lw $t1, 12($sp)
+	sw $t1, -5992($sp)
+	subi $sp, $sp, 6004
+	jal matrix_mult_begin
+	addi $sp, $sp, 6004
+label_V504:
+	li $t3, 10
+	mul $t0, $t3, 0
+	sw $t0, 1088($sp)
+	lw $t2, 1088($sp)
+	mul $t2, $t2, 4
+	lw $t1, 576($sp)
+	add $t0, $t2, $t1
+	sw $t0, 1092($sp)
+	lw $t2, 1092($sp)
+	move $t0, $t2
+	sw $t0, 1096($sp)
+	lw $t1, 1096($sp)
+	sw $t1, -6000($sp)
+	li $t3, 10
+	mul $t0, $t3, 0
+	sw $t0, 1100($sp)
+	lw $t2, 1100($sp)
+	mul $t2, $t2, 4
+	lw $t1, 168($sp)
+	add $t0, $t2, $t1
+	sw $t0, 1104($sp)
+	lw $t2, 1104($sp)
+	move $t0, $t2
+	sw $t0, 1108($sp)
+	lw $t1, 1108($sp)
+	sw $t1, -5996($sp)
+	lw $t1, maxn
+	lw $t2, maxn
+	mul $t0, $t1, $t2
+	sw $t0, 1112($sp)
+	lw $t1, 1112($sp)
+	sw $t1, -5992($sp)
+	subi $sp, $sp, 6004
+	jal _memcpy_begin
+	addi $sp, $sp, 6004
+	lw $t1, 576($sp)
+	sw $t1, -6000($sp)
+	lw $t1, 576($sp)
+	sw $t1, -5996($sp)
+	lw $t1, 168($sp)
+	sw $t1, -5992($sp)
+	subi $sp, $sp, 6004
+	jal matrix_mult_begin
+	addi $sp, $sp, 6004
+	li $t4, 0
+	mul $t2, $t4, 4
+	lw $t1, 984($sp)
+	add $t0, $t2, $t1
+	sw $t0, 1116($sp)
+	li $t4, 0
+	mul $t2, $t4, 4
+	lw $t1, 984($sp)
+	add $t0, $t2, $t1
+	sw $t0, 1120($sp)
+	lw $t1, 1120($sp)
+	lw $t0, 0($t1)
+	sw $t0, 1124($sp)
+	lw $t1, 1124($sp)
+	div $t0, $t1, 2
+	sw $t0, 1128($sp)
+	li $t4, 1
+	mul $t2, $t4, 4
+	lw $t1, 984($sp)
+	add $t0, $t2, $t1
+	sw $t0, 1132($sp)
+	lw $t1, 1132($sp)
+	lw $t0, 0($t1)
+	sw $t0, 1136($sp)
+	lw $t1, 1136($sp)
+	li $t4, 2
+	rem $t0, $t1, $t4
+	sw $t0, 1140($sp)
+	lw $t1, 1140($sp)
+	lw $t2, 164($sp)
+	mul $t0, $t1, $t2
+	sw $t0, 1140($sp)
+	lw $t1, 1128($sp)
+	lw $t2, 1140($sp)
+	add $t0, $t1, $t2
+	sw $t0, 1144($sp)
+	lw $t2, 1144($sp)
+	lw $t1, 1116($sp)
+	sw $t2, 0($t1)
+	li $t4, 1
+	mul $t2, $t4, 4
+	lw $t1, 984($sp)
+	add $t0, $t2, $t1
+	sw $t0, 1148($sp)
+	li $t4, 1
+	mul $t2, $t4, 4
+	lw $t1, 984($sp)
+	add $t0, $t2, $t1
+	sw $t0, 1152($sp)
+	lw $t1, 1152($sp)
+	lw $t0, 0($t1)
+	sw $t0, 1156($sp)
+	lw $t1, 1156($sp)
+	div $t0, $t1, 2
+	sw $t0, 1160($sp)
+	lw $t2, 1160($sp)
+	lw $t1, 1148($sp)
+	sw $t2, 0($t1)
+label_V495:
+	j label_V493
+label_V494:
+	j matrix_pow_end
+matrix_pow_end:
 	lw $ra, 0($sp)
 	jr $ra

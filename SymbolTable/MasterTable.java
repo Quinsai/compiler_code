@@ -373,7 +373,7 @@ public class MasterTable {
 
         while (!this.table.isEmpty()) {
             MasterTableItem item = this.table.getLast();
-            if (item.getScope() == scope) {
+            if (item.getScope() >= scope) {
                 subTable.table.addFirst(item);
                 this.table.removeLast();
             }
