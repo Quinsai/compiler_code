@@ -129,8 +129,10 @@ public class GenerateText implements IGenerateText {
         String param1 = getIdentify(mips, quaternion.getParam1(), 1, false);
         String param2 = getIdentify(mips, quaternion.getParam2(), 2, false);
 
-        mips.append("\tdiv ").append(param1).append(", ").append(param2).append("\n");
-        mips.append("\tmfhi $t0\n");
+//        mips.append("\tdiv ").append(param1).append(", ").append(param2).append("\n");
+//        mips.append("\tmfhi $t0\n");
+
+        mips.append("\trem $t0, ").append(param1).append(", ").append(param2).append("\n");
 
         setIdentifyIntoStack(mips, quaternion.getResult());
         return mips.toString();
@@ -151,7 +153,12 @@ public class GenerateText implements IGenerateText {
         else if (quaternion.getParam1().isUseRegister) {
             variable = getIdentify(mips, quaternion.getParam1(), 1, false);
             value = getIdentify(mips, quaternion.getParam2(), 2, true);
-            mips.append("\tli ").append(variable).append(", ").append(value);
+            if (value.matches("^-?\\d+$")) {
+                mips.append("\tli ").append(variable).append(", ").append(value).append("\n");
+            }
+            else {
+                mips.append("\tmove ").append(value).append(", ").append(value).append("\n");
+            }
         }
         // 存在栈里的局部变量，用sw指令
         else if (quaternion.getParam1().getType() == QuaternionIdentifyType.LOCAL) {
