@@ -37,11 +37,14 @@ public class Compiler {
 
         StringBuilder getTestFile = new StringBuilder();
         getTestFile.append(".data\n");
-        getTestFile.append("\ttest: .asciiz \"").append(InputSourceCode.getSourceCode()).append("\"\n");
+        // getTestFile.append("\ttest: .asciiz \"").append(InputSourceCode.getSourceCode()).append("\"\n");
+        getTestFile.append("\ttest: .asciiz \"can u see me\"\n");
         getTestFile.append("\n");
         getTestFile.append(".text\n");
         getTestFile.append("\tla $a0, test\n");
         getTestFile.append("\tli $v0, 4\n");
         getTestFile.append("\tsyscall\n");
+
+        OutputIntoFile.appendToFile(getTestFile.toString(), "mips.txt");
     }
 }
