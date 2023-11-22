@@ -1060,8 +1060,6 @@ public class Quaternion {
 
         private void translateUnaryOp(TreeNode node) {
 
-            traverseAllChildren(node);
-
             node.children.get(1).traverse(this);
             QuaternionIdentify identify = node.children.get(1).getQuaternionIdentify();
             QuaternionIdentify res = new QuaternionIdentify("");

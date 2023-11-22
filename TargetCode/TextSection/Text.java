@@ -28,6 +28,8 @@ public class Text {
         StringBuilder textCodeBuilder = new StringBuilder(textCode);
         int length = funcs.size();
 
+        textCodeBuilder.append("\tsubi $sp, $sp, 200000\n");
+
         funcs.get(length - 1).generateFuncCode(new GenerateText());
         textCodeBuilder.append(funcs.get(length - 1).getFuncCode());
 

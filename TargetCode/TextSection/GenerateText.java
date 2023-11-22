@@ -9,7 +9,7 @@ public class GenerateText implements IGenerateText {
 
     private int numOfFuncCallEnd;
 
-    private static final int spaceOfFunc = 6004;
+    private static final int spaceOfFunc = 300004;
 
     public GenerateText() {
         this.numOfFuncCallBegin = 0;
@@ -59,7 +59,7 @@ public class GenerateText implements IGenerateText {
             builder.append(getCode);
             return "$t" + paramIndex;
         }
-        return "ON-NO!";
+        return "$zero";
     }
 
     /**
@@ -156,7 +156,7 @@ public class GenerateText implements IGenerateText {
                 mips.append("\tli ").append(variable).append(", ").append(value).append("\n");
             }
             else {
-                mips.append("\tmove ").append(value).append(", ").append(value).append("\n");
+                mips.append("\tmove ").append(variable).append(", ").append(value).append("\n");
             }
         }
         // 存在栈里的局部变量，用sw指令
@@ -528,7 +528,7 @@ public class GenerateText implements IGenerateText {
 
         StringBuilder mips = new StringBuilder();
         String param1 = getIdentify(mips, quaternion.getParam1(), 1, false);
-        String param2 = getIdentify(mips, quaternion.getParam2(), 2, true);
+        String param2 = getIdentify(mips, quaternion.getParam2(), 2, false);
 
         mips.append("\tsne $t0, ").append(param1).append(", ").append(param2).append("\n");
         setIdentifyIntoStack(mips, quaternion.getResult());
@@ -540,7 +540,7 @@ public class GenerateText implements IGenerateText {
 
         StringBuilder mips = new StringBuilder();
         String param1 = getIdentify(mips, quaternion.getParam1(), 1, false);
-        String param2 = getIdentify(mips, quaternion.getParam2(), 2, true);
+        String param2 = getIdentify(mips, quaternion.getParam2(), 2, false);
 
         mips.append("\tseq $t0, ").append(param1).append(", ").append(param2).append("\n");
         setIdentifyIntoStack(mips, quaternion.getResult());
@@ -553,7 +553,7 @@ public class GenerateText implements IGenerateText {
         StringBuilder mips = new StringBuilder();
         String param = getIdentify(mips, quaternion.getParam1(), 1, false);
 
-        mips.append("\tseq $t0, ").append(param).append(", 0\n");
+        mips.append("\tseq $t0, ").append(param).append(", $zero\n");
         setIdentifyIntoStack(mips, quaternion.getResult());
 
         return mips.toString();
@@ -585,7 +585,7 @@ public class GenerateText implements IGenerateText {
         String condition = getIdentify(mips, quaternion.getParam1(), 1, false);
         String labelId = quaternion.getParam2().id;
 
-        mips.append("\tbeq ").append(condition).append(", 1, label_").append(labelId).append("\n");
+        mips.append("\tbnez ").append(condition).append(", label_").append(labelId).append("\n");
         return mips.toString();
     }
 
@@ -727,17 +727,6 @@ public class GenerateText implements IGenerateText {
         return mips.toString();
     }
 
-    private String generateGetArrayHeadAddress(SingleQuaternion quaternion) {
-
-        StringBuilder mips = new StringBuilder();
-        String array = getIdentify(mips, quaternion.getParam1(), 1, false);
-
-        mips.append("\tmove $t0, ").append(array).append("\n");
-        setIdentifyIntoStack(mips, quaternion.getResult());
-
-        return mips.toString();
-    }
-
     @Override
     public String generateText(SingleQuaternion quaternion) {
         Operation operation = quaternion.getOperation();
@@ -783,7 +772,6 @@ public class GenerateText implements IGenerateText {
             case GET_ADDRESS -> mips.append(generateGetAddress(quaternion));
             case STORE_TO_ADDRESS -> mips.append(generateStoreToAddress(quaternion));
             case GETINT_TO_ADDRESS -> mips.append(generateGetintToAddress(quaternion));
-            case GET_ARRAY_HEAD_ADDRESS -> mips.append(generateGetArrayHeadAddress(quaternion));
         }
         return mips.toString();
     }

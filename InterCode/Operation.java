@@ -5,12 +5,6 @@ package InterCode;
  */
 public enum Operation {
 
-    /**
-     * 获得数组的首地址
-     * GET_ARRAY_HEAD_ADDRESS, array, null, address
-     */
-    GET_ARRAY_HEAD_ADDRESS,
-
     /*
      * GET_ADDRESS, a, offset, t
      * 获取`a`所指向的地址偏移（增大）`offset`后的地址
