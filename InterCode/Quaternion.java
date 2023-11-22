@@ -480,7 +480,8 @@ public class Quaternion {
             QuaternionIdentify beginLabel = new QuaternionIdentify("");
             QuaternionIdentify endLabel = new QuaternionIdentify("");
             QuaternionIdentify updateLabel = new QuaternionIdentify("");
-            QuaternionIdentify condition;
+            QuaternionIdentify contentLabel = new QuaternionIdentify("");
+            QuaternionIdentify condition = new QuaternionIdentify("");
 
             /*
             要在这里把开始标签和结束标签加入栈中
@@ -508,14 +509,51 @@ public class Quaternion {
             addIntoInterCodes(Operation.LABEL, beginLabel, null, null);
 
             if (!node.children.get(i).value.equals(";")) {
-                node.children.get(i).traverse(this);
-                condition = node.children.get(i).getQuaternionIdentify();
-                addIntoInterCodes(Operation.BRANCH_IF_FALSE, condition, endLabel, null);
+
+                TreeNode conditionNode = node.children.get(i);
+                int numOfConditionNode = conditionNode.children.size();
+
+                if (numOfConditionNode > 2 && conditionNode.children.get(1).value.equals("&&")) {
+                    for (int j = 0; j < numOfConditionNode; j += 2) {
+                        conditionNode.children.get(j).traverse(this);
+                        QuaternionIdentify subCondition = conditionNode.children.get(j).getQuaternionIdentify();
+                        addIntoInterCodes(Operation.BRANCH_IF_FALSE, subCondition, endLabel, null);
+                        if (j == 0) {
+                            condition = subCondition;
+                        }
+                        else {
+                            addIntoInterCodes(Operation.AND, condition, subCondition, condition);
+                        }
+                    }
+                    addIntoInterCodes(Operation.BRANCH_IF_TRUE, condition, contentLabel, null);
+                }
+                else if (numOfConditionNode > 2 && conditionNode.children.get(1).value.equals("||")) {
+                    for (int j = 0; j < numOfConditionNode; j += 2) {
+                        conditionNode.children.get(j).traverse(this);
+                        QuaternionIdentify subCondition = conditionNode.children.get(j).getQuaternionIdentify();
+                        addIntoInterCodes(Operation.BRANCH_IF_TRUE, subCondition, contentLabel, null);
+                        if (j == 0) {
+                            condition = subCondition;
+                        }
+                        else {
+                            addIntoInterCodes(Operation.OR, condition, subCondition, condition);
+                        }
+                    }
+                    addIntoInterCodes(Operation.BRANCH_IF_FALSE, condition, endLabel, null);
+                }
+                else {
+                    node.children.get(i).traverse(this);
+                    condition = node.children.get(i).getQuaternionIdentify();
+                    addIntoInterCodes(Operation.BRANCH_IF_FALSE, condition, endLabel, null);
+                }
+
                 i += 2;
             }
             else {
                 i++;
             }
+
+            addIntoInterCodes(Operation.LABEL, contentLabel, null, null);
 
             node.children.get(length - 1).traverse(this);
 
