@@ -19,4 +19,9 @@ public enum QuaternionIdentifyType {
      * 数字
      */
     NUMBER,
+
+    /**
+     * 仅仅是个标签，实际上不是变量
+     */
+    LABEL
 }

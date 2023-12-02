@@ -1,6 +1,6 @@
 import Input.InputSourceCode;
 import InterCode.Quaternion;
-import Lexical.LexicalAnalysis;
+import Optimize.Register.RegisterAllocator;
 import Output.OutputIntoFile;
 import Syntactic.SyntacticAnalysis;
 import SyntacticTree.Tree;
@@ -31,6 +31,8 @@ public class Compiler {
         // 重定向输出到intercode.txt中，仅仅为了检验一下四元式生成的正确性而已
         // 最后的时候要记得注释掉这行
         Quaternion.getInstance().display();
+
+        RegisterAllocator.getInstance().allocate();
 
         Target.getInstance().generateTargetCode();
         Target.getInstance().outputTargetCode();

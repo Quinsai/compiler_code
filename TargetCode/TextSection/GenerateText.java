@@ -66,12 +66,17 @@ public class GenerateText implements IGenerateText {
      * 把某一个四元式变量的值存进栈里面
      * 默认它的值现在在$t0里面
      */
-    private void setIdentifyIntoStack(StringBuilder builder, QuaternionIdentify identify) {
-        if (!identify.isInStack) {
-            identify.pushIntoStack();
+    private void storeIdentify(StringBuilder builder, QuaternionIdentify identify) {
+        if (identify.isUseRegister) {
+            builder.append("\tmove ").append(identify.getRegister()).append(", $t0\n");
         }
-        int address = identify.getAddress();
-        builder.append("\tsw $t0, ").append(address).append("($sp)\n");
+        else {
+            if (!identify.isInStack) {
+                identify.pushIntoStack();
+            }
+            int address = identify.getAddress();
+            builder.append("\tsw $t0, ").append(address).append("($sp)\n");
+        }
     }
 
     private String generatePlus(SingleQuaternion quaternion) {
@@ -82,7 +87,7 @@ public class GenerateText implements IGenerateText {
 
         mips.append("\taddu $t0, ").append(param1).append(", ").append(param2).append("\n");
 
-        setIdentifyIntoStack(mips, quaternion.getResult());
+        storeIdentify(mips, quaternion.getResult());
         return mips.toString();
     }
 
@@ -94,7 +99,7 @@ public class GenerateText implements IGenerateText {
 
         mips.append("\tsubu $t0, ").append(param1).append(", ").append(param2).append("\n");
 
-        setIdentifyIntoStack(mips, quaternion.getResult());
+        storeIdentify(mips, quaternion.getResult());
         return mips.toString();
     }
 
@@ -106,7 +111,7 @@ public class GenerateText implements IGenerateText {
 
         mips.append("\tmul $t0, ").append(param1).append(", ").append(param2).append("\n");
 
-        setIdentifyIntoStack(mips, quaternion.getResult());
+        storeIdentify(mips, quaternion.getResult());
         return mips.toString();
     }
 
@@ -118,7 +123,7 @@ public class GenerateText implements IGenerateText {
 
         mips.append("\tdiv $t0, ").append(param1).append(", ").append(param2).append("\n");
 
-        setIdentifyIntoStack(mips, quaternion.getResult());
+        storeIdentify(mips, quaternion.getResult());
         return mips.toString();
     }
 
@@ -133,7 +138,7 @@ public class GenerateText implements IGenerateText {
 
         mips.append("\trem $t0, ").append(param1).append(", ").append(param2).append("\n");
 
-        setIdentifyIntoStack(mips, quaternion.getResult());
+        storeIdentify(mips, quaternion.getResult());
         return mips.toString();
     }
 
@@ -169,7 +174,7 @@ public class GenerateText implements IGenerateText {
             else {
                 mips.append("\tmove $t0, ").append(value).append("\n");
             }
-            setIdentifyIntoStack(mips, quaternion.getParam1());
+            storeIdentify(mips, quaternion.getParam1());
         }
 
         return mips.toString();
@@ -184,9 +189,7 @@ public class GenerateText implements IGenerateText {
         int size1 = 0;
         int size2 = 0;
 
-        if (!value.arrayValue.get(0).arrayValue.isEmpty()) {
-            dimension ++;
-        }
+
         size1 = value.arrayValue.size();
         if (dimension == 2) {
             size2 = value.arrayValue.get(0).arrayValue.size();
@@ -222,7 +225,7 @@ public class GenerateText implements IGenerateText {
 
         mips.append("\tlw $t0, 0(").append(address).append(")\n");
 
-        setIdentifyIntoStack(mips, quaternion.getResult());
+        storeIdentify(mips, quaternion.getResult());
 
         return mips.toString();
     }
@@ -441,7 +444,7 @@ public class GenerateText implements IGenerateText {
         String param = getIdentify(mips, quaternion.getParam1(), 1, false);
 
         mips.append("\tnegu $t0, ").append(param).append("\n");
-        setIdentifyIntoStack(mips, quaternion.getResult());
+        storeIdentify(mips, quaternion.getResult());
 
         return mips.toString();
     }
@@ -456,7 +459,7 @@ public class GenerateText implements IGenerateText {
         mips.append("\tsne $t2, ").append(param2).append(", $zero\n");
 
         mips.append("\tor $t0, $t1, $t2\n");
-        setIdentifyIntoStack(mips, quaternion.getResult());
+        storeIdentify(mips, quaternion.getResult());
 
         return mips.toString();
     }
@@ -471,7 +474,7 @@ public class GenerateText implements IGenerateText {
         mips.append("\tsne $t2, ").append(param2).append(", $zero\n");
 
         mips.append("\tand $t0, $t1, $t2\n");
-        setIdentifyIntoStack(mips, quaternion.getResult());
+        storeIdentify(mips, quaternion.getResult());
 
         return mips.toString();
     }
@@ -483,7 +486,7 @@ public class GenerateText implements IGenerateText {
         String param2 = getIdentify(mips, quaternion.getParam2(), 2, false);
 
         mips.append("\tsgt $t0, ").append(param1).append(", ").append(param2).append("\n");
-        setIdentifyIntoStack(mips, quaternion.getResult());
+        storeIdentify(mips, quaternion.getResult());
 
         return mips.toString();
     }
@@ -495,7 +498,7 @@ public class GenerateText implements IGenerateText {
         String param2 = getIdentify(mips, quaternion.getParam2(), 2, false);
 
         mips.append("\tsge $t0, ").append(param1).append(", ").append(param2).append("\n");
-        setIdentifyIntoStack(mips, quaternion.getResult());
+        storeIdentify(mips, quaternion.getResult());
 
         return mips.toString();
     }
@@ -507,7 +510,7 @@ public class GenerateText implements IGenerateText {
         String param2 = getIdentify(mips, quaternion.getParam2(), 2, false);
 
         mips.append("\tslt $t0, ").append(param1).append(", ").append(param2).append("\n");
-        setIdentifyIntoStack(mips, quaternion.getResult());
+        storeIdentify(mips, quaternion.getResult());
 
         return mips.toString();
     }
@@ -519,7 +522,7 @@ public class GenerateText implements IGenerateText {
         String param2 = getIdentify(mips, quaternion.getParam2(), 2, false);
 
         mips.append("\tsle $t0, ").append(param1).append(", ").append(param2).append("\n");
-        setIdentifyIntoStack(mips, quaternion.getResult());
+        storeIdentify(mips, quaternion.getResult());
 
         return mips.toString();
     }
@@ -531,7 +534,7 @@ public class GenerateText implements IGenerateText {
         String param2 = getIdentify(mips, quaternion.getParam2(), 2, false);
 
         mips.append("\tsne $t0, ").append(param1).append(", ").append(param2).append("\n");
-        setIdentifyIntoStack(mips, quaternion.getResult());
+        storeIdentify(mips, quaternion.getResult());
 
         return mips.toString();
     }
@@ -543,7 +546,7 @@ public class GenerateText implements IGenerateText {
         String param2 = getIdentify(mips, quaternion.getParam2(), 2, false);
 
         mips.append("\tseq $t0, ").append(param1).append(", ").append(param2).append("\n");
-        setIdentifyIntoStack(mips, quaternion.getResult());
+        storeIdentify(mips, quaternion.getResult());
 
         return mips.toString();
     }
@@ -554,7 +557,7 @@ public class GenerateText implements IGenerateText {
         String param = getIdentify(mips, quaternion.getParam1(), 1, false);
 
         mips.append("\tseq $t0, ").append(param).append(", $zero\n");
-        setIdentifyIntoStack(mips, quaternion.getResult());
+        storeIdentify(mips, quaternion.getResult());
 
         return mips.toString();
     }
@@ -636,7 +639,7 @@ public class GenerateText implements IGenerateText {
         mips.append("\tsyscall\n");
         mips.append("\tmove $t0, $v0\n");
 
-        setIdentifyIntoStack(mips, quaternion.getParam1());
+        storeIdentify(mips, quaternion.getParam1());
 
         return mips.toString();
     }
@@ -664,7 +667,7 @@ public class GenerateText implements IGenerateText {
         if (dimension == 1) {
 
             mips.append("\tla $t0, ").append(4 * (QuaternionIdentify.stackIndex + 1)).append("($sp)\n");
-            setIdentifyIntoStack(mips, quaternion.getResult());
+            storeIdentify(mips, quaternion.getResult());
             // QuaternionIdentify.stackIndex ++;
 
             QuaternionIdentify.stackIndex += size1;
@@ -672,7 +675,7 @@ public class GenerateText implements IGenerateText {
         else {
 
             mips.append("\tla $t0, ").append(4 * (QuaternionIdentify.stackIndex + 1)).append("($sp)\n");
-            setIdentifyIntoStack(mips, quaternion.getResult());
+            storeIdentify(mips, quaternion.getResult());
             // QuaternionIdentify.stackIndex ++;
 
             QuaternionIdentify.stackIndex += size1 * size2;
@@ -691,13 +694,13 @@ public class GenerateText implements IGenerateText {
             mips.append("\tmul $t1, ").append(offset).append(", 4\n");
             mips.append("\tla $t2, ").append(name).append("\n");
             mips.append("\tadd $t0, $t1, $t2\n");
-            setIdentifyIntoStack(mips, quaternion.getResult());
+            storeIdentify(mips, quaternion.getResult());
         }
         else if (quaternion.getParam1().getType() == QuaternionIdentifyType.LOCAL) {
             mips.append("\tmul $t2, ").append(offset).append(", 4\n");
             String address = getIdentify(mips, quaternion.getParam1(), 1, false);
             mips.append("\tadd $t0, $t2, ").append(address).append("\n");
-            setIdentifyIntoStack(mips, quaternion.getResult());
+            storeIdentify(mips, quaternion.getResult());
 
         }
 

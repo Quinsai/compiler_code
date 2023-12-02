@@ -41,6 +41,9 @@ public class Quaternion {
 
     private QuaternionIdentify currentFunc;
 
+    /**
+     * 获取所有的四元式中间代码
+     */
     public LinkedList<SingleQuaternion> getQuaternions() {
         return quaternions;
     }
@@ -483,6 +486,11 @@ public class Quaternion {
             QuaternionIdentify contentLabel = new QuaternionIdentify("");
             QuaternionIdentify condition = new QuaternionIdentify("");
 
+            beginLabel.setType(QuaternionIdentifyType.LABEL);
+            endLabel.setType(QuaternionIdentifyType.LABEL);
+            updateLabel.setType(QuaternionIdentifyType.LABEL);
+            contentLabel.setType(QuaternionIdentifyType.LABEL);
+
             /*
             要在这里把开始标签和结束标签加入栈中
             这样好让每一个break和continue都知道它们要去哪一个结束标签/开始标签
@@ -587,6 +595,10 @@ public class Quaternion {
             QuaternionIdentify startLabel = new QuaternionIdentify("");
             QuaternionIdentify endLabel = new QuaternionIdentify("");
             QuaternionIdentify elseLabel = new QuaternionIdentify("");
+
+            startLabel.setType(QuaternionIdentifyType.LABEL);
+            endLabel.setType(QuaternionIdentifyType.LABEL);
+            elseLabel.setType(QuaternionIdentifyType.LABEL);
 
             if (length == 7) {
                 isElse = true;
