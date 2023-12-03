@@ -200,6 +200,9 @@ public class Quaternion {
                 setIdentifyToTreeNode(node, identify);
                 linkIdentifyWithSymbolTableItem(name, identify, node.getScope());
                 addIntoInterCodes(Operation.VAR_INT_DECLARE, null, null, identify);
+                if (isGlobal) {
+                    identify.setType(QuaternionIdentifyType.GLOBAL);
+                }
                 return;
             }
 
