@@ -149,7 +149,7 @@ public class FunctionBlock {
     }
 
     private Boolean isSame(ArrayList<QuaternionIdentify> set1, ArrayList<QuaternionIdentify> set2) {
-        return difference(set1, set2).isEmpty();
+        return difference(set1, set2).isEmpty() && difference(set2, set1).isEmpty();
     }
 
     private ArrayList<QuaternionIdentify> getAllVariable() {
@@ -259,7 +259,7 @@ public class FunctionBlock {
                 break;
             }
 
-            while (orderedNodes.size() > 1 && orderedNodes.peek().getCountOfConflict() < 9) {
+            while (orderedNodes.size() > 1 && orderedNodes.peek().getCountOfConflict() < 8) {
                 VariableNode node = orderedNodes.poll();
                 conflictGraph.removeNode(node);
                 removedNodes.push(node);
@@ -275,7 +275,7 @@ public class FunctionBlock {
             removedNodes.push(notAllocatedNode);
         }
 
-        orderedNodes.peek().idOfRegister = 1;
+        orderedNodes.peek().idOfRegister = 0;
         while (!removedNodes.isEmpty()) {
             VariableNode addedNode = removedNodes.pop();
             conflictGraph.addNode(addedNode);
@@ -286,7 +286,7 @@ public class FunctionBlock {
             HashMap<Integer, Boolean> allocatedRegister = getAllocatedRegister(addedNode);
 
             int register;
-            for (register = 1; register <= 9; register++) {
+            for (register = 0; register <= 7; register++) {
                 if (!allocatedRegister.containsKey(register)) {
                     break;
                 }
@@ -318,7 +318,7 @@ public class FunctionBlock {
         for (VariableNode node :
             allNodes) {
             if (node.idOfRegister != -1) {
-                node.identify.setRegister("$t" + node.idOfRegister);
+                node.identify.setRegister("$s" + node.idOfRegister);
             }
         }
     }

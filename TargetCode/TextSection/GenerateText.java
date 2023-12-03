@@ -416,13 +416,22 @@ public class GenerateText implements IGenerateText {
 
         int levelOfFuncCallNest = this.numOfFuncCallBegin - this.numOfFuncCallEnd;
 
-        // 给接下来的这个函数开辟一个504字节的不会被打扰的空间
+        int startIndexOfSavedRegister = QuaternionIdentify.stackIndex;
+        for (int i = 0; i <= 7; i++) {
+            mips.append("\tsw $s").append(i).append(", ").append(4 * (startIndexOfSavedRegister + i)).append("($sp)\n");
+        }
+
+        // 给接下来的这个函数开辟一个不会被打扰的空间
         // 让它岁月静好
         mips.append("\tsubiu $sp, $sp, ").append(spaceOfFunc * levelOfFuncCallNest).append("\n");
 
         mips.append("\tjal ").append(funcName).append("_begin\n");
 
         mips.append("\taddiu $sp, $sp, ").append(spaceOfFunc * levelOfFuncCallNest).append("\n");
+
+        for (int i = 0; i <= 7; i++) {
+            mips.append("\tlw $s").append(i).append(", ").append(4 * (startIndexOfSavedRegister + i)).append("($sp)\n");
+        }
 
         QuaternionIdentify result = quaternion.getResult();
         if (result != null) {

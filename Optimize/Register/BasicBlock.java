@@ -68,7 +68,7 @@ public class BasicBlock {
     }
 
     private void handleDef(QuaternionIdentify identify, HashMap<QuaternionIdentify, Boolean> hasOccurred) {
-        if (identify == null || hasOccurred.containsKey(identify) || identify.getType() == QuaternionIdentifyType.NUMBER || identify.getType() == QuaternionIdentifyType.GLOBAL || identify.getType() == QuaternionIdentifyType.LABEL) {
+        if (identify == null || hasOccurred.containsKey(identify) || identify.getType() != QuaternionIdentifyType.LOCAL) {
             return;
         }
         hasOccurred.put(identify, true);
@@ -76,7 +76,7 @@ public class BasicBlock {
     }
 
     private void handleUse(QuaternionIdentify identify, HashMap<QuaternionIdentify, Boolean> hasOccurred) {
-        if (identify == null || hasOccurred.containsKey(identify) || identify.getType() == QuaternionIdentifyType.NUMBER || identify.getType() == QuaternionIdentifyType.GLOBAL || identify.getType() == QuaternionIdentifyType.LABEL) {
+        if (identify == null || hasOccurred.containsKey(identify) || identify.getType() != QuaternionIdentifyType.LOCAL) {
             return;
         }
         hasOccurred.put(identify, true);
@@ -93,13 +93,11 @@ public class BasicBlock {
             switch (operation) {
                 case MAIN_FUNC_BEGIN, MAIN_FUNC_END, FUNC_BEGIN, FUNC_END, FUNC_CALL_BEGIN,
                     FUNC_CALL_END, BLOCK_BEGIN, BLOCK_END, LABEL, SKIP, BRANCH_IF_FALSE,
-                    BRANCH_IF_TRUE -> {}
+                    BRANCH_IF_TRUE, CONST_ARRAY_DECLARE, VAR_ARRAY_DECLARE,
+                    FORMAL_PARA_ARRAY, FORMAL_PARA_INT, ARRAY_INIT -> {}
                 case SET_VALUE -> {
                     handleDef(param2, hasOccurred);
                     handleUse(param1, hasOccurred);
-                }
-                case FORMAL_PARA_INT, FORMAL_PARA_ARRAY -> {
-                    handleDef(param1, hasOccurred);
                 }
                 case RETURN -> {
                     handleUse(param2, hasOccurred);
@@ -107,36 +105,36 @@ public class BasicBlock {
                 case REAL_PARA -> {
                     handleUse(param1, hasOccurred);
                 }
-                case VAR_INT_DECLARE, VAR_ARRAY_DECLARE, CONST_INT_DECLARE, CONST_ARRAY_DECLARE -> {
+                case VAR_INT_DECLARE, CONST_INT_DECLARE -> {
                     handleDef(result, hasOccurred);
                 }
                 case GETINT -> {
                     handleDef(param1, hasOccurred);
                 }
-                case ARRAY_INIT -> {
-                    handleDef(param1, hasOccurred);
-                    int dimension = 1;
-                    if (!param2.arrayValue.get(0).arrayValue.isEmpty()) {
-                        dimension ++;
-                    }
-                    int size1 = param2.arrayValue.size();
-                    if (dimension == 1) {
-                        for (int j = 0; j < size1; j++) {
-                            QuaternionIdentify identify = param2.arrayValue.get(j);
-                            handleUse(identify, hasOccurred);
-                        }
-                    }
-                    else {
-                        int size2 = param2.arrayValue.get(0).arrayValue.size();
-                        for (int j = 0; j < size1; j++) {
-                            QuaternionIdentify firstDimensionValue = param2.arrayValue.get(j);
-                            for (int k = 0; k < size2; k++) {
-                                QuaternionIdentify identify = firstDimensionValue.arrayValue.get(k);
-                                handleUse(identify, hasOccurred);
-                            }
-                        }
-                    }
-                }
+//                case  -> {
+//                    handleDef(param1, hasOccurred);
+//                    int dimension = 1;
+//                    if (!param2.arrayValue.get(0).arrayValue.isEmpty()) {
+//                        dimension ++;
+//                    }
+//                    int size1 = param2.arrayValue.size();
+//                    if (dimension == 1) {
+//                        for (int j = 0; j < size1; j++) {
+//                            QuaternionIdentify identify = param2.arrayValue.get(j);
+//                            handleUse(identify, hasOccurred);
+//                        }
+//                    }
+//                    else {
+//                        int size2 = param2.arrayValue.get(0).arrayValue.size();
+//                        for (int j = 0; j < size1; j++) {
+//                            QuaternionIdentify firstDimensionValue = param2.arrayValue.get(j);
+//                            for (int k = 0; k < size2; k++) {
+//                                QuaternionIdentify identify = firstDimensionValue.arrayValue.get(k);
+//                                handleUse(identify, hasOccurred);
+//                            }
+//                        }
+//                    }
+//                }
                 default -> {
                     handleUse(param1, hasOccurred);
                     handleUse(param2, hasOccurred);
