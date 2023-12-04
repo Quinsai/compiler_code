@@ -71,12 +71,18 @@ public class BasicBlock {
         if (identify == null || hasOccurred.containsKey(identify) || identify.getType() != QuaternionIdentifyType.LOCAL) {
             return;
         }
+        if (identify.isArrayIdentify) {
+            return;
+        }
         hasOccurred.put(identify, true);
         def.add(identify);
     }
 
     private void handleUse(QuaternionIdentify identify, HashMap<QuaternionIdentify, Boolean> hasOccurred) {
         if (identify == null || hasOccurred.containsKey(identify) || identify.getType() != QuaternionIdentifyType.LOCAL) {
+            return;
+        }
+        if (identify.isArrayIdentify) {
             return;
         }
         hasOccurred.put(identify, true);
@@ -92,9 +98,10 @@ public class BasicBlock {
             QuaternionIdentify result = quaternions.get(i).getResult();
             switch (operation) {
                 case MAIN_FUNC_BEGIN, MAIN_FUNC_END, FUNC_BEGIN, FUNC_END, FUNC_CALL_BEGIN,
-                    FUNC_CALL_END, BLOCK_BEGIN, BLOCK_END, LABEL, SKIP, BRANCH_IF_FALSE,
+                    BLOCK_BEGIN, BLOCK_END, LABEL, SKIP, BRANCH_IF_FALSE,
                     BRANCH_IF_TRUE, CONST_ARRAY_DECLARE, VAR_ARRAY_DECLARE,
-                    FORMAL_PARA_ARRAY, FORMAL_PARA_INT, ARRAY_INIT -> {}
+                    FORMAL_PARA_ARRAY, FORMAL_PARA_INT, ARRAY_INIT,
+                    GET_ADDRESS, STORE_TO_ADDRESS, GETINT_TO_ADDRESS -> {}
                 case SET_VALUE -> {
                     handleDef(param2, hasOccurred);
                     handleUse(param1, hasOccurred);
@@ -110,6 +117,11 @@ public class BasicBlock {
                 }
                 case GETINT -> {
                     handleDef(param1, hasOccurred);
+                }
+                case FUNC_CALL_END -> {
+                    if (result != null) {
+                        handleDef(result, hasOccurred);
+                    }
                 }
 //                case  -> {
 //                    handleDef(param1, hasOccurred);

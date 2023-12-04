@@ -45,12 +45,21 @@ public class FunctionBlock {
         this.beginIndex = beginIndex;
         this.endIndex = endIndex;
         this.quaternions = Quaternion.getInstance().getQuaternions();
+
+        for (int i = beginIndex; i <= endIndex; i++) {
+            quaternions.get(i).functionBlock = this;
+        }
+    }
+
+    public void allocate() {
+        this.liveVariableAnalyzeOfBasicBlock();
+        this.liveVariableAnalyzeOfSingleQuaternion();
     }
 
     /**
-     * 活跃变量分析
+     * 基本块的活跃变量分析
      */
-    public void liveVariableAnalyze() {
+    private void liveVariableAnalyzeOfBasicBlock() {
         this.basicBlocks = divideBasicBlock();
         // 这里表示最后一个代表出口的exit的代码块
         this.basicBlocks.add(new BasicBlock(true));
@@ -85,7 +94,7 @@ public class FunctionBlock {
             }
         }
 
-        this.conflictGraph = new ConflictGraph(getAllVariable());
+        /*this.conflictGraph = new ConflictGraph(getAllVariable());
 
         for (int i = 0; i < numberOfBasicBlocks; i++) {
 
@@ -123,8 +132,15 @@ public class FunctionBlock {
                     conflictGraph.addEdge(outIdentify1, outIdentify2);
                 }
             }
-        }
+        }*/
 
+    }
+
+    /**
+     * 单一四元式的活跃变量分析
+     */
+    private void liveVariableAnalyzeOfSingleQuaternion() {
+        return;
     }
 
     private ArrayList<QuaternionIdentify> union(ArrayList<QuaternionIdentify> set1, ArrayList<QuaternionIdentify> set2) {
@@ -248,7 +264,7 @@ public class FunctionBlock {
         }
     }
 
-    public void allocateRegister() {
+    private void allocateRegister() {
 
         PriorityQueue<VariableNode> orderedNodes = new PriorityQueue<>(new NodeComparator());
         Stack<VariableNode> removedNodes = new Stack<>();
@@ -313,7 +329,7 @@ public class FunctionBlock {
         return allocatedRegister;
     }
 
-    public void setRegister() {
+    private void setRegister() {
         LinkedList<VariableNode> allNodes = this.conflictGraph.getNodes();
         for (VariableNode node :
             allNodes) {
@@ -321,5 +337,29 @@ public class FunctionBlock {
                 node.identify.setRegister("$s" + node.idOfRegister);
             }
         }
+    }
+
+    public ConflictGraph getConflictGraph() {
+        return conflictGraph;
+    }
+
+    public ArrayList<Integer> getAllocatedRegister() {
+        LinkedList<VariableNode> allNodes = this.conflictGraph.getNodes();
+        HashMap<Integer, Boolean> allocated = new HashMap<>();
+        ArrayList<Integer> res = new ArrayList<>();
+        for (VariableNode node :
+            allNodes) {
+            if (node.idOfRegister != -1) {
+                if (!allocated.containsKey(node.idOfRegister)) {
+                    allocated.put(node.idOfRegister, true);
+                }
+            }
+        }
+        for (int i = 0; i <= 7; i++) {
+            if (allocated.containsKey(i)) {
+                res.add(i);
+            }
+        }
+        return res;
     }
 }

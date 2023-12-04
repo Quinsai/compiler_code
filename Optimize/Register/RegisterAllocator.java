@@ -44,9 +44,7 @@ public class RegisterAllocator {
         ArrayList<FunctionBlock> functionBlocks = divideFunctionBlock();
         for (FunctionBlock function :
             functionBlocks) {
-            function.liveVariableAnalyze();
-            function.allocateRegister();
-            function.setRegister();
+            function.allocate();
         }
     }
 

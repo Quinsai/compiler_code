@@ -68,7 +68,7 @@ public class GenerateText implements IGenerateText {
      */
     private void storeIdentify(StringBuilder builder, QuaternionIdentify identify) {
         if (identify.isUseRegister) {
-            builder.append("\tmove ").append(identify.getRegister()).append(", $t0\n");
+            return;
         }
         else {
             if (!identify.isInStack) {
@@ -79,13 +79,22 @@ public class GenerateText implements IGenerateText {
         }
     }
 
+    private String getResultIdentify(QuaternionIdentify identify) {
+        if (identify.isUseRegister) {
+            return identify.getRegister();
+        }
+        else {
+            return "$t0";
+        }
+    }
+
     private String generatePlus(SingleQuaternion quaternion) {
 
         StringBuilder mips = new StringBuilder();
         String param1 = getIdentify(mips, quaternion.getParam1(), 1, false);
         String param2 = getIdentify(mips, quaternion.getParam2(), 2, true);
 
-        mips.append("\taddu $t0, ").append(param1).append(", ").append(param2).append("\n");
+        mips.append("\taddu ").append(getResultIdentify(quaternion.getResult())).append(", ").append(param1).append(", ").append(param2).append("\n");
 
         storeIdentify(mips, quaternion.getResult());
         return mips.toString();
@@ -97,7 +106,7 @@ public class GenerateText implements IGenerateText {
         String param1 = getIdentify(mips, quaternion.getParam1(), 1, false);
         String param2 = getIdentify(mips, quaternion.getParam2(), 2, true);
 
-        mips.append("\tsubu $t0, ").append(param1).append(", ").append(param2).append("\n");
+        mips.append("\tsubu ").append(getResultIdentify(quaternion.getResult())).append(", ").append(param1).append(", ").append(param2).append("\n");
 
         storeIdentify(mips, quaternion.getResult());
         return mips.toString();
@@ -109,7 +118,7 @@ public class GenerateText implements IGenerateText {
         String param1 = getIdentify(mips, quaternion.getParam1(), 1, false);
         String param2 = getIdentify(mips, quaternion.getParam2(), 2, true);
 
-        mips.append("\tmul $t0, ").append(param1).append(", ").append(param2).append("\n");
+        mips.append("\tmul ").append(getResultIdentify(quaternion.getResult())).append(", ").append(param1).append(", ").append(param2).append("\n");
 
         storeIdentify(mips, quaternion.getResult());
         return mips.toString();
@@ -121,7 +130,7 @@ public class GenerateText implements IGenerateText {
         String param1 = getIdentify(mips, quaternion.getParam1(), 1, false);
         String param2 = getIdentify(mips, quaternion.getParam2(), 2, true);
 
-        mips.append("\tdiv $t0, ").append(param1).append(", ").append(param2).append("\n");
+        mips.append("\tdiv ").append(getResultIdentify(quaternion.getResult())).append(", ").append(param1).append(", ").append(param2).append("\n");
 
         storeIdentify(mips, quaternion.getResult());
         return mips.toString();
@@ -136,7 +145,7 @@ public class GenerateText implements IGenerateText {
 //        mips.append("\tdiv ").append(param1).append(", ").append(param2).append("\n");
 //        mips.append("\tmfhi $t0\n");
 
-        mips.append("\trem $t0, ").append(param1).append(", ").append(param2).append("\n");
+        mips.append("\trem ").append(getResultIdentify(quaternion.getResult())).append(", ").append(param1).append(", ").append(param2).append("\n");
 
         storeIdentify(mips, quaternion.getResult());
         return mips.toString();
@@ -169,10 +178,10 @@ public class GenerateText implements IGenerateText {
             value = getIdentify(mips, quaternion.getParam2(), 2, true);
             // 是数字
             if (value.matches("^-?\\d+$")) {
-                mips.append("\tli $t0, ").append(value).append("\n");
+                mips.append("\tli ").append(getResultIdentify(quaternion.getParam1())).append(", ").append(value).append("\n");
             }
             else {
-                mips.append("\tmove $t0, ").append(value).append("\n");
+                mips.append("\tmove ").append(getResultIdentify(quaternion.getParam1())).append(", ").append(value).append("\n");
             }
             storeIdentify(mips, quaternion.getParam1());
         }
@@ -189,7 +198,9 @@ public class GenerateText implements IGenerateText {
         int size1 = 0;
         int size2 = 0;
 
-
+        if (!value.arrayValue.get(0).arrayValue.isEmpty()) {
+            dimension ++;
+        }
         size1 = value.arrayValue.size();
         if (dimension == 2) {
             size2 = value.arrayValue.get(0).arrayValue.size();
@@ -223,7 +234,7 @@ public class GenerateText implements IGenerateText {
         StringBuilder mips = new StringBuilder();
         String address = getIdentify(mips, quaternion.getParam1(), 1, false);
 
-        mips.append("\tlw $t0, 0(").append(address).append(")\n");
+        mips.append("\tlw ").append(getResultIdentify(quaternion.getResult())).append(", 0(").append(address).append(")\n");
 
         storeIdentify(mips, quaternion.getResult());
 
@@ -283,7 +294,18 @@ public class GenerateText implements IGenerateText {
 
     private String generateFormalParaInt(SingleQuaternion quaternion) {
 
+        StringBuilder mips = new StringBuilder();
         int count = Integer.parseInt(quaternion.getResult().getValue());
+
+        QuaternionIdentify param = quaternion.getParam1();
+
+        if (param.isUseRegister) {
+            mips.append("\tlw ").append(param.getRegister()).append(", ").append(4 * count).append("($sp)\n");
+        }
+        else {
+            param.isInStack = true;
+            param.setAddress(count * 4);
+        }
 
         // 可以使用a系列寄存器来存参数
 //        if (count <= 4) {
@@ -296,10 +318,7 @@ public class GenerateText implements IGenerateText {
 //            quaternion.getParam1().setAddress((count - 4) * 4);
 //        }
 
-        quaternion.getParam1().isInStack = true;
-        quaternion.getParam1().setAddress(count * 4);
-
-        return "";
+        return mips.toString();
     }
 
     private String generateFormalParaArray(SingleQuaternion quaternion) {
@@ -417,7 +436,8 @@ public class GenerateText implements IGenerateText {
         int levelOfFuncCallNest = this.numOfFuncCallBegin - this.numOfFuncCallEnd;
 
         int startIndexOfSavedRegister = QuaternionIdentify.stackIndex;
-        for (int i = 0; i <= 7; i++) {
+        for (int i :
+            quaternion.functionBlock.getAllocatedRegister()) {
             mips.append("\tsw $s").append(i).append(", ").append(4 * (startIndexOfSavedRegister + i)).append("($sp)\n");
         }
 
@@ -429,17 +449,24 @@ public class GenerateText implements IGenerateText {
 
         mips.append("\taddiu $sp, $sp, ").append(spaceOfFunc * levelOfFuncCallNest).append("\n");
 
-        for (int i = 0; i <= 7; i++) {
+        for (int i :
+            quaternion.functionBlock.getAllocatedRegister()) {
             mips.append("\tlw $s").append(i).append(", ").append(4 * (startIndexOfSavedRegister + i)).append("($sp)\n");
         }
 
         QuaternionIdentify result = quaternion.getResult();
         if (result != null) {
-            if (!result.isInStack) {
-                result.pushIntoStack();
+            if (result.isUseRegister) {
+                String register = result.getRegister();
+                mips.append("\tmove ").append(register).append(", $v0\n");
             }
-            int address = result.getAddress();
-            mips.append("\tsw $v0, ").append(address).append("($sp)\n");
+            else {
+                if (!result.isInStack) {
+                    result.pushIntoStack();
+                }
+                int address = result.getAddress();
+                mips.append("\tsw $v0, ").append(address).append("($sp)\n");
+            }
         }
 
         this.numOfFuncCallEnd ++;
@@ -452,7 +479,7 @@ public class GenerateText implements IGenerateText {
         StringBuilder mips = new StringBuilder();
         String param = getIdentify(mips, quaternion.getParam1(), 1, false);
 
-        mips.append("\tnegu $t0, ").append(param).append("\n");
+        mips.append("\tnegu ").append(getResultIdentify(quaternion.getResult())).append(", ").append(param).append("\n");
         storeIdentify(mips, quaternion.getResult());
 
         return mips.toString();
@@ -467,7 +494,7 @@ public class GenerateText implements IGenerateText {
         mips.append("\tsne $t1, ").append(param1).append(", $zero\n");
         mips.append("\tsne $t2, ").append(param2).append(", $zero\n");
 
-        mips.append("\tor $t0, $t1, $t2\n");
+        mips.append("\tor ").append(getResultIdentify(quaternion.getResult())).append(", $t1, $t2\n");
         storeIdentify(mips, quaternion.getResult());
 
         return mips.toString();
@@ -482,7 +509,7 @@ public class GenerateText implements IGenerateText {
         mips.append("\tsne $t1, ").append(param1).append(", $zero\n");
         mips.append("\tsne $t2, ").append(param2).append(", $zero\n");
 
-        mips.append("\tand $t0, $t1, $t2\n");
+        mips.append("\tand ").append(getResultIdentify(quaternion.getResult())).append(", $t1, $t2\n");
         storeIdentify(mips, quaternion.getResult());
 
         return mips.toString();
@@ -494,7 +521,7 @@ public class GenerateText implements IGenerateText {
         String param1 = getIdentify(mips, quaternion.getParam1(), 1, false);
         String param2 = getIdentify(mips, quaternion.getParam2(), 2, false);
 
-        mips.append("\tsgt $t0, ").append(param1).append(", ").append(param2).append("\n");
+        mips.append("\tsgt ").append(getResultIdentify(quaternion.getResult())).append(", ").append(param1).append(", ").append(param2).append("\n");
         storeIdentify(mips, quaternion.getResult());
 
         return mips.toString();
@@ -506,7 +533,7 @@ public class GenerateText implements IGenerateText {
         String param1 = getIdentify(mips, quaternion.getParam1(), 1, false);
         String param2 = getIdentify(mips, quaternion.getParam2(), 2, false);
 
-        mips.append("\tsge $t0, ").append(param1).append(", ").append(param2).append("\n");
+        mips.append("\tsge ").append(getResultIdentify(quaternion.getResult())).append(", ").append(param1).append(", ").append(param2).append("\n");
         storeIdentify(mips, quaternion.getResult());
 
         return mips.toString();
@@ -518,7 +545,7 @@ public class GenerateText implements IGenerateText {
         String param1 = getIdentify(mips, quaternion.getParam1(), 1, false);
         String param2 = getIdentify(mips, quaternion.getParam2(), 2, false);
 
-        mips.append("\tslt $t0, ").append(param1).append(", ").append(param2).append("\n");
+        mips.append("\tslt ").append(getResultIdentify(quaternion.getResult())).append(", ").append(param1).append(", ").append(param2).append("\n");
         storeIdentify(mips, quaternion.getResult());
 
         return mips.toString();
@@ -530,7 +557,7 @@ public class GenerateText implements IGenerateText {
         String param1 = getIdentify(mips, quaternion.getParam1(), 1, false);
         String param2 = getIdentify(mips, quaternion.getParam2(), 2, false);
 
-        mips.append("\tsle $t0, ").append(param1).append(", ").append(param2).append("\n");
+        mips.append("\tsle ").append(getResultIdentify(quaternion.getResult())).append(", ").append(param1).append(", ").append(param2).append("\n");
         storeIdentify(mips, quaternion.getResult());
 
         return mips.toString();
@@ -542,7 +569,7 @@ public class GenerateText implements IGenerateText {
         String param1 = getIdentify(mips, quaternion.getParam1(), 1, false);
         String param2 = getIdentify(mips, quaternion.getParam2(), 2, false);
 
-        mips.append("\tsne $t0, ").append(param1).append(", ").append(param2).append("\n");
+        mips.append("\tsne ").append(getResultIdentify(quaternion.getResult())).append(", ").append(param1).append(", ").append(param2).append("\n");
         storeIdentify(mips, quaternion.getResult());
 
         return mips.toString();
@@ -554,7 +581,7 @@ public class GenerateText implements IGenerateText {
         String param1 = getIdentify(mips, quaternion.getParam1(), 1, false);
         String param2 = getIdentify(mips, quaternion.getParam2(), 2, false);
 
-        mips.append("\tseq $t0, ").append(param1).append(", ").append(param2).append("\n");
+        mips.append("\tseq ").append(getResultIdentify(quaternion.getResult())).append(", ").append(param1).append(", ").append(param2).append("\n");
         storeIdentify(mips, quaternion.getResult());
 
         return mips.toString();
@@ -565,7 +592,7 @@ public class GenerateText implements IGenerateText {
         StringBuilder mips = new StringBuilder();
         String param = getIdentify(mips, quaternion.getParam1(), 1, false);
 
-        mips.append("\tseq $t0, ").append(param).append(", $zero\n");
+        mips.append("\tseq ").append(getResultIdentify(quaternion.getResult())).append(", ").append(param).append(", $zero\n");
         storeIdentify(mips, quaternion.getResult());
 
         return mips.toString();
@@ -646,7 +673,7 @@ public class GenerateText implements IGenerateText {
 
         mips.append("\tli $v0, 5\n");
         mips.append("\tsyscall\n");
-        mips.append("\tmove $t0, $v0\n");
+        mips.append("\tmove ").append(getResultIdentify(quaternion.getParam1())).append(", $v0\n");
 
         storeIdentify(mips, quaternion.getParam1());
 
@@ -702,13 +729,13 @@ public class GenerateText implements IGenerateText {
             String name = quaternion.getParam1().getValue();
             mips.append("\tmul $t1, ").append(offset).append(", 4\n");
             mips.append("\tla $t2, ").append(name).append("\n");
-            mips.append("\tadd $t0, $t1, $t2\n");
+            mips.append("\tadd ").append(getResultIdentify(quaternion.getResult())).append(", $t1, $t2\n");
             storeIdentify(mips, quaternion.getResult());
         }
         else if (quaternion.getParam1().getType() == QuaternionIdentifyType.LOCAL) {
             mips.append("\tmul $t2, ").append(offset).append(", 4\n");
             String address = getIdentify(mips, quaternion.getParam1(), 1, false);
-            mips.append("\tadd $t0, $t2, ").append(address).append("\n");
+            mips.append("\tadd ").append(getResultIdentify(quaternion.getResult())).append(", $t2, ").append(address).append("\n");
             storeIdentify(mips, quaternion.getResult());
 
         }

@@ -1,5 +1,7 @@
 package InterCode;
 
+import Optimize.Register.FunctionBlock;
+
 public class SingleQuaternion {
 
     private Operation operation;
@@ -9,6 +11,8 @@ public class SingleQuaternion {
     private QuaternionIdentify param2;
 
     private QuaternionIdentify result;
+
+    public FunctionBlock functionBlock;
 
     public SingleQuaternion(Operation operation, QuaternionIdentify param1, QuaternionIdentify param2, QuaternionIdentify result) {
         this.operation = operation;
