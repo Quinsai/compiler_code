@@ -1,7 +1,6 @@
 package Optimize.Register;
 
 import InterCode.*;
-import Other.ParamResult;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,6 +44,8 @@ public class BasicBlock {
      */
     public ArrayList<BasicBlock> follow;
 
+    private int idOfTempRegister;
+
     public BasicBlock(int beginIndex, int endIndex) {
         this.beginIndex = beginIndex;
         this.endIndex = endIndex;
@@ -55,6 +56,7 @@ public class BasicBlock {
         this.isExit = false;
         this.in = new ArrayList<>();
         this.out = new ArrayList<>();
+        this.idOfTempRegister = 5;
     }
 
     public BasicBlock(boolean isExit) {
@@ -74,6 +76,15 @@ public class BasicBlock {
         if (identify.isArrayIdentify) {
             return;
         }
+        if (identify.getValue().isEmpty()) {
+            identify.setRegister("$t" + idOfTempRegister);
+            idOfTempRegister ++;
+            if (idOfTempRegister > 9) {
+                idOfTempRegister = 5;
+            }
+            hasOccurred.put(identify, true);
+            return;
+        }
         hasOccurred.put(identify, true);
         def.add(identify);
     }
@@ -83,6 +94,15 @@ public class BasicBlock {
             return;
         }
         if (identify.isArrayIdentify) {
+            return;
+        }
+        if (identify.getValue().isEmpty()) {
+            identify.setRegister("$t" + idOfTempRegister);
+            idOfTempRegister ++;
+            if (idOfTempRegister > 9) {
+                idOfTempRegister = 5;
+            }
+            hasOccurred.put(identify, true);
             return;
         }
         hasOccurred.put(identify, true);

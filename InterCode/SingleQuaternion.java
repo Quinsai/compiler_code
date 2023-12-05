@@ -1,5 +1,6 @@
 package InterCode;
 
+import Optimize.Register.BasicBlock;
 import Optimize.Register.FunctionBlock;
 
 public class SingleQuaternion {

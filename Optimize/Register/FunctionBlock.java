@@ -54,6 +54,8 @@ public class FunctionBlock {
     public void allocate() {
         this.liveVariableAnalyzeOfBasicBlock();
         this.liveVariableAnalyzeOfSingleQuaternion();
+        this.allocateRegister();
+        this.setRegister();
     }
 
     /**
@@ -94,7 +96,7 @@ public class FunctionBlock {
             }
         }
 
-        /*this.conflictGraph = new ConflictGraph(getAllVariable());
+        this.conflictGraph = new ConflictGraph(getAllVariable());
 
         for (int i = 0; i < numberOfBasicBlocks; i++) {
 
@@ -103,7 +105,7 @@ public class FunctionBlock {
             for (QuaternionIdentify defIdentify :
                 block.def) {
                 for (QuaternionIdentify outIdentify :
-                    block.out) {
+                    block.in) {
                     if (defIdentify == outIdentify) {
                         continue;
                     }
@@ -132,7 +134,7 @@ public class FunctionBlock {
                     conflictGraph.addEdge(outIdentify1, outIdentify2);
                 }
             }
-        }*/
+        }
 
     }
 
@@ -289,6 +291,10 @@ public class FunctionBlock {
             notAllocatedNode.idOfRegister = -1;
             conflictGraph.removeNode(notAllocatedNode);
             removedNodes.push(notAllocatedNode);
+        }
+
+        if (orderedNodes.isEmpty()) {
+            return;
         }
 
         orderedNodes.peek().idOfRegister = 0;
