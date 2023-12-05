@@ -1,10 +1,11 @@
 package Optimize.Register;
 
 import InterCode.*;
+import Optimize.Register.Graph.ConflictEdge;
+import Optimize.Register.Graph.ConflictGraph;
+import Optimize.Register.Graph.VariableNode;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.*;
 
 /**
  * 基本块类
@@ -73,16 +74,7 @@ public class BasicBlock {
         if (identify == null || hasOccurred.containsKey(identify) || identify.getType() != QuaternionIdentifyType.LOCAL) {
             return;
         }
-        if (identify.isArrayIdentify) {
-            return;
-        }
-        if (identify.getValue().isEmpty()) {
-            identify.setRegister("$t" + idOfTempRegister);
-            idOfTempRegister ++;
-            if (idOfTempRegister > 9) {
-                idOfTempRegister = 5;
-            }
-            hasOccurred.put(identify, true);
+        if (identify.isArrayIdentify || identify.getValue().isEmpty()) {
             return;
         }
         hasOccurred.put(identify, true);
@@ -93,16 +85,7 @@ public class BasicBlock {
         if (identify == null || hasOccurred.containsKey(identify) || identify.getType() != QuaternionIdentifyType.LOCAL) {
             return;
         }
-        if (identify.isArrayIdentify) {
-            return;
-        }
-        if (identify.getValue().isEmpty()) {
-            identify.setRegister("$t" + idOfTempRegister);
-            idOfTempRegister ++;
-            if (idOfTempRegister > 9) {
-                idOfTempRegister = 5;
-            }
-            hasOccurred.put(identify, true);
+        if (identify.isArrayIdentify || identify.getValue().isEmpty()) {
             return;
         }
         hasOccurred.put(identify, true);
@@ -120,7 +103,7 @@ public class BasicBlock {
                 case MAIN_FUNC_BEGIN, MAIN_FUNC_END, FUNC_BEGIN, FUNC_END, FUNC_CALL_BEGIN,
                     BLOCK_BEGIN, BLOCK_END, LABEL, SKIP, BRANCH_IF_FALSE,
                     BRANCH_IF_TRUE, CONST_ARRAY_DECLARE, VAR_ARRAY_DECLARE,
-                    FORMAL_PARA_ARRAY, FORMAL_PARA_INT, ARRAY_INIT,
+                    FORMAL_PARA_ARRAY, ARRAY_INIT,
                     GET_ADDRESS, STORE_TO_ADDRESS, GETINT_TO_ADDRESS -> {}
                 case SET_VALUE -> {
                     handleDef(param2, hasOccurred);
@@ -136,6 +119,9 @@ public class BasicBlock {
                     handleDef(result, hasOccurred);
                 }
                 case GETINT -> {
+                    handleDef(param1, hasOccurred);
+                }
+                case FORMAL_PARA_INT -> {
                     handleDef(param1, hasOccurred);
                 }
                 case FUNC_CALL_END -> {
@@ -174,5 +160,141 @@ public class BasicBlock {
                 }
             }
         }
+    }
+
+    private void handleTempVariable(int time, QuaternionIdentify identify, HashMap<QuaternionIdentify, Integer> birthTime, HashMap<QuaternionIdentify, Integer> deathTime) {
+        if (identify == null || identify.getType() != QuaternionIdentifyType.LOCAL || !identify.getValue().isEmpty()) {
+            return;
+        }
+        if (!birthTime.containsKey(identify)) {
+            birthTime.put(identify, time);
+            deathTime.put(identify, time);
+        }
+        else {
+            deathTime.replace(identify, time);
+        }
+
+    }
+
+    static class NodeComparator implements Comparator<VariableNode> {
+
+        @Override
+        public int compare(VariableNode o1, VariableNode o2) {
+            if (o1 == o2) {
+                return 0;
+            }
+            else if (o1.getCountOfConflict() <= o2.getCountOfConflict()) {
+                return -1;
+            }
+            else {
+                return 1;
+            }
+        }
+    }
+
+    public void allocateTempRegister() {
+        HashMap<Integer, ArrayList<QuaternionIdentify>> liveTempVariableEachTime = new HashMap<>();
+        for (int i = beginIndex; i <= endIndex; i++) {
+            liveTempVariableEachTime.put(i, new ArrayList<>());
+        }
+
+        HashMap<QuaternionIdentify, Integer> birthTime = new HashMap<>();
+        HashMap<QuaternionIdentify, Integer> deathItem = new HashMap<>();
+        for (int i = beginIndex; i <= endIndex; i++) {
+            SingleQuaternion quaternion = this.quaternions.get(i);
+            handleTempVariable(i, quaternion.getParam1(), birthTime, deathItem);
+            handleTempVariable(i, quaternion.getParam2(), birthTime, deathItem);
+            handleTempVariable(i, quaternion.getResult(), birthTime, deathItem);
+        }
+
+        Set<QuaternionIdentify> allIdentify = birthTime.keySet();
+        ConflictGraph tempConflictGraph = new ConflictGraph(new ArrayList<>(allIdentify));
+        for (QuaternionIdentify identify :
+            allIdentify) {
+            int birth = birthTime.get(identify);
+            int death = deathItem.get(identify);
+            for (int i = birth; i <= death; i++) {
+                ArrayList<QuaternionIdentify> conflictNodes = liveTempVariableEachTime.get(i);
+                for (QuaternionIdentify conflictNode :
+                    conflictNodes) {
+                    tempConflictGraph.addEdge(conflictNode, identify);
+                }
+                liveTempVariableEachTime.get(i).add(identify);
+            }
+        }
+
+        PriorityQueue<VariableNode> orderedNodes = new PriorityQueue<>(new BasicBlock.NodeComparator());
+        Stack<VariableNode> removedNodes = new Stack<>();
+        orderedNodes.addAll(tempConflictGraph.getNodes());
+
+        while (true) {
+            if (orderedNodes.size() <= 1) {
+                break;
+            }
+
+            while (orderedNodes.size() > 1 && orderedNodes.peek().getCountOfConflict() < 5) {
+                VariableNode node = orderedNodes.poll();
+                tempConflictGraph.removeNode(node);
+                removedNodes.push(node);
+            }
+
+            if (orderedNodes.size() == 1) {
+                break;
+            }
+
+            VariableNode notAllocatedNode = orderedNodes.poll();
+            notAllocatedNode.idOfRegister = -1;
+            tempConflictGraph.removeNode(notAllocatedNode);
+            removedNodes.push(notAllocatedNode);
+        }
+
+        if (orderedNodes.isEmpty()) {
+            return;
+        }
+
+        orderedNodes.peek().idOfRegister = 5;
+        while (!removedNodes.isEmpty()) {
+            VariableNode addedNode = removedNodes.pop();
+            tempConflictGraph.addNode(addedNode);
+
+            if (addedNode.idOfRegister == -1) {
+                continue;
+            }
+            HashMap<Integer, Boolean> allocatedRegister = getAllocatedRegister(addedNode);
+
+            int register;
+            for (register = 5; register <= 9; register++) {
+                if (!allocatedRegister.containsKey(register)) {
+                    break;
+                }
+            }
+
+            addedNode.idOfRegister = register;
+        }
+
+        LinkedList<VariableNode> allNodes = tempConflictGraph.getNodes();
+        for (VariableNode node :
+            allNodes) {
+            if (node.idOfRegister != -1) {
+                node.identify.setRegister("$t" + node.idOfRegister);
+            }
+        }
+    }
+
+    private HashMap<Integer, Boolean> getAllocatedRegister(VariableNode addedNode) {
+        HashMap<Integer, Boolean> allocatedRegister = new HashMap<>();
+        LinkedList<ConflictEdge> allConflictEdge = addedNode.getConflictEdge();
+        for (ConflictEdge edge :
+            allConflictEdge) {
+            VariableNode otherNode = edge.node1;
+            if (edge.node1 == addedNode) {
+                otherNode = edge.node2;
+            }
+            if (otherNode.idOfRegister == -1) {
+                continue;
+            }
+            allocatedRegister.put(otherNode.idOfRegister, true);
+        }
+        return allocatedRegister;
     }
 }

@@ -32,6 +32,8 @@ public class Compiler {
         // 最后的时候要记得注释掉这行
         Quaternion.getInstance().display();
 
+        // 启用下面这句，则开启优化，可能会有奇怪的未知的bug存在，不保证通过代码生成，保证通过竞速
+        // 如果不启用，则不开启优化，但保证一定能通过代码生成
         RegisterAllocator.getInstance().allocate();
 
         Target.getInstance().generateTargetCode();

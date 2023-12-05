@@ -69,6 +69,7 @@ public class FunctionBlock {
         analyzeBlockFlow();
 
         for (int i = 0; i < numberOfBasicBlocks; i++) {
+            this.basicBlocks.get(i).allocateTempRegister();
             this.basicBlocks.get(i).analyzeDefAndUse();
         }
 

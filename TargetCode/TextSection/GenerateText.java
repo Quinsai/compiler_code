@@ -436,12 +436,15 @@ public class GenerateText implements IGenerateText {
         int levelOfFuncCallNest = this.numOfFuncCallBegin - this.numOfFuncCallEnd;
 
         int startIndexOfSavedRegister = QuaternionIdentify.stackIndex;
-        for (int i = 5; i <= 9; i++) {
-            mips.append("\tsw $t").append(i).append(", ").append(4 * (startIndexOfSavedRegister + i - 5)).append("($sp)\n");
-        }
-        for (int i :
-            quaternion.functionBlock.getAllocatedRegister()) {
-            mips.append("\tsw $s").append(i).append(", ").append(4 * (startIndexOfSavedRegister + i + 5)).append("($sp)\n");
+        // 只有但functionBlock不等于null的时候，才是开启了优化的时候
+        if (quaternion.functionBlock != null) {
+            for (int i = 5; i <= 9; i++) {
+                mips.append("\tsw $t").append(i).append(", ").append(4 * (startIndexOfSavedRegister + i - 5)).append("($sp)\n");
+            }
+            for (int i :
+                quaternion.functionBlock.getAllocatedRegister()) {
+                mips.append("\tsw $s").append(i).append(", ").append(4 * (startIndexOfSavedRegister + i + 5)).append("($sp)\n");
+            }
         }
 
         // 给接下来的这个函数开辟一个不会被打扰的空间
@@ -452,12 +455,15 @@ public class GenerateText implements IGenerateText {
 
         mips.append("\taddiu $sp, $sp, ").append(spaceOfFunc * levelOfFuncCallNest).append("\n");
 
-        for (int i = 5; i <= 9; i++) {
-            mips.append("\tlw $t").append(i).append(", ").append(4 * (startIndexOfSavedRegister + i - 5)).append("($sp)\n");
-        }
-        for (int i :
-            quaternion.functionBlock.getAllocatedRegister()) {
-            mips.append("\tlw $s").append(i).append(", ").append(4 * (startIndexOfSavedRegister + i + 5)).append("($sp)\n");
+        // 同上
+        if (quaternion.functionBlock != null) {
+            for (int i = 5; i <= 9; i++) {
+                mips.append("\tlw $t").append(i).append(", ").append(4 * (startIndexOfSavedRegister + i - 5)).append("($sp)\n");
+            }
+            for (int i :
+                quaternion.functionBlock.getAllocatedRegister()) {
+                mips.append("\tlw $s").append(i).append(", ").append(4 * (startIndexOfSavedRegister + i + 5)).append("($sp)\n");
+            }
         }
 
         QuaternionIdentify result = quaternion.getResult();
