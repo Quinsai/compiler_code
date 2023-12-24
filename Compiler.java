@@ -2,6 +2,7 @@ import Input.InputSourceCode;
 import InterCode.Quaternion;
 import Optimize.Register.RegisterAllocator;
 import Output.OutputIntoFile;
+import Result.Error.HandleError;
 import Syntactic.SyntacticAnalysis;
 import SyntacticTree.Tree;
 import TargetCode.Target;
@@ -24,6 +25,10 @@ public class Compiler {
         // 语法分析作业使用
         SyntacticAnalysis.getInstance().run(false);
 
+        if (HandleError.whetherError) {
+            return;
+        }
+
         Tree.getInstance().simplifyTree();
 
         // 生成四元式形式的中间代码
@@ -34,7 +39,7 @@ public class Compiler {
 
         // 启用下面这句，则开启优化，可能会有奇怪的未知的bug存在，不保证通过代码生成，保证通过竞速
         // 如果不启用，则不开启优化，但保证一定能通过代码生成
-        RegisterAllocator.getInstance().allocate();
+        // RegisterAllocator.getInstance().allocate();
 
         Target.getInstance().generateTargetCode();
         Target.getInstance().outputTargetCode();

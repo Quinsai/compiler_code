@@ -5,11 +5,15 @@ import Output.OutputIntoFile;
 
 public class HandleError {
 
+    public static boolean whetherError = false;
+
     public static void lexicalError() {
         System.out.println("error");
     }
 
     public static void handleError(AnalysisErrorType errorType) {
+
+        whetherError = true;
 
         char c = '*';
         if (errorType == AnalysisErrorType.FORMAT_STRING_WITH_ILLEGAL_CHAR) {

@@ -502,6 +502,7 @@ public class LexicalAnalysis {
         final int NEXT_LINE = 1322;
         final int NEXT_LBRACE = 8690;
         final int NEXT_SEMICN = 3244;
+        final int NEXT_COMMA = 6454;
 
         int delta = 0;
 
@@ -522,12 +523,32 @@ public class LexicalAnalysis {
                 delta = NEXT_SEMICN;
                 break;
             }
+            else if (c == ',') {
+                delta = NEXT_COMMA;
+                break;
+            }
             currentIndex ++;
         }
 
-        if (delta == NEXT_LINE || delta == NEXT_SEMICN) {
+        if (delta == NEXT_LINE || delta == NEXT_SEMICN ) {
             currentIndex ++;
         }
+    }
+
+    public void skipToNextComma() {
+        System.out.println("wwww");
+        System.out.println(this.currentLine);
+        while (currentIndex < sourceLength) {
+            char c = source.charAt(currentIndex);
+            if (c == '\n') {
+                this.currentLine ++;
+            }
+            if (c == ',') {
+                break;
+            }
+            currentIndex ++;
+        }
+        System.out.println(this.currentLine);
     }
 
     /**
