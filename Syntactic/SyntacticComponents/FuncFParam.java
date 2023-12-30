@@ -56,6 +56,10 @@ public class FuncFParam extends SyntacticComponent {
                 return AnalysisResult.FAIL;
             }
             if (!nextWordCategoryCode.getValue().equals("RBRACK")) {
+                res = masterTable.insertIntoTable(name, SymbolConst.VAR, SymbolConst.ARRAY, dimension, item);
+                if (res == AnalysisResult.FAIL) {
+                    return AnalysisResult.FAIL;
+                }
                 HandleError.handleError(AnalysisErrorType.LACK_OF_RBRACK);
                 return AnalysisResult.FAIL;
             }
@@ -91,6 +95,10 @@ public class FuncFParam extends SyntacticComponent {
                     return AnalysisResult.FAIL;
                 }
                 if (!nextWordCategoryCode.getValue().equals("RBRACK")) {
+                    res = masterTable.insertIntoTable(name, SymbolConst.VAR, SymbolConst.ARRAY, dimension, item);
+                    if (res == AnalysisResult.FAIL) {
+                        return AnalysisResult.FAIL;
+                    }
                     HandleError.handleError(AnalysisErrorType.LACK_OF_RBRACK);
                     return AnalysisResult.FAIL;
                 }

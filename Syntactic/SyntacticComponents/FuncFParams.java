@@ -1,5 +1,6 @@
 package Syntactic.SyntacticComponents;
 
+import Lexical.LexicalAnalysis;
 import Other.ParamResult;
 import Output.OutputIntoFile;
 import Result.AnalysisResult;
@@ -23,7 +24,9 @@ public class FuncFParams extends SyntacticComponent {
         FuncFParam funcFParam = new FuncFParam(treeNode);
         res = funcFParam.analyze(whetherOutput);
         if (res != AnalysisResult.SUCCESS) {
-            return AnalysisResult.FAIL;
+            System.out.println("www");
+            // LexicalAnalysis.getInstance().skipToNextComma();
+            // return AnalysisResult.FAIL;
         }
 
         while (true) {
@@ -40,7 +43,9 @@ public class FuncFParams extends SyntacticComponent {
             FuncFParam funcFParam1 = new FuncFParam(treeNode);
             res = funcFParam1.analyze(whetherOutput);
             if (res != AnalysisResult.SUCCESS) {
-                return AnalysisResult.FAIL;
+                System.out.println("www");
+                // LexicalAnalysis.getInstance().skipToNextComma();
+                // return AnalysisResult.FAIL;
             }
         }
 
